@@ -8,7 +8,12 @@ export default defineConfig({
   fmt: {
     arrowParens: "avoid",
     printWidth: 80,
-    ignorePatterns: ["pnpm-lock.yaml", "dist", "**/*.html"],
+    ignorePatterns: [
+      "pnpm-lock.yaml",
+      "dist",
+      "types/auto-imports.d.ts",
+      "**/*.html",
+    ],
     sortImports: {
       groups: [
         "type-import",
