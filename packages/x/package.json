@@ -39,7 +39,7 @@
     "build:comp": "vp build --config vite.build.config.ts",
     "build:esm": "vp build --config vite.esm.config.ts",
     "build:umd": "vp build --config vite.umd.config.ts",
-    "build": "pnpm run build:comp && pnpm run build:esm && pnpm run build:umd"
+    "build": "vp run build:comp && vp run build:esm && vp run build:umd"
   },
   "dependencies": {
     "@ant-design/fast-color": "catalog:prod",

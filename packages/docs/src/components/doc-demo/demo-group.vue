@@ -42,7 +42,7 @@ const columns = computed(() => {
 
   if (actualCols.value <= 1) return [children];
 
-  const result: VNode[][] = Array.from({ length: actualCols.value }).fill([]);
+  const result = Array.from({ length: actualCols.value }).fill([]) as VNode[][];
   for (let i = 0; i < children.length; i++) {
     result[i % actualCols.value]!.push(children[i]!);
   }

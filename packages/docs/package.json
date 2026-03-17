@@ -1,0 +1,11 @@
+{
+  "name": "@antdv-next/docs",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev .",
+    "build": "vp build .",
+    "preview": "vp preview ."
+  }
+}

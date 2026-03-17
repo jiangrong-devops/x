@@ -11,7 +11,8 @@ export default defineConfig({
     ignorePatterns: [
       "pnpm-lock.yaml",
       "dist",
-      "types/auto-imports.d.ts",
+      "**/types/auto-imports.d.ts",
+      "**/types/components.d.ts",
       "**/*.html",
     ],
     sortImports: {

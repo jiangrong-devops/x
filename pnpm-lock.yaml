@@ -374,6 +374,8 @@ importers:
         specifier: catalog:dev
         version: 3.2.5(typescript@5.9.3)
 
+  packages/docs: {}
+
   packages/x:
     dependencies:
       '@ant-design/fast-color':

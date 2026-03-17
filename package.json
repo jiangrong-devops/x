@@ -3,15 +3,15 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "docs:dev": "vp dev docs",
-    "docs:preview": "vp preview docs",
-    "docs:build": "vp build docs",
+    "docs:dev": "vp dev packages/docs",
+    "docs:preview": "vp preview packages/docs",
+    "docs:build": "vp build packages/docs",
     "test:unit": "vp test",
-    "type-check": "pnpm -r --filter \"./packages/*\" run type-check",
-    "build": "pnpm -r --filter \"./packages/*\" run build",
-    "build:x": "pnpm --filter @antdv-next/x run build",
-    "pack:packages": "pnpm -r --filter \"./packages/*\" pack",
-    "publish:packages": "pnpm -r --filter \"./packages/*\" publish --access public --no-git-checks",
+    "type-check": "vp run --filter \"./packages/*\" --filter \"!./packages/docs\" type-check",
+    "build": "vp run --filter \"./packages/*\" --filter \"!./packages/docs\" build",
+    "build:x": "vp run --filter @antdv-next/x build",
+    "pack:packages": "vp pm pack -r --filter \"./packages/*\" --filter \"!./packages/docs\"",
+    "publish:packages": "vp pm publish -r --filter \"./packages/*\" --filter \"!./packages/docs\" --access public --no-git-checks",
     "prepare": "vp config"
   },
   "devDependencies": {
@@ -74,5 +74,6 @@
     "vue-i18n": "catalog:prod",
     "vue-router": "catalog:prod",
     "vue-tsc": "catalog:dev"
-  }
+  },
+  "packageManager": "pnpm@10.32.1"
 }

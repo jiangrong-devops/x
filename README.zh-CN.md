@@ -1,6 +1,6 @@
 <div align="center"><a name="readme-top"></a>
 
-<img height="180" src="./docs/public/x.svg">
+<img height="180" src="./packages/docs/public/x.svg">
 
 <h1>Antdv X</h1>
 

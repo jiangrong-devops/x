@@ -41,11 +41,11 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@antdv-next/x": fileURLToPath(
-        new URL("../packages/x/components/index.ts", import.meta.url),
+        new URL("../x/components/index.ts", import.meta.url),
       ),
     },
   },
   server: {
-    port: 6878,
+    port: 6999,
   },
 });
