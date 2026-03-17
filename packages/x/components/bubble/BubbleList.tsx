@@ -1,13 +1,6 @@
-import type { PropType, StyleValue } from "vue";
+import type { PropType, Ref, StyleValue } from "vue";
 
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 import type {
   BubbleItemType,
@@ -19,6 +12,7 @@ import type {
 
 import Bubble from "./Bubble";
 import DividerBubble from "./Divider";
+import { useCompatibleScroll } from "./hooks/useCompatibleScroll";
 import useBubbleStyle from "./style";
 import SystemBubble from "./System";
 
@@ -84,28 +78,17 @@ export const XBubbleList = defineComponent({
   setup(props, { expose, attrs }) {
     const rootRef = ref<HTMLDivElement>();
     const scrollBoxRef = ref<HTMLDivElement>();
+    const scrollContentRef = ref<HTMLDivElement>();
     const bubbleRefs = new Map<string | number, HTMLElement>();
-    const stickToBottom = ref(true);
     const [hashId, cssVarCls] = useBubbleStyle(computed(() => props.prefixCls));
+    const { scrollTo: compatibleScrollTo } = useCompatibleScroll(
+      scrollBoxRef as Ref<HTMLElement | undefined>,
+      scrollContentRef as Ref<HTMLElement | undefined>,
+    );
 
     const listPrefixCls = computed(() => `${props.prefixCls}-list`);
 
-    const updateStickState = () => {
-      const scrollBox = scrollBoxRef.value;
-      if (!scrollBox) return;
-      const distance =
-        scrollBox.scrollHeight - scrollBox.scrollTop - scrollBox.clientHeight;
-      stickToBottom.value = distance <= 56;
-    };
-
-    const scrollToBottom = (behavior: ScrollBehavior = "auto") => {
-      const scrollBox = scrollBoxRef.value;
-      if (!scrollBox) return;
-      scrollBox.scrollTo({ top: scrollBox.scrollHeight, behavior });
-    };
-
     const handleScroll = (event: Event) => {
-      updateStickState();
       props.onScroll?.(event);
     };
 
@@ -171,24 +154,39 @@ export const XBubbleList = defineComponent({
       const scrollBox = scrollBoxRef.value;
       if (!scrollBox) return;
 
+      const { scrollHeight, clientHeight } = scrollBox;
+
       if (typeof top === "number") {
-        scrollBox.scrollTo({ top, behavior });
+        compatibleScrollTo({
+          top: props.autoScroll ? -scrollHeight + clientHeight + top : top,
+          behavior,
+        });
         return;
       }
 
       if (top === "bottom") {
-        scrollBox.scrollTo({ top: scrollBox.scrollHeight, behavior });
+        compatibleScrollTo({
+          top: props.autoScroll ? 0 : scrollHeight,
+          behavior,
+        });
         return;
       }
 
       if (top === "top") {
-        scrollBox.scrollTo({ top: 0, behavior });
+        compatibleScrollTo({
+          top: props.autoScroll ? -scrollHeight : 0,
+          behavior,
+        });
         return;
       }
 
       if (key !== undefined) {
         const target = bubbleRefs.get(key);
-        target?.scrollIntoView({ behavior, block: block ?? "nearest" });
+        if (!target) return;
+        compatibleScrollTo({
+          intoView: { behavior, block: block ?? "nearest" },
+          intoViewDom: target,
+        });
       }
     };
 
@@ -200,28 +198,6 @@ export const XBubbleList = defineComponent({
         return scrollBoxRef.value as HTMLDivElement;
       },
       scrollTo,
-    });
-
-    watch(
-      () => props.items,
-      async () => {
-        await nextTick();
-        if (props.autoScroll && stickToBottom.value) scrollToBottom("smooth");
-      },
-      { deep: true },
-    );
-
-    watch(
-      () => props.autoScroll,
-      enabled => {
-        if (enabled) scrollToBottom();
-      },
-      { immediate: true },
-    );
-
-    onMounted(() => {
-      updateStickState();
-      if (props.autoScroll) scrollToBottom();
     });
 
     return () => (
@@ -249,7 +225,10 @@ export const XBubbleList = defineComponent({
           style={props.styles?.scroll}
           onScroll={handleScroll}
         >
-          <div class={`${listPrefixCls.value}-scroll-content`}>
+          <div
+            ref={scrollContentRef}
+            class={`${listPrefixCls.value}-scroll-content`}
+          >
             {mergedItems.value.map(item => {
               const {
                 key,

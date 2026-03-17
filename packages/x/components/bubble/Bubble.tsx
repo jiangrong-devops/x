@@ -258,13 +258,6 @@ export const XBubble = defineComponent({
     };
 
     const renderMainContent = () => {
-      if (props.loading)
-        return props.loadingRender ? (
-          props.loadingRender()
-        ) : (
-          <Loading prefixCls={props.prefixCls} />
-        );
-
       if (isEditing.value) {
         if (typeof props.content !== "string")
           throw new Error(
@@ -306,6 +299,54 @@ export const XBubble = defineComponent({
       return memoedContent.value;
     };
 
+    const renderContent = () => {
+      if (props.loading) {
+        return props.loadingRender ? (
+          props.loadingRender()
+        ) : (
+          <Loading prefixCls={props.prefixCls} />
+        );
+      }
+
+      return (
+        <div class={getSlotClassName("body")} style={getSlotStyle("body")}>
+          {renderHeader()}
+          <div
+            class={[
+              `${prefixCls.value}-content`,
+              `${prefixCls.value}-content-${variant.value}`,
+              `${prefixCls.value}-content-${shape.value}`,
+              contextConfig.value.classes?.content,
+              props.classes?.content,
+              {
+                [`${prefixCls.value}-content-string`]:
+                  typeof memoedContent.value === "string",
+                [`${prefixCls.value}-content-editing`]: isEditing.value,
+                [`${prefixCls.value}-content-${props.info.status}`]:
+                  props.info.status,
+              },
+            ]}
+            style={{
+              ...contextConfig.value.styles?.content,
+              ...props.styles?.content,
+            }}
+          >
+            {isFooterInner.value ? (
+              <>
+                <div class={`${prefixCls.value}-content-with-footer`}>
+                  {renderMainContent()}
+                </div>
+                {!isEditing.value ? renderFooter() : null}
+              </>
+            ) : (
+              renderMainContent()
+            )}
+          </div>
+          {!isEditing.value && !isFooterInner.value ? renderFooter() : null}
+        </div>
+      );
+    };
+
     const { prefixCls, placement, variant, shape } = toRefs(props);
 
     return () => (
@@ -345,41 +386,7 @@ export const XBubble = defineComponent({
           </div>
         ) : null}
 
-        <div class={getSlotClassName("body")} style={getSlotStyle("body")}>
-          {renderHeader()}
-          <div
-            class={[
-              `${prefixCls.value}-content`,
-              `${prefixCls.value}-content-${variant.value}`,
-              `${prefixCls.value}-content-${shape.value}`,
-              contextConfig.value.classes?.content,
-              props.classes?.content,
-              {
-                [`${prefixCls.value}-content-string`]:
-                  typeof memoedContent.value === "string",
-                [`${prefixCls.value}-content-editing`]: isEditing.value,
-                [`${prefixCls.value}-content-${props.info.status}`]:
-                  props.info.status,
-              },
-            ]}
-            style={{
-              ...contextConfig.value.styles?.content,
-              ...props.styles?.content,
-            }}
-          >
-            {isFooterInner.value ? (
-              <>
-                <div class={`${prefixCls.value}-content-with-footer`}>
-                  {renderMainContent()}
-                </div>
-                {!isEditing.value ? renderFooter() : null}
-              </>
-            ) : (
-              renderMainContent()
-            )}
-          </div>
-          {!isEditing.value && !isFooterInner.value ? renderFooter() : null}
-        </div>
+        {renderContent()}
 
         {!isEditing.value &&
         !props.loading &&

@@ -3,32 +3,40 @@ import type { BubbleListProps } from "@antdv-next/x";
 
 import {
   AntDesignOutlined,
-  ArrowDownOutlined,
-  ArrowUpOutlined,
   CopyOutlined,
   RedoOutlined,
   UserOutlined,
 } from "@antdv-next/icons";
 import { Actions, Bubble } from "@antdv-next/x";
-import { Avatar, Button, Space } from "antdv-next";
+import { Avatar, Button, Flex } from "antdv-next";
 import { h, ref } from "vue";
 
 let seed = 0;
 const nextKey = () => `bubble_${seed++}`;
 
-function genItem(isAI: boolean, repeat = 20): any {
+function genItem(isAI: boolean, config: Partial<any> = {}, repeat = 50): any {
   return {
     key: nextKey(),
     role: isAI ? "ai" : "user",
-    content: `${seed}: ${isAI ? "Mock AI content ".repeat(repeat) : "Mock user content."}`,
-    typing: false,
+    content: `${seed} : ${isAI ? "Mock AI content".repeat(repeat) : "Mock user content."}`,
+    ...config,
   };
 }
 
 const listRef = ref<any>(null);
-const items = ref<any[]>(
-  Array.from({ length: 11 }, (_, index) => genItem(index % 2 === 1)),
-);
+const items = ref<any[]>([
+  genItem(false, { typing: false }),
+  genItem(true, { typing: false }),
+  genItem(false, { typing: false }),
+  genItem(true, { typing: false }),
+  genItem(false, { typing: false }),
+  genItem(true, { typing: false }),
+  genItem(false, { typing: false }),
+  genItem(true, { typing: false }),
+  genItem(false, { typing: false }),
+  genItem(true, { typing: false }),
+  genItem(false, { typing: false }),
+]);
 const actionItems = [
   {
     key: "retry",
@@ -46,20 +54,23 @@ const role: BubbleListProps["role"] = {
   ai: {
     typing: true,
     header: "AI",
-    avatar: () => h(Avatar, { size: "small", icon: h(AntDesignOutlined) }),
+    avatar: () => h(Avatar, { icon: h(AntDesignOutlined) }),
     footer: () => h(Actions, { items: actionItems }),
   },
   user: {
     placement: "end",
     typing: false,
     header: "User",
-    avatar: () => h(Avatar, { size: "small", icon: h(UserOutlined) }),
+    avatar: () => h(Avatar, { icon: h(UserOutlined) }),
   },
 };
 
 function addLongBubble() {
   const isAI = !!(items.value.length % 2);
-  items.value = [...items.value, genItem(isAI, 100)];
+  items.value = [
+    ...items.value,
+    genItem(isAI, { typing: { effect: "fade-in", step: [20, 50] } }, 500),
+  ];
 }
 
 function scrollTop() {
@@ -96,37 +107,26 @@ function scrollLast() {
 </script>
 
 <template>
-  <Space
-    direction="vertical"
-    style="display: flex; width: 100%; height: 720px"
-    :size="10"
-  >
-    <Space wrap>
-      <Button type="primary" @click="addLongBubble">
-        <RedoOutlined />
-        Add Long Bubble
-      </Button>
-      <Button @click="scrollTop">
-        <ArrowUpOutlined />
-        Scroll To Top
-      </Button>
-      <Button @click="scrollBottomSmooth">
-        <ArrowDownOutlined />
-        Scroll To Bottom smooth
-      </Button>
-      <Button @click="scrollBottomInstant">
-        <ArrowDownOutlined />
-        Scroll To Bottom instant
-      </Button>
+  <Flex vertical gap="small" style="height: 720px">
+    <Flex gap="small" wrap>
+      <Button type="primary" @click="addLongBubble"> Add Long Bubble </Button>
+      <Button @click="scrollTop"> Scroll To Top </Button>
+      <Button @click="scrollBottomSmooth"> Scroll To Bottom smooth </Button>
+      <Button @click="scrollBottomInstant"> Scroll To Bottom instant </Button>
       <Button @click="scrollRandom"> Scroll To Random </Button>
       <Button @click="scrollSecond"> Scroll To Second Bubble </Button>
       <Button @click="scrollLast"> Scroll To Last Bubble </Button>
-    </Space>
+    </Flex>
 
     <div style="display: flex; flex: 1; min-height: 0">
-      <Bubble.List ref="listRef" :role="role" :items="items" />
+      <Bubble.List
+        ref="listRef"
+        style="height: 100%"
+        :role="role"
+        :items="items"
+      />
     </div>
-  </Space>
+  </Flex>
 </template>
 
 <docs lang="zh-CN">

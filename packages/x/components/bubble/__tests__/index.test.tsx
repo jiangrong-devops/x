@@ -1,7 +1,9 @@
 import { mount } from "@vue/test-utils";
+import zhCN from "antdv-next/dist/locale/zh_CN";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { h, nextTick } from "vue";
 
+import XProvider from "../../x-provider";
 import Bubble from "../Bubble";
 
 describe("Bubble", () => {
@@ -76,6 +78,8 @@ describe("Bubble", () => {
 
     expect(wrapper.find(".antdx-bubble-loading").exists()).toBe(true);
     expect(wrapper.find(".antdx-bubble-dot").exists()).toBe(true);
+    expect(wrapper.find(".antdx-bubble-body").exists()).toBe(false);
+    expect(wrapper.find(".antdx-bubble-content").exists()).toBe(false);
 
     const customLoading = mount(Bubble, {
       props: {
@@ -87,6 +91,8 @@ describe("Bubble", () => {
     });
 
     expect(customLoading.find(".custom-loading").exists()).toBe(true);
+    expect(customLoading.find(".antdx-bubble-body").exists()).toBe(false);
+    expect(customLoading.find(".antdx-bubble-content").exists()).toBe(false);
   });
 
   it("applies variants and shapes", async () => {
@@ -186,5 +192,108 @@ describe("Bubble", () => {
         },
       });
     }).toThrow("[Bubble] Editable mode only supports string content.");
+  });
+
+  it("renders contentEditable for editable mode", () => {
+    const wrapper = mount(Bubble, {
+      props: {
+        content: "Editable text",
+        editable: { editing: true },
+      },
+    });
+
+    expect(
+      wrapper.find(".antdx-bubble-content-editing [contenteditable]").exists(),
+    ).toBe(true);
+    expect(wrapper.find("textarea").exists()).toBe(false);
+  });
+
+  it("triggers editable callbacks", async () => {
+    const onEditConfirm = vi.fn();
+    const onEditCancel = vi.fn();
+
+    const wrapper = mount(Bubble, {
+      props: {
+        content: "Editable text",
+        editable: { editing: true },
+        onEditConfirm,
+        onEditCancel,
+      },
+    });
+
+    const editable = wrapper.find(
+      ".antdx-bubble-content-editing [contenteditable]",
+    );
+    (editable.element as HTMLDivElement).textContent = "Changed text";
+
+    await wrapper
+      .find(".antdx-bubble-editing-opts .ant-btn-primary")
+      .trigger("click");
+    await wrapper
+      .find(".antdx-bubble-editing-opts .ant-btn-text")
+      .trigger("click");
+
+    expect(onEditConfirm).toHaveBeenCalledWith("Changed text");
+    expect(onEditCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("uses zh locale fallback text in editable mode", () => {
+    const wrapper = mount({
+      render() {
+        return (
+          <XProvider locale={zhCN}>
+            <Bubble content="Editable text" editable={{ editing: true }} />
+          </XProvider>
+        );
+      },
+    });
+
+    expect(
+      wrapper
+        .find(".antdx-bubble-editing-opts .ant-btn-primary")
+        .text()
+        .replace(/\s+/g, ""),
+    ).toBe("确认");
+    expect(
+      wrapper
+        .find(".antdx-bubble-editing-opts .ant-btn-text")
+        .text()
+        .replace(/\s+/g, ""),
+    ).toBe("取消");
+  });
+
+  it("supports custom Bubble locale texts", () => {
+    const wrapper = mount({
+      render() {
+        return (
+          <XProvider
+            locale={
+              {
+                ...zhCN,
+                Bubble: {
+                  editableOk: "保存",
+                  editableCancel: "放弃",
+                },
+              } as any
+            }
+          >
+            <Bubble content="Editable text" editable={{ editing: true }} />
+          </XProvider>
+        );
+      },
+    });
+
+    expect(
+      wrapper
+        .find(".antdx-bubble-editing-opts .ant-btn-primary")
+        .text()
+        .replace(/\s+/g, ""),
+    ).toBe("保存");
+    expect(
+      wrapper
+        .find(".antdx-bubble-editing-opts .ant-btn-text")
+        .text()
+        .replace(/\s+/g, ""),
+    ).toBe("放弃");
   });
 });

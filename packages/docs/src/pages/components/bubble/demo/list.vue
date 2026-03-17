@@ -4,12 +4,14 @@ import {
   CheckOutlined,
   CopyOutlined,
   EditOutlined,
+  FileOutlined,
   LinkOutlined,
   RedoOutlined,
   UserOutlined,
 } from "@antdv-next/icons";
 import { Actions, Bubble } from "@antdv-next/x";
-import { Avatar, Button, Space, Switch, Typography } from "antdv-next";
+import { Avatar, Button, Flex, Space, Switch, Typography } from "antdv-next";
+import MarkdownIt from "markdown-it";
 import { computed, h, ref } from "vue";
 
 let seed = 0;
@@ -19,9 +21,24 @@ function genItem(isAI: boolean, config: Partial<any> = {}): any {
   return {
     key: nextKey(),
     role: isAI ? "ai" : "user",
-    content: `${seed}: ${isAI ? "Mock AI content ".repeat(8) : "Mock user content."}`,
+    content: `${seed} : ${isAI ? "Mock AI content".repeat(50) : "Mock user content."}`,
     ...config,
   };
+}
+
+const markdownText = `
+> Render as markdown content to show rich text!
+
+Link: [Ant Design X](https://x.ant.design)
+`.trim();
+
+const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
+
+function renderMarkdown(value: string) {
+  return h("div", {
+    class: "markdown-content",
+    innerHTML: md.render(value),
+  });
 }
 
 const listRef = ref<any>(null);
@@ -52,14 +69,14 @@ const role = computed<any>(() => ({
   ai: {
     typing: true,
     header: "AI",
-    avatar: () => h(Avatar, { size: "small", icon: h(AntDesignOutlined) }),
+    avatar: () => h(Avatar, { icon: h(AntDesignOutlined) }),
     footer: () => h(Actions, { items: actionItems }),
   },
   user: (data: any) => ({
     placement: "end",
     typing: false,
     header: `User-${data.key}`,
-    avatar: () => h(Avatar, { size: "small", icon: h(UserOutlined) }),
+    avatar: () => h(Avatar, { icon: h(UserOutlined) }),
     footer: () =>
       h(Actions, {
         items: [
@@ -89,20 +106,26 @@ const role = computed<any>(() => ({
   }),
   reference: {
     variant: "borderless",
+    styles: { root: { margin: 0, marginBottom: "-12px" } },
     avatar: () => "",
     contentRender: (content: { name: string; size?: string }) =>
-      h(
-        Typography.Text,
-        { type: "secondary" },
-        {
-          default: () => [
-            h(LinkOutlined),
-            "Reference:",
-            content.name,
-            content.size ? ` (${content.size})` : "",
-          ],
-        },
-      ),
+      // FIXME: Replace this mocked reference card with `FileCard` after FileCard lands in `@antdv-next/x`.
+      h("div", { class: "reference-content" }, [
+        h(LinkOutlined, { class: "reference-link" }),
+        h("div", { class: "reference-file" }, [
+          h(FileOutlined, { class: "reference-file-icon" }),
+          h("div", { class: "reference-file-meta" }, [
+            h(Typography.Text, null, { default: () => content.name }),
+            content.size
+              ? h(
+                  Typography.Text,
+                  { type: "secondary", class: "reference-file-size" },
+                  { default: () => content.size },
+                )
+              : null,
+          ]),
+        ]),
+      ]),
   },
 }));
 
@@ -132,6 +155,20 @@ function addDivider() {
   maybeLocate("bottom");
 }
 
+function addMarkdown() {
+  append({
+    key: nextKey(),
+    role: "ai",
+    typing: { effect: "fade-in", step: 6 },
+    content: markdownText,
+    contentRender: (content: string) =>
+      h(Typography, null, {
+        default: () => [renderMarkdown(content)],
+      }),
+  });
+  maybeLocate("bottom");
+}
+
 function addSystem() {
   append({
     key: nextKey(),
@@ -153,7 +190,7 @@ function addWithReference() {
       key: nextKey(),
       role: "reference",
       placement: "end",
-      content: { name: "Ant-Design-X.pdf", size: "2.4MB" },
+      content: { name: "Ant-Design-X.pdf" },
     },
     genItem(false),
   ];
@@ -162,28 +199,29 @@ function addWithReference() {
 </script>
 
 <template>
-  <Space direction="vertical" style="display: flex; width: 100%" :size="16">
-    <Space direction="vertical">
+  <Flex vertical :gap="20" style="height: 720px">
+    <Flex vertical gap="small">
       <Space align="center">
         <Switch v-model:checked="autoScroll" />
-        <span>enabled autoScroll</span>
+        <span>启用 autoScroll / enabled autoScroll</span>
       </Space>
       <Space align="center">
         <Switch v-model:checked="enableLocate" />
-        <span>locate to new bubble</span>
+        <span>定位到新气泡 / locate to new bubble</span>
       </Space>
-    </Space>
+    </Flex>
 
-    <Space wrap>
+    <Flex gap="small" wrap>
       <Button type="primary" @click="addBubble">
         <RedoOutlined />
         Add Bubble
       </Button>
+      <Button @click="addMarkdown"> Add Markdown </Button>
       <Button @click="addDivider"> Add Divider </Button>
       <Button @click="addSystem"> Add System </Button>
       <Button @click="addToTop"> Add To Top </Button>
       <Button @click="addWithReference"> Add With Ref </Button>
-    </Space>
+    </Flex>
 
     <div style="display: flex; flex: 1; min-height: 0">
       <Bubble.List
@@ -194,8 +232,66 @@ function addWithReference() {
         :auto-scroll="autoScroll"
       />
     </div>
-  </Space>
+  </Flex>
 </template>
+
+<style scoped>
+.markdown-content {
+  white-space: normal;
+  line-height: 1.7;
+}
+
+.reference-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reference-link {
+  color: #8c8c8c;
+}
+
+.reference-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 240px;
+  padding: 6px 10px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.reference-file-icon {
+  color: #1677ff;
+  font-size: 16px;
+}
+
+.reference-file-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.reference-file-meta :deep(.ant-typography) {
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.reference-file-meta :deep(.ant-typography:last-child) {
+  margin-bottom: 0;
+}
+
+.reference-file-meta :deep(.ant-typography:first-child) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reference-file-size {
+  font-size: 12px;
+}
+</style>
 
 <docs lang="zh-CN">
 预设样式的气泡列表，支持自动滚动，支持使用 `role` 定义不同类别的气泡并设置属性。**Bubble.List** 是一个受控组件，内部对 **Bubble** 做了 **memo** 处理，因此推荐使用 **setState** 的回调形式来修改 `items` 属性，尽可能保证非必要渲染数据项的配置稳定，以此来保证 **Bubble.List** 的高性能渲染。

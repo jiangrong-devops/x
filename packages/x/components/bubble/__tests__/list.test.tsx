@@ -233,6 +233,40 @@ describe("Bubble.List", () => {
     expect(scrollToMock).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
   });
 
+  it("supports scrollTo mapping when autoScroll is enabled", () => {
+    const wrapper = mount(BubbleList, {
+      props: {
+        items: mockItems,
+        autoScroll: true,
+      },
+    });
+
+    const scrollBox = wrapper.find(".antdx-bubble-list-scroll-box")
+      .element as HTMLDivElement;
+    Object.defineProperty(scrollBox, "scrollHeight", {
+      configurable: true,
+      value: 1000,
+    });
+    Object.defineProperty(scrollBox, "clientHeight", {
+      configurable: true,
+      value: 300,
+    });
+
+    scrollToMock.mockClear();
+
+    (wrapper.vm as any).scrollTo({ top: 100, behavior: "auto" });
+    expect(scrollToMock).toHaveBeenCalledWith({ top: -600, behavior: "auto" });
+
+    (wrapper.vm as any).scrollTo({ top: "bottom", behavior: "smooth" });
+    expect(scrollToMock).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
+
+    (wrapper.vm as any).scrollTo({ top: "top", behavior: "smooth" });
+    expect(scrollToMock).toHaveBeenCalledWith({
+      top: -1000,
+      behavior: "smooth",
+    });
+  });
+
   it("supports scrollTo by key", async () => {
     const wrapper = mount(BubbleList, {
       props: {
@@ -254,6 +288,70 @@ describe("Bubble.List", () => {
       behavior: "smooth",
       block: "center",
     });
+  });
+
+  it("supports scrollTo by key when autoScroll is enabled", async () => {
+    const wrapper = mount(BubbleList, {
+      props: {
+        items: mockItems,
+        autoScroll: true,
+      },
+    });
+
+    await nextTick();
+    scrollIntoViewMock.mockClear();
+
+    (wrapper.vm as any).scrollTo({
+      key: "item1",
+      behavior: "smooth",
+      block: "end",
+    });
+
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      behavior: "smooth",
+      block: "end",
+    });
+  });
+
+  it("forwards instant behavior in scrollTo", () => {
+    const wrapper = mount(BubbleList, {
+      props: {
+        items: mockItems,
+        autoScroll: true,
+      },
+    });
+
+    const scrollBox = wrapper.find(".antdx-bubble-list-scroll-box")
+      .element as HTMLDivElement;
+    Object.defineProperty(scrollBox, "scrollHeight", {
+      configurable: true,
+      value: 1000,
+    });
+
+    scrollToMock.mockClear();
+    (wrapper.vm as any).scrollTo({ top: "bottom", behavior: "instant" });
+
+    expect(scrollToMock).toHaveBeenCalledWith({
+      top: 0,
+      behavior: "instant",
+    });
+  });
+
+  it("handles non-existent key and empty scroll options", () => {
+    const wrapper = mount(BubbleList, {
+      props: {
+        items: mockItems,
+      },
+    });
+
+    scrollToMock.mockClear();
+    scrollIntoViewMock.mockClear();
+
+    (wrapper.vm as any).scrollTo({ key: "not-exists", behavior: "smooth" });
+    (wrapper.vm as any).scrollTo({ behavior: "smooth" });
+
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+    expect(scrollToMock).not.toHaveBeenCalled();
   });
 
   it("handles empty items", () => {

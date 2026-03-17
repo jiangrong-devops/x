@@ -1,9 +1,49 @@
 import type { PropType } from "vue";
 
-import { Button, Space } from "antdv-next";
-import { defineComponent, ref, watch } from "vue";
+import { Button, Flex } from "antdv-next";
+import { defineComponent, nextTick, onMounted, ref, watch } from "vue";
 
 import type { BubbleProps, EditableBubbleOption } from "./interface";
+
+import { useLocale } from "../locale";
+import enUS from "../locale/en_US";
+
+function isBlock(el: HTMLElement): boolean {
+  const display = getComputedStyle(el).display;
+  return (
+    display === "block" ||
+    display === "flex" ||
+    display === "list-item" ||
+    display === "table"
+  );
+}
+
+function getPlainTextWithFormat(dom: HTMLElement) {
+  const lines: string[] = [""];
+  const walker = document.createTreeWalker(
+    dom,
+    NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+  );
+
+  while (walker.nextNode()) {
+    const node = walker.currentNode as HTMLElement;
+
+    if (node.nodeType === Node.TEXT_NODE) {
+      lines[lines.length - 1] += node.textContent ?? "";
+      continue;
+    }
+
+    if (node.tagName === "BR" && node.parentNode?.childElementCount === 1) {
+      continue;
+    }
+
+    if (node.tagName === "BR" || isBlock(node)) {
+      lines.push("");
+    }
+  }
+
+  return lines.join("\n");
+}
 
 export const EditableContent = defineComponent({
   name: "XBubbleEditableContent",
@@ -34,45 +74,63 @@ export const EditableContent = defineComponent({
     },
   },
   setup(props) {
-    const draft = ref(props.content);
+    const editableRef = ref<HTMLDivElement>();
+    const [contextLocale] = useLocale("Bubble", enUS.Bubble);
+
+    const placeCaretAtEnd = () => {
+      const editable = editableRef.value;
+      if (!editable || typeof window === "undefined") return;
+
+      const selection = window.getSelection();
+      if (!selection) return;
+
+      const range = document.createRange();
+      range.selectNodeContents(editable);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    };
 
     watch(
       () => props.content,
       value => {
-        draft.value = value;
+        if (!editableRef.value) return;
+        editableRef.value.textContent = value;
       },
     );
 
-    const onInput = (event: Event) => {
-      draft.value = (event.target as HTMLTextAreaElement).value;
-    };
+    onMounted(() => {
+      if (!editableRef.value) return;
+      editableRef.value.textContent = props.content;
+      void nextTick(() => {
+        editableRef.value?.focus();
+        placeCaretAtEnd();
+      });
+    });
 
     const confirm = () => {
-      props.onEditConfirm?.(draft.value);
+      const editable = editableRef.value;
+      props.onEditConfirm?.(
+        editable ? getPlainTextWithFormat(editable) : props.content,
+      );
     };
 
     const cancel = () => {
-      draft.value = props.content;
       props.onEditCancel?.();
     };
 
     return () => (
-      <div class={`${props.prefixCls}-editing`}>
-        <textarea
-          class={`${props.prefixCls}-editing-input`}
-          value={draft.value}
-          onInput={onInput}
-          rows={4}
-        />
-        <Space class={`${props.prefixCls}-editing-opts`} size={8}>
+      <>
+        <div ref={editableRef} contenteditable />
+        <Flex class={`${props.prefixCls}-editing-opts`} gap={8}>
           <Button type="primary" shape="round" size="small" onClick={confirm}>
-            {props.okText ?? "Confirm"}
+            {props.okText ?? contextLocale.value.editableOk}
           </Button>
-          <Button shape="round" size="small" onClick={cancel}>
-            {props.cancelText ?? "Cancel"}
+          <Button type="text" shape="round" size="small" onClick={cancel}>
+            {props.cancelText ?? contextLocale.value.editableCancel}
           </Button>
-        </Space>
-      </div>
+        </Flex>
+      </>
     );
   },
 });
