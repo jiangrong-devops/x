@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { MenuEmits } from "antdv-next";
 
+import { GithubOutlined } from "@antdv-next/icons";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -98,6 +99,20 @@ function changeLocale(value: 1 | 2) {
           <template #label1> 中 </template>
           <template #label2> En </template>
         </SwitchBtn>
+
+        <a
+          href="https://github.com/antdv-next/x"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <a-tooltip title="GitHub" destroy-on-hidden>
+            <a-button type="text">
+              <template #icon>
+                <GithubOutlined />
+              </template>
+            </a-button>
+          </a-tooltip>
+        </a>
       </div>
     </div>
   </header>
