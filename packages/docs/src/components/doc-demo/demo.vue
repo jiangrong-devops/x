@@ -36,7 +36,7 @@ const codeType = shallowRef<"ts" | "js">("ts");
 const demo = computed(() => demos[props.src]);
 
 const preferredLocale = computed(() => {
-  return route.path.includes("/en") ? "en-US" : "zh-CN";
+  return route.meta?.locale === "en-US" ? "en-US" : "zh-CN";
 });
 
 const description = computed(() => {
