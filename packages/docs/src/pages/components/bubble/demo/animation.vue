@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { XProviderProps } from "@antdv-next/x";
+
 import { CopyOutlined, RedoOutlined, UserOutlined } from "@antdv-next/icons";
-import { Actions, Bubble } from "@antdv-next/x";
+import { Actions, Bubble, XProvider } from "@antdv-next/x";
 import { Avatar, Button, Divider, Space, Switch } from "antdv-next";
 import { computed, h, ref } from "vue";
 
@@ -37,10 +39,23 @@ function footer() {
 }
 
 const typingConfig = computed(() => ({
-  effect: effect.value === "fade-in" ? "fade-in" : "typing",
+  effect: (effect.value === "fade-in" ? "fade-in" : "typing") as
+    | "fade-in"
+    | "typing",
   interval: 50,
   step: 3,
   keepPrefix: keepPrefix.value,
+}));
+
+const theme = computed<XProviderProps["theme"]>(() => ({
+  components: {
+    Bubble:
+      effect.value === "custom-typing"
+        ? {
+            typingContent: '"💖"',
+          }
+        : {},
+  },
 }));
 
 function loadA() {
@@ -84,25 +99,20 @@ function loadB() {
 
     <Divider style="margin: 4px 0" />
 
-    <Bubble
-      :loading="loading"
-      :content="content"
-      :typing="typingConfig"
-      :class="{ 'bubble-custom-typing': effect === 'custom-typing' }"
-      :header="h('h5', null, 'ADX')"
-      :footer="footer"
-      :avatar="h(Avatar, { icon: h(UserOutlined) })"
-      :on-typing="() => console.log('typing')"
-      :on-typing-complete="() => console.log('typing complete')"
-    />
+    <XProvider :theme="theme">
+      <Bubble
+        :loading="loading"
+        :content="content"
+        :typing="typingConfig"
+        :header="h('h5', null, 'ADX')"
+        :footer="footer"
+        :avatar="h(Avatar, { icon: h(UserOutlined) })"
+        :on-typing="() => console.log('typing')"
+        :on-typing-complete="() => console.log('typing complete')"
+      />
+    </XProvider>
   </Space>
 </template>
-
-<style scoped>
-:deep(.bubble-custom-typing .antdx-bubble-typing:last-child::after) {
-  content: "💖";
-}
-</style>
 
 <docs lang="zh-CN">
 动画效果，仅支持 `content` 是字符串或 `contentRender` 渲染字符串的情况下生效。非字符串场景需要自定义渲染动画。生效时，如果 `content` 不变，而其他配置发生变化，动画不会重新执行。

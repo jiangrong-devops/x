@@ -7,6 +7,7 @@ import type { ActionsProps } from "../actions";
 import type { BubbleProps } from "../bubble";
 import type { ConversationsProps } from "../conversations";
 import type { FileCardProps } from "../file-card";
+import type { DesignTokenProviderProps } from "../theme/context";
 
 export interface BaseComponentConfig {
   style?: StyleValue;
@@ -39,7 +40,10 @@ export interface XComponentsConfig {
 
 export interface XProviderProps
   extends XComponentsConfig, Omit<ConfigProviderProps, "theme"> {
-  theme?: ConfigProviderProps["theme"];
+  theme?: ConfigProviderProps["theme"] & {
+    components?: DesignTokenProviderProps["components"];
+    override?: DesignTokenProviderProps["override"];
+  };
 }
 
 export const XProviderContextKey: symbol = Symbol(

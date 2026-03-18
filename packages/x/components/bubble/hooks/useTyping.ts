@@ -87,7 +87,20 @@ export function useTyping(params: {
     }
   };
 
+  const reset = (content: string) => {
+    stop();
+    taskId += 1;
+    renderedText = content;
+    animating.value = false;
+    renderedData.value = content
+      ? [{ id: toUid(), text: content, done: true }]
+      : [];
+  };
+
   const finish = (content: string) => {
+    stop();
+    taskId += 1;
+    renderedText = content;
     renderedData.value = content
       ? [{ id: toUid(), text: content, done: true }]
       : [];
@@ -96,15 +109,10 @@ export function useTyping(params: {
   };
 
   const runTyping = (reason: "content" | "streaming") => {
-    const cfg = animationCfg.value;
     const content = params.content();
+    const cfg = animationCfg.value;
     if (!cfg || !content) {
-      stop();
-      animating.value = false;
-      renderedText = content || "";
-      renderedData.value = renderedText
-        ? [{ id: toUid(), text: renderedText, done: true }]
-        : [];
+      reset(content || "");
       return;
     }
 
@@ -128,15 +136,21 @@ export function useTyping(params: {
     const stepOnce = () => {
       if (currentTask !== taskId) return;
 
+      const nextCfg = animationCfg.value;
       const nextContent = params.content();
+      if (!nextCfg || !nextContent) {
+        reset(nextContent || "");
+        return;
+      }
+
       const chunk = nextContent.slice(
         renderedText.length,
-        renderedText.length + getStep(cfg.step),
+        renderedText.length + getStep(nextCfg.step),
       );
 
       if (!chunk) {
         if (params.streaming()) {
-          timer = setTimeout(stepOnce, cfg.interval);
+          timer = setTimeout(stepOnce, nextCfg.interval);
           return;
         }
         finish(nextContent);
@@ -147,12 +161,12 @@ export function useTyping(params: {
       const currentEntry: OutputData = {
         id: toUid(),
         text: chunk,
-        done: cfg.effect !== "fade-in",
+        done: false,
       };
       renderedData.value = [...renderedData.value, currentEntry];
       params.onTyping?.(renderedText, nextContent);
 
-      timer = setTimeout(stepOnce, cfg.interval);
+      timer = setTimeout(stepOnce, nextCfg.interval);
     };
 
     stepOnce();
@@ -160,7 +174,16 @@ export function useTyping(params: {
 
   watch(
     () => params.content(),
-    () => runTyping("content"),
+    content => {
+      const cfg = animationCfg.value;
+      if (!cfg || !content) {
+        reset(content || "");
+        return;
+      }
+      if (content === renderedText) return;
+      if (animating.value && content.startsWith(renderedText)) return;
+      runTyping("content");
+    },
     { immediate: true },
   );
 

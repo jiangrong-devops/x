@@ -241,6 +241,129 @@ describe("Bubble", () => {
     }
   });
 
+  it("does not force immediate rerun when typing config changes during animation", async () => {
+    vi.useFakeTimers();
+    try {
+      const onTyping = vi.fn();
+      const wrapper = mount(Bubble, {
+        props: {
+          content: "Hello world, this is a long sentence for animation test.",
+          typing: {
+            effect: "typing",
+            interval: 200,
+            step: 1,
+          },
+          onTyping,
+        },
+      });
+
+      await nextTick();
+      vi.advanceTimersByTime(200);
+      await nextTick();
+      const callsBeforeSwitch = onTyping.mock.calls.length;
+
+      await wrapper.setProps({
+        typing: {
+          effect: "fade-in",
+          interval: 200,
+          step: 1,
+        },
+      });
+      await nextTick();
+
+      expect(onTyping.mock.calls.length).toBe(callsBeforeSwitch);
+      expect(wrapper.find(".antdx-bubble-fade-in").exists()).toBe(true);
+
+      vi.advanceTimersByTime(200);
+      await nextTick();
+      expect(onTyping.mock.calls.length).toBe(callsBeforeSwitch + 1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("does not rerun for effect-only switch, then uses latest effect on next content change", async () => {
+    vi.useFakeTimers();
+    try {
+      const onTyping = vi.fn();
+      const wrapper = mount(Bubble, {
+        props: {
+          content: "data-1: This is a long typing message for scenario one.",
+          typing: {
+            effect: "typing",
+            interval: 50,
+            step: 1,
+          },
+          onTyping,
+        },
+      });
+
+      await nextTick();
+      vi.advanceTimersByTime(3000);
+      await nextTick();
+      const callsAfterFirstContentDone = onTyping.mock.calls.length;
+
+      await wrapper.setProps({
+        typing: {
+          effect: "fade-in",
+          interval: 50,
+          step: 1,
+        },
+      });
+      await nextTick();
+      vi.advanceTimersByTime(500);
+      await nextTick();
+
+      expect(onTyping.mock.calls.length).toBe(callsAfterFirstContentDone);
+      expect(wrapper.text()).toContain("data-1:");
+
+      await wrapper.setProps({
+        content:
+          "data-2: This is another long typing message for scenario two.",
+      });
+      await nextTick();
+
+      expect(wrapper.find(".antdx-bubble-fade-in").exists()).toBe(true);
+      expect(wrapper.find(".fade-in").exists()).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("uses new effect when content and typing change together", async () => {
+    vi.useFakeTimers();
+    try {
+      const wrapper = mount(Bubble, {
+        props: {
+          content: "data-1: hello world",
+          typing: {
+            effect: "typing",
+            interval: 200,
+            step: 2,
+          },
+        },
+      });
+
+      await nextTick();
+      vi.advanceTimersByTime(2000);
+      await nextTick();
+
+      await wrapper.setProps({
+        content: "data-2: hello world",
+        typing: {
+          effect: "fade-in",
+          interval: 200,
+          step: 2,
+        },
+      });
+      await nextTick();
+
+      expect(wrapper.find(".fade-in").exists()).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("adds info status class", () => {
     const wrapper = mount(Bubble, {
       props: {
