@@ -46,7 +46,7 @@ export const XCodeHighlighter = defineComponent({
   props: {
     prefixCls: {
       type: String,
-      default: "antdx-code-highlighter",
+      default: "antd-code-highlighter",
     },
     content: {
       type: String,
