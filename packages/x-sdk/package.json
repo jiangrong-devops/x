@@ -30,12 +30,12 @@
       "import": "./dist/x-conversations/index.js"
     },
     "./x-request": {
-      "types": "./dist/x-request.d.ts",
-      "import": "./dist/x-request.js"
+      "types": "./dist/x-request/index.d.ts",
+      "import": "./dist/x-request/index.js"
     },
     "./x-stream": {
-      "types": "./dist/x-stream.d.ts",
-      "import": "./dist/x-stream.js"
+      "types": "./dist/x-stream/index.d.ts",
+      "import": "./dist/x-stream/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -44,10 +44,7 @@
   },
   "scripts": {
     "type-check": "tsc --project tsconfig.json --noEmit",
-    "build": "tsc --project tsconfig.build.json"
-  },
-  "dependencies": {
-    "@ant-design/x-sdk": "^2.4.0"
+    "build": "vp build --config vite.build.config.ts"
   },
   "peerDependencies": {
     "vue": ">=3.5.0"

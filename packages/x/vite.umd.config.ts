@@ -15,6 +15,8 @@ export default defineConfig({
     vueJsx(),
   ],
   build: {
+    minify: false,
+    sourcemap: false,
     rolldownOptions: {
       external: ["vue", "antdv-next", "@antdv-next/icons", /^dayjs/],
       output: {
