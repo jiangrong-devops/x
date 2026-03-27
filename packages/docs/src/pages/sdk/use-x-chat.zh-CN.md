@@ -18,6 +18,14 @@ description: 单对话的数据管理。
 
 <!-- prettier-ignore -->
 <demo src="./demo/openai.vue">OpenAI 模型接入</demo>
+<demo src="./demo/deepSeek.vue">DeepSeek 思考模型接入</demo>
+<demo src="./demo/defaultMessages.vue">历史消息设置</demo>
+<demo src="./demo/async-defaultMessages.vue">请求远程历史消息</demo>
+<demo src="./demo/developer.vue">系统提示词设置</demo>
+<demo src="./demo/openai-callback.vue">模型的请求回调</demo>
+<demo src="./demo/custom-request-fetch.vue">自定义 XRequest.fetch</demo>
+<demo src="./demo/request-openai-node.vue">自定义 request</demo>
+<demo src="./demo/session-key.vue">SessionId - ConversationKey</demo>
 
 ## API
 

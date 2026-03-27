@@ -45,6 +45,10 @@ export class ConversationStore {
   }
 
   setActiveConversationKey = (key: string) => {
+    if (this.activeConversationKey === key) {
+      return true;
+    }
+
     this.activeConversationKey = key;
     this.emitListeners();
     return true;

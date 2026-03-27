@@ -1,13 +1,15 @@
-<script setup lang="ts">
-import type { MenuEmits } from "antdv-next";
-import type { MenuItemType } from "antdv-next";
+<script lang="ts" setup>
+import type { MenuEmits, MenuItemType } from "antdv-next";
 
+import { EditOutlined } from "@antdv-next/icons";
 import { createStyles } from "antdv-style";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { componentOverviewItems } from "@/components/component-overview/data";
+import Contributors from "@/components/Contributors.vue";
 import { useDocPage } from "@/composables/use-doc-page";
+import { useLocale } from "@/composables/use-locale.ts";
 import { docsRoutes, LOCALE_EN_US, LOCALE_ZH_CN } from "@/router/docs";
 import { useAppStore } from "@/stores/app";
 
@@ -21,7 +23,7 @@ const useStyles = createStyles(({ token }) => ({
     ".antd-doc-layout-main": {
       padding: "24px 48px 40px",
       display: "grid",
-      gridTemplateColumns: "240px minmax(0, 1fr) 200px",
+      gridTemplateColumns: "280px minmax(0, 1fr) 200px",
       gap: 40,
     },
     ".antd-doc-layout-sider": {
@@ -112,6 +114,7 @@ const router = useRouter();
 const appStore = useAppStore();
 const { pageData, anchorItems } = useDocPage();
 const styleState = useStyles();
+const { t } = useLocale();
 
 function normalizePath(path: string) {
   if (path === "/") return "/";
@@ -136,6 +139,7 @@ type LocaleKey = typeof LOCALE_ZH_CN | typeof LOCALE_EN_US;
 
 interface ParsedPageMeta {
   title?: string;
+  subtitle?: string;
   order?: number;
   groupTitle?: string;
   groupOrder?: number;
@@ -171,6 +175,9 @@ function parseFrontmatterMeta(markdown: string): ParsedPageMeta {
   if (!frontmatter) return {};
 
   const title = toOptionalText(frontmatter.match(/^title:\s*(.+)$/m)?.[1]);
+  const subtitle = toOptionalText(
+    frontmatter.match(/^subtitle:\s*(.+)$/m)?.[1],
+  );
   const order = toOptionalNumber(frontmatter.match(/^order:\s*(.+)$/m)?.[1]);
   const hidden = toOptionalBoolean(frontmatter.match(/^hidden:\s*(.+)$/m)?.[1]);
 
@@ -184,6 +191,7 @@ function parseFrontmatterMeta(markdown: string): ParsedPageMeta {
 
   return {
     title,
+    subtitle,
     order,
     groupTitle,
     groupOrder,
@@ -300,6 +308,7 @@ function createGroupedSiderItems(
 
 interface ParsedPageMeta {
   title?: string;
+  subtitle?: string;
   order?: number;
   groupTitle?: string;
   groupOrder?: number;
@@ -382,10 +391,14 @@ const siderItems = computed<MenuItemType[]>(() => {
         pageMeta?.groupOrder ??
         fallbackMeta.groupOrder ??
         Number.MAX_SAFE_INTEGER,
-      label:
+      label: [
         pageMeta?.title ||
-        fallbackMeta.title ||
-        formatSegmentLabel(lastSegment),
+          fallbackMeta.title ||
+          formatSegmentLabel(lastSegment),
+        pageMeta?.subtitle,
+      ]
+        .filter(Boolean)
+        .join("  "),
     };
   });
 
@@ -398,19 +411,28 @@ const hasAnchors = computed(() => anchorItems.value.length > 0);
 const handleSiderMenuClick: MenuEmits["click"] = info => {
   router.push(String(info.key));
 };
+
+const editGithubUrl = computed(() => {
+  const pageRoute = docsRoutes.filter(r => r.name === route.name)?.[0]!;
+  const path = ((pageRoute.meta?.source ?? "") as string).replace(
+    "..",
+    "packages/docs/src",
+  );
+  return `https://github.com/antdv-next/x/edit/main/${path}`;
+});
 </script>
 
 <template>
-  <div class="antd-doc-layout" :class="styleState.styles.root">
+  <div :class="styleState.styles.root" class="antd-doc-layout">
     <DocHeader />
 
     <main class="antd-doc-layout-main">
       <aside v-if="siderItems.length" class="antd-doc-layout-sider">
         <a-menu
-          class="ant-doc-main-sider-menu"
-          mode="inline"
           :items="siderItems"
           :selected-keys="selectedSiderKeys"
+          class="ant-doc-main-sider-menu"
+          mode="inline"
           @click="handleSiderMenuClick"
         />
       </aside>
@@ -422,18 +444,33 @@ const handleSiderMenuClick: MenuEmits["click"] = info => {
           "
           class="antd-doc-layout-content-header"
         >
-          <h1
-            v-if="pageData?.frontmatter?.title"
-            class="antd-doc-layout-content-title"
-          >
-            {{ pageData?.frontmatter?.title }}
-            <small
-              v-if="pageData?.frontmatter?.subtitle"
-              class="antd-doc-layout-content-subtitle"
+          <div class="flex gap-3 items-center">
+            <h1
+              v-if="pageData?.frontmatter?.title"
+              class="antd-doc-layout-content-title"
             >
-              {{ pageData?.frontmatter?.subtitle }}
-            </small>
-          </h1>
+              {{ pageData?.frontmatter?.title }}
+              <small
+                v-if="pageData?.frontmatter?.subtitle"
+                class="antd-doc-layout-content-subtitle"
+              >
+                {{ pageData?.frontmatter?.subtitle }}
+              </small>
+            </h1>
+            <a-tooltip :title="t('edit-page')" destroy-on-hidden>
+              <a
+                :href="editGithubUrl"
+                class="cursor-pointer relative decoration-none align-mid ml-xs"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <EditOutlined
+                  class="text-16px block"
+                  style="color: var(--ant-color-text-tertiary)"
+                />
+              </a>
+            </a-tooltip>
+          </div>
           <p
             v-if="pageData?.frontmatter?.description"
             class="antd-doc-layout-content-description"
@@ -442,6 +479,10 @@ const handleSiderMenuClick: MenuEmits["click"] = info => {
           </p>
         </header>
         <router-view />
+        <Suspense>
+          <Contributors />
+          <template #fallback> loading </template>
+        </Suspense>
       </article>
 
       <aside v-if="hasAnchors" class="antd-doc-layout-anchor">

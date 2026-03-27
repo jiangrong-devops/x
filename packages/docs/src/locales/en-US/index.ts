@@ -111,4 +111,8 @@ export default {
       conversationsTag: "Common",
     },
   },
+  "edit-page": "Edit this page on GitHub!",
+  contributors: {
+    title: "contributors",
+  },
 };

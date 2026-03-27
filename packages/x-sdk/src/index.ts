@@ -1,20 +1,13 @@
 export * from "./chat-providers";
-export {
-  AbstractXRequestClass,
-  XRequest,
-  setXRequestGlobalOptions,
-} from "./x-request";
-export { default as useXChat } from "./x-chat";
-export { default as useXConversations } from "./x-conversations";
-export { XStream } from "./x-stream";
-
-export type { DefaultMessageInfo, MessageInfo } from "./x-chat";
-export type { ConversationData } from "./x-conversations";
 export type {
   XModelMessage,
   XModelParams,
   XModelResponse,
 } from "./chat-providers/types/model";
+export type { DefaultMessageInfo, MessageInfo } from "./x-chat";
+export { default as useXChat } from "./x-chat";
+export type { ConversationData } from "./x-conversations";
+export { default as useXConversations } from "./x-conversations";
 export type {
   XRequestCallbacks,
   XRequestClass,
@@ -22,12 +15,18 @@ export type {
   XRequestGlobalOptions,
   XRequestOptions,
 } from "./x-request";
+export {
+  AbstractXRequestClass,
+  default as XRequest,
+  setXRequestGlobalOptions,
+} from "./x-request";
 export type {
   SSEFields,
   SSEOutput,
   XReadableStream,
   XStreamOptions,
 } from "./x-stream";
+export { default as XStream } from "./x-stream";
 
 export interface XSdkClientOptions {
   baseURL: string;

@@ -1,4 +1,4 @@
-import { onScopeDispose, ref } from "vue";
+import { onScopeDispose, ref, shallowRef } from "vue";
 
 import type { AnyObject } from "../_util/types";
 
@@ -19,7 +19,7 @@ export default function useXConversations(config: XConversationConfig) {
     config?.defaultActiveConversationKey || "",
   );
 
-  const conversations = ref<ConversationData[]>(store.getSnapshot());
+  const conversations = shallowRef<ConversationData[]>(store.getSnapshot());
   const activeConversationKey = ref(store.getActiveConversationKey());
 
   const syncStore = () => {

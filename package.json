@@ -8,7 +8,7 @@
     "docs:build": "vp build packages/docs",
     "test:unit": "vp test",
     "type-check": "vp run --filter \"./packages/*\" --filter \"!./packages/docs\" type-check",
-    "build": "vp run --filter \"./packages/*\" --filter \"!./packages/docs\" build",
+    "build": "vp run --filter \"./packages/*\" --filter \"!./packages/docs\" --filter \"!./packages/x-skill\" build",
     "build:x": "vp run --filter @antdv-next/x build",
     "pack:packages": "vp pm pack -r --filter \"./packages/*\" --filter \"!./packages/docs\"",
     "publish:packages": "vp pm publish -r --filter \"./packages/*\" --filter \"!./packages/docs\" --access public --no-git-checks",

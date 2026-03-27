@@ -14,6 +14,28 @@ export interface ComponentOverviewItem {
 
 export const componentOverviewItems: ComponentOverviewItem[] = [
   {
+    slug: "prompts",
+    path: "/components/prompts",
+    title: "Prompts",
+    subtitle: {
+      "zh-CN": "提示集",
+    },
+    description: {
+      "zh-CN": "用于显示一组与当前上下文相关的预定义的问题或建议。",
+      "en-US":
+        "Display a predefined set of questions or suggestions relevant to the current context.",
+    },
+    group: {
+      "zh-CN": "唤醒",
+      "en-US": "Wake",
+    },
+    groupOrder: 1,
+    cover:
+      "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*UfhXRamlAf0AAAAAAAAAAAAADgCCAQ/original",
+    coverDark:
+      "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*3CN5RLKP0X4AAAAAAAAAAAAADgCCAQ/original",
+  },
+  {
     slug: "bubble",
     path: "/components/bubble",
     title: "Bubble",
@@ -54,6 +76,27 @@ export const componentOverviewItems: ComponentOverviewItem[] = [
       "https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/_KKkTrXq7wcAAAAAKuAAAAgADtFMAQFr/original",
     coverDark:
       "https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/c62-S4SH1tUAAAAANuAAAAgADtFMAQFr/original",
+  },
+  {
+    slug: "mermaid",
+    path: "/components/mermaid",
+    title: "Mermaid",
+    subtitle: {
+      "zh-CN": "图表工具",
+    },
+    description: {
+      "zh-CN": "用于渲染 Mermaid 图表，支持图形/代码视图切换。",
+      "en-US": "Render Mermaid diagrams with image/code mode switching.",
+    },
+    group: {
+      "zh-CN": "反馈",
+      "en-US": "Feedback",
+    },
+    groupOrder: 4,
+    cover:
+      "https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/yTn9SILS900AAAAAPaAAAAgADtFMAQFr/original",
+    coverDark:
+      "https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/uYcMRYLDTCMAAAAAQBAAAAgADtFMAQFr/original",
   },
   {
     slug: "conversations",
@@ -182,6 +225,28 @@ export const componentOverviewItems: ComponentOverviewItem[] = [
       "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*OwTOS6wqFIsAAAAAAAAAAAAADgCCAQ/original",
     coverDark:
       "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*cOfrS4fVkOMAAAAAAAAAAAAADgCCAQ/original",
+  },
+  {
+    slug: "suggestion",
+    path: "/components/suggestion",
+    title: "Suggestion",
+    subtitle: {
+      "zh-CN": "快捷指令",
+      "en-US": "Quick Commands",
+    },
+    description: {
+      "zh-CN": "用于在输入场景中提供快捷指令建议。",
+      "en-US": "Provide quick command suggestions in input scenarios.",
+    },
+    group: {
+      "zh-CN": "表达",
+      "en-US": "Expression",
+    },
+    groupOrder: 2,
+    cover:
+      "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*4vEeSJ2e9xgAAAAAAAAAAAAADgCCAQ/original",
+    coverDark:
+      "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*cahuSJ4VxvoAAAAAAAAAAAAADgCCAQ/original",
   },
   {
     slug: "think",

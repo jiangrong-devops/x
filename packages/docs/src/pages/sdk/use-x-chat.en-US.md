@@ -19,6 +19,14 @@ Manage conversation data through Agent and produce data for page rendering.
 
 <!-- prettier-ignore -->
 <demo src="./demo/openai.vue">OpenAI Model Integration</demo>
+<demo src="./demo/deepSeek.vue">Thinking Model Integration</demo>
+<demo src="./demo/defaultMessages.vue">Historical Messages Setup</demo>
+<demo src="./demo/async-defaultMessages.vue">Request Remote Historical Messages</demo>
+<demo src="./demo/developer.vue">System Prompt Setup</demo>
+<demo src="./demo/openai-callback.vue">Model Request Callback</demo>
+<demo src="./demo/custom-request-fetch.vue">Custom XRequest.fetch</demo>
+<demo src="./demo/request-openai-node.vue">Custom request</demo>
+<demo src="./demo/session-key.vue">SessionId - ConversationKey</demo>
 
 ## API
 

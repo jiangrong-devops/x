@@ -12,9 +12,12 @@ import Bubble, { BubbleDivider, BubbleList, BubbleSystem } from "./bubble";
 import CodeHighlighter from "./code-highlighter";
 import Conversations, { ConversationsCreation } from "./conversations";
 import FileCard, { FileCardList } from "./file-card";
+import Mermaid from "./mermaid";
 import Notification, { XNotification } from "./notification";
+import Prompts from "./prompts";
 import Sender, { SenderHeader, SenderSwitch } from "./sender";
 import Sources from "./sources";
+import Suggestion from "./suggestion";
 import Think from "./think";
 import ThoughtChain, { ThoughtChainItem } from "./thought-chain";
 import Welcome from "./welcome";
@@ -30,6 +33,7 @@ const components = [
   ConversationsCreation,
   XProvider,
   Actions,
+  Prompts,
   Sources,
   Welcome,
   ActionsAudio,
@@ -38,10 +42,12 @@ const components = [
   ActionsItem,
   FileCard,
   FileCardList,
+  Mermaid,
   Attachments,
   Sender,
   SenderHeader,
   SenderSwitch,
+  Suggestion,
   Think,
   ThoughtChain,
   ThoughtChainItem,
@@ -59,10 +65,12 @@ const componentAliases = new Map<string, string[]>([
   ["XActionsItem", ["AActionsItem"]],
   ["XFileCard", ["AFileCard"]],
   ["XFileCardList", ["AFileCardList"]],
+  ["XMermaid", ["AMermaid"]],
   ["XAttachments", ["AAttachments"]],
   ["XSender", ["ASender"]],
   ["XSenderHeader", ["ASenderHeader"]],
   ["XSenderSwitch", ["ASenderSwitch"]],
+  ["XSuggestion", ["ASuggestion"]],
   ["XThink", ["AThink"]],
   ["XThoughtChain", ["AThoughtChain"]],
   ["XThoughtChainItem", ["AThoughtChainItem"]],
@@ -98,11 +106,14 @@ export {
   ConversationsCreation,
   FileCard,
   FileCardList,
+  Mermaid,
   Notification,
   XNotification,
   Sender,
   SenderHeader,
   SenderSwitch,
+  Suggestion,
+  Prompts,
   XProvider,
   version,
   Sources,
@@ -132,6 +143,23 @@ export type {
 } from "./bubble";
 
 export type { FileCardListProps, FileCardProps } from "./file-card";
+export type {
+  MermaidActions,
+  MermaidProps,
+  MermaidRef,
+  MermaidRenderType,
+  MermaidSemanticType,
+} from "./mermaid";
+
+export type {
+  BasePromptsItemType,
+  PromptDataItem,
+  PromptsClickInfo,
+  PromptsItemType,
+  PromptsProps,
+  PromptsRef,
+} from "./prompts";
+
 export type { ThinkProps, ThinkRef } from "./think";
 export type {
   ThoughtChainItemProps,
@@ -159,6 +187,11 @@ export type {
 } from "./code-highlighter";
 
 export type { SenderProps, SenderRef } from "./sender";
+export type {
+  RenderChildrenProps,
+  SuggestionItem,
+  SuggestionProps,
+} from "./suggestion";
 export type { XProviderProps } from "./x-provider";
 export type { AttachmentsProps, AttachmentsRef } from "./attachments";
 

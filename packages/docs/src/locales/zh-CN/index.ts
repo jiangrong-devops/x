@@ -105,4 +105,8 @@ export default {
       conversationsTag: "通用",
     },
   },
+  "edit-page": "在 GitHub 上编辑此页！",
+  contributors: {
+    title: "文档贡献者",
+  },
 };

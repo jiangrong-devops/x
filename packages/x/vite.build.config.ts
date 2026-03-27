@@ -32,6 +32,8 @@ export default defineConfig({
     }),
   ],
   build: {
+    minify: false,
+    sourcemap: false,
     rolldownOptions: {
       external: [
         "vue",
