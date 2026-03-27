@@ -1,20 +1,63 @@
-export const headerItems = [
-  { key: "/docs", label: "研发" },
-  { key: "/components", label: "组件" },
-  { key: "/markdown", label: "Markdown" },
-  { key: "/sdk", label: "SDK" },
-  { key: "/skill", label: "Skill" },
-  { key: "/demo", label: "演示" },
-];
+export interface HeaderItem {
+  key: string;
+  path: string;
+  basePath: string;
+  label: Record<"zh-CN" | "en-US", string>;
+}
 
-export const headerLocales: Record<
-  string,
-  Record<"zh-CN" | "en-US", string>
-> = {
-  "/docs": { "zh-CN": "研发", "en-US": "R&D" },
-  "/components": { "zh-CN": "组件", "en-US": "Components" },
-  "/markdown": { "zh-CN": "Markdown", "en-US": "Markdown" },
-  "/sdk": { "zh-CN": "SDK", "en-US": "SDK" },
-  "/skill": { "zh-CN": "Skill", "en-US": "Skill" },
-  "/demo": { "zh-CN": "演示", "en-US": "Demos" },
-};
+export const headerItems: HeaderItem[] = [
+  {
+    key: "development",
+    path: "/docs",
+    basePath: "/docs",
+    label: {
+      "zh-CN": "研发",
+      "en-US": "R&D",
+    },
+  },
+  {
+    key: "components",
+    path: "/components",
+    basePath: "/components",
+    label: {
+      "zh-CN": "组件",
+      "en-US": "Components",
+    },
+  },
+  {
+    key: "markdown",
+    path: "/markdown",
+    basePath: "/markdown",
+    label: {
+      "zh-CN": "Markdown",
+      "en-US": "Markdown",
+    },
+  },
+  {
+    key: "sdk",
+    path: "/sdk",
+    basePath: "/sdk",
+    label: {
+      "zh-CN": "SDK",
+      "en-US": "SDK",
+    },
+  },
+  {
+    key: "skill",
+    path: "/skill",
+    basePath: "/skill",
+    label: {
+      "zh-CN": "Skill",
+      "en-US": "Skill",
+    },
+  },
+  {
+    key: "demo",
+    path: "/demo",
+    basePath: "/demo",
+    label: {
+      "zh-CN": "演示",
+      "en-US": "Demos",
+    },
+  },
+];

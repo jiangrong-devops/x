@@ -14,6 +14,10 @@ import { docsRoutes, LOCALE_EN_US, LOCALE_ZH_CN } from "@/router/docs";
 import { useAppStore } from "@/stores/app";
 
 import DocHeader from "./components/doc-header.vue";
+import {
+  DOC_HEADER_CONTENT_OFFSET,
+  DOC_HEADER_HEIGHT,
+} from "./components/header-shared";
 
 const useStyles = createStyles(({ token }) => ({
   root: {
@@ -21,16 +25,16 @@ const useStyles = createStyles(({ token }) => ({
     background: token.colorBgContainer,
     transition: `background-color ${token.motionDurationSlow}`,
     ".antd-doc-layout-main": {
-      padding: "24px 48px 40px",
+      padding: "80px 48px 40px",
       display: "grid",
       gridTemplateColumns: "280px minmax(0, 1fr) 200px",
       gap: 40,
     },
     ".antd-doc-layout-sider": {
       position: "sticky",
-      top: 88,
+      top: DOC_HEADER_CONTENT_OFFSET,
       alignSelf: "start",
-      maxHeight: "calc(100vh - 96px)",
+      maxHeight: `calc(100vh - ${DOC_HEADER_CONTENT_OFFSET + 8}px)`,
       overflow: "hidden",
       scrollbarWidth: "thin",
       scrollbarGutter: "stable",
@@ -74,9 +78,9 @@ const useStyles = createStyles(({ token }) => ({
     },
     ".antd-doc-layout-anchor": {
       position: "sticky",
-      top: 88,
+      top: DOC_HEADER_CONTENT_OFFSET,
       alignSelf: "start",
-      maxHeight: "calc(100vh - 96px)",
+      maxHeight: `calc(100vh - ${DOC_HEADER_CONTENT_OFFSET + 8}px)`,
       overflow: "auto",
       scrollbarWidth: "thin",
       scrollbarGutter: "stable",
@@ -486,7 +490,11 @@ const editGithubUrl = computed(() => {
       </article>
 
       <aside v-if="hasAnchors" class="antd-doc-layout-anchor">
-        <a-anchor :items="anchorItems" :offset-top="88" :affix="false" />
+        <a-anchor
+          :items="anchorItems"
+          :offset-top="DOC_HEADER_CONTENT_OFFSET"
+          :affix="false"
+        />
       </aside>
     </main>
   </div>
