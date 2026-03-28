@@ -24,17 +24,17 @@ export default {
     design: "Get Design",
     mainBanner: {
       slogan: "New AI Experience",
-      desc: "The Antdv Next team presents the RICH paradigm, crafting superior AI interface solutions and pioneering intelligent experiences.",
+      desc: "Following the RICH design paradigm from Ant Design X, Antdv Next X creates high-quality AI interface solutions for next-generation intelligent experiences.",
       start: "Get Started",
       design: "Get Design",
     },
     designBanner: {
-      title: "AI Design Paradigm - RICH",
-      desc: "We focus on developing AI design theory, iterating it across Antdv Next's AI products, leading to the RICH design paradigm: Role, Intention, Conversation, and Hybrid UI.",
+      title: "AI Design Paradigm — RICH",
+      desc: "An AI design paradigm for real-world use: evolving across roles, intentions, and interfaces.",
     },
     designGuide: {
       title: "AI Interface Solution",
-      desc: "Building on the RICH paradigm and Antdv Next language, the AGI Hybrid-UI solution blends GUI with natural conversation.",
+      desc: "Inheriting the Ant Design X RICH paradigm and familiar Antdv Next language, the AGI Hybrid-UI solution blends GUI with natural conversation.",
       awaken: "Awaken",
       awakenTitle: "Effortlessly Awaken, Instantly Engage",
       awakenTitlePrefix: "Effortlessly ",
@@ -79,7 +79,7 @@ export default {
       greetingShort: "Hello, I am Antdv Next X",
       welcomePreviewTitle: "Hello, I am Antdv Next X",
       welcomePreviewDesc:
-        "Powered by Antdv Next's AGI solution to create better intelligent experiences.",
+        "Powered by Ant Design X RICH paradigm and Antdv Next components for better intelligent experiences.",
       assistantGreeting: "What can I help you with?",
       waiting: "Processing...",
       assistTitle: "I can assist you with:",
@@ -89,7 +89,8 @@ export default {
       designGuide: "RICH Design Guide",
       helpDesc: "Click a question to send it immediately",
       question1: "What are the new upgrades in X?",
-      question2: "X has introduced the new RICH design guide.",
+      question2:
+        "Antdv Next X follows the RICH design guide from Ant Design X.",
       question3: "What are the component assets in X?",
       question4: "Discover new design for the AI!",
       empathy: "AI that understands and addresses user needs",
