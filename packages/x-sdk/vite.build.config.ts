@@ -1,19 +1,14 @@
-import { resolve } from "node:path";
+import { globSync } from "tinyglobby";
 import dts from "unplugin-dts/vite";
 import { defineConfig } from "vite-plus";
 
-const entries = {
-  index: resolve(__dirname, "src/index.ts"),
-  "chat-providers/index": resolve(__dirname, "src/chat-providers/index.ts"),
-  "chat-providers/types/model": resolve(
-    __dirname,
-    "src/chat-providers/types/model.ts",
-  ),
-  "x-chat/index": resolve(__dirname, "src/x-chat/index.ts"),
-  "x-conversations/index": resolve(__dirname, "src/x-conversations/index.ts"),
-  "x-request/index": resolve(__dirname, "src/x-request/index.ts"),
-  "x-stream/index": resolve(__dirname, "src/x-stream/index.ts"),
-};
+const files = globSync(["./src/**/*.ts"])
+  .sort()
+  .map(file => `./${file}`);
+
+const entries = Object.fromEntries(
+  files.map(file => [file.replace("./src/", "").replace(/\.ts$/, ""), file]),
+);
 
 export default defineConfig({
   plugins: [
@@ -28,13 +23,19 @@ export default defineConfig({
     minify: false,
     sourcemap: false,
     emptyOutDir: true,
+    rolldownOptions: {
+      external: ["vue"],
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: "src",
+        format: "esm",
+        entryFileNames: "[name].js",
+        dir: "dist",
+      },
+    },
     lib: {
       entry: entries,
       formats: ["es"],
-      fileName: (_format, entryName) => `${entryName}.js`,
-    },
-    rolldownOptions: {
-      external: ["vue"],
     },
   },
 });
