@@ -14,6 +14,7 @@ Use it as an operation area below messages, such as retry, edit, copy, feedback,
 <demo src="./demo/preset.vue">Preset Composition</demo>
 <demo src="./demo/variant.vue">Variants</demo>
 <demo src="./demo/fade-in.vue">Fade In</demo>
+<demo src="./demo/render-slot.vue">Slot Render</demo>
 
 ## API
 
@@ -29,6 +30,13 @@ Use it as an operation area below messages, such as retry, edit, copy, feedback,
 | `fadeInLeft`    | Enable left-to-right fade-in animation     | `boolean`                                                            | `false`        |
 | `classes`       | Semantic class names                       | `Partial<Record<'root' \| 'item' \| 'itemDropdown', string>>`        | -              |
 | `styles`        | Semantic styles                            | `Partial<Record<'root' \| 'item' \| 'itemDropdown', CSSProperties>>` | -              |
+
+#### Actions Slots
+
+| Slot Name      | Description        | Type                                          |
+| -------------- | ------------------ | --------------------------------------------- |
+| `iconRender`   | Action icon slot   | `({ item, index, originNode }) => VNodeChild` |
+| `actionRender` | Action render slot | `({ item, index, originNode }) => VNodeChild` |
 
 Prefer `ActionsCopy`, `ActionsFeedback`, `ActionsAudio`, and `ActionsItem` exports. Legacy `Actions.Copy`, `Actions.Feedback`, `Actions.Audio`, and `Actions.Item` syntax remains compatible.
 
@@ -68,10 +76,18 @@ import { Actions, ActionsCopy } from "@antdv-next/x";
 
 ### ActionsCopy
 
-| Property | Description  | Type         | Default |
-| -------- | ------------ | ------------ | ------- |
-| `text`   | Text to copy | `string`     | `''`    |
-| `icon`   | Copy icon    | `VNodeChild` | -       |
+| Property | Description  | Type                         | Default |
+| -------- | ------------ | ---------------------------- | ------- |
+| `text`   | Text to copy | `string`                     | `''`    |
+| `icon`   | Copy icon    | `VNodeChild \| VNodeChild[]` | -       |
+
+#### ActionsCopy Slots
+
+| Slot Name    | Description    | Type                                     |
+| ------------ | -------------- | ---------------------------------------- |
+| `iconRender` | Copy icon slot | `({ originNode, status }) => VNodeChild` |
+
+`status` is `'default' | 'copied'`. When you pass a single `icon` or return a single `iconRender` node, it will be used for both states. If you want different icons for each state, use the `status` field in `iconRender`.
 
 ### ActionsAudio
 
@@ -87,6 +103,13 @@ import { Actions, ActionsCopy } from "@antdv-next/x";
 | `label`       | Tooltip label | `string`                                         | -           |
 | `defaultIcon` | Default icon  | `VNodeChild`                                     | -           |
 | `runningIcon` | Running icon  | `VNodeChild`                                     | -           |
+
+#### ActionsItem Slots
+
+| Slot Name     | Description       | Type               |
+| ------------- | ----------------- | ------------------ |
+| `defaultIcon` | Default icon slot | `() => VNodeChild` |
+| `runningIcon` | Running icon slot | `() => VNodeChild` |
 
 ## Semantic DOM
 

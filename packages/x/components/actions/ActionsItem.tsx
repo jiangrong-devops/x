@@ -8,7 +8,7 @@ import type {
 
 import { CloseCircleOutlined, LoadingOutlined } from "@antdv-next/icons";
 import { Tooltip } from "antdv-next";
-import { computed, defineComponent, useAttrs } from "vue";
+import { computed, defineComponent, useAttrs, useSlots } from "vue";
 
 import useActionsStyle from "./style";
 
@@ -81,6 +81,7 @@ export const XActionsItem = defineComponent({
   },
   setup(props) {
     const attrs = useAttrs();
+    const slots = useSlots();
     const [hashId, cssVarCls] = useActionsStyle(
       computed(() => props.prefixCls),
     );
@@ -91,15 +92,25 @@ export const XActionsItem = defineComponent({
       return rest;
     });
 
+    const defaultIconSlot = computed(
+      () => slots.defaultIcon ?? slots["default-icon"],
+    );
+
+    const runningIconSlot = computed(
+      () => slots.runningIcon ?? slots["running-icon"],
+    );
+
     const statusIcon = computed(() => {
+      const defaultIconNode = defaultIconSlot.value?.() ?? props.defaultIcon;
+      const runningIconNode = runningIconSlot.value?.() ?? props.runningIcon;
       const iconMap = {
         [ACTIONS_ITEM_STATUS.LOADING]: <LoadingOutlined />,
         [ACTIONS_ITEM_STATUS.ERROR]: <CloseCircleOutlined />,
-        [ACTIONS_ITEM_STATUS.RUNNING]: props.runningIcon,
-        [ACTIONS_ITEM_STATUS.DEFAULT]: props.defaultIcon,
+        [ACTIONS_ITEM_STATUS.RUNNING]: runningIconNode,
+        [ACTIONS_ITEM_STATUS.DEFAULT]: defaultIconNode,
       };
 
-      return iconMap[props.status] ?? props.defaultIcon;
+      return iconMap[props.status] ?? defaultIconNode;
     });
 
     return () => (

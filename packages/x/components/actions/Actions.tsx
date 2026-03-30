@@ -1,9 +1,17 @@
 import type { CSSProperties, PropType, StyleValue, TransitionProps } from "vue";
 
 import { useConfig } from "antdv-next/dist/config-provider/context";
-import { computed, defineComponent, ref, Transition, useAttrs } from "vue";
+import {
+  computed,
+  defineComponent,
+  ref,
+  Transition,
+  useAttrs,
+  useSlots,
+} from "vue";
 
 import type {
+  ActionsItemSlotInfo,
   ActionsProps,
   ActionsRef,
   ItemType,
@@ -83,6 +91,7 @@ export const XActions = defineComponent({
   setup(props, { expose }) {
     const configCtx = useConfig();
     const attrs = useAttrs();
+    const slots = useSlots();
     const contextConfig = useXComponentConfig("actions");
     const rootRef = ref<HTMLDivElement>();
     const [hashId, cssVarCls] = useActionsStyle(
@@ -123,6 +132,9 @@ export const XActions = defineComponent({
       } as Partial<Record<SemanticType, CSSProperties>>;
     });
 
+    const getNamedSlot = (name: "iconRender" | "actionRender") =>
+      slots[name] ?? slots[name.replace(/[A-Z]/g, s => `-${s.toLowerCase()}`)];
+
     const renderList = () => (
       <div
         class={[
@@ -130,17 +142,43 @@ export const XActions = defineComponent({
           `${props.prefixCls}-variant-${props.variant}`,
         ]}
       >
-        {props.items.map((item, idx) => (
-          <Item
-            key={item.key ?? idx}
-            item={item}
-            onClick={props.onClick}
-            dropdownProps={props.dropdownProps}
-            prefixCls={props.prefixCls}
-            classes={mergedClasses.value}
-            styles={mergedStyles.value}
-          />
-        ))}
+        {props.items.map((item, idx) => {
+          const slotInfo: ActionsItemSlotInfo = {
+            item,
+            index: idx,
+            originNode: item.icon,
+          };
+          const slottedIcon = getNamedSlot("iconRender")?.(slotInfo);
+          const slotActionNode = getNamedSlot("actionRender")?.({
+            item,
+            index: idx,
+            originNode:
+              item.actionRender !== undefined
+                ? typeof item.actionRender === "function"
+                  ? item.actionRender(item)
+                  : item.actionRender
+                : undefined,
+          });
+
+          const mergedItem: ItemType = {
+            ...item,
+            icon: slottedIcon ?? item.icon,
+            actionRender:
+              slotActionNode !== undefined ? slotActionNode : item.actionRender,
+          };
+
+          return (
+            <Item
+              key={item.key ?? idx}
+              item={mergedItem}
+              onClick={props.onClick}
+              dropdownProps={props.dropdownProps}
+              prefixCls={props.prefixCls}
+              classes={mergedClasses.value}
+              styles={mergedStyles.value}
+            />
+          );
+        })}
       </div>
     );
 

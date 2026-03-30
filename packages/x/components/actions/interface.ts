@@ -34,6 +34,19 @@ export interface ActionsClickInfo {
   domEvent: MouseEvent | KeyboardEvent | Event;
 }
 
+export interface ActionsItemSlotInfo {
+  item: ItemType;
+  index: number;
+  originNode: VNodeChild;
+}
+
+export type ActionsCopyIconStatus = "default" | "copied";
+
+export interface ActionsCopyIconSlotInfo {
+  originNode: VNodeChild;
+  status: ActionsCopyIconStatus;
+}
+
 export interface ActionsProps extends Omit<
   HTMLAttributes,
   "onClick" | "class" | "style"

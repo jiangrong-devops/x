@@ -143,6 +143,41 @@ describe("Actions", () => {
 
     expect(wrapper.find(".antd-actions-sub-item").exists()).toBe(true);
   });
+
+  it("supports actionRender slot", () => {
+    const actionRender = vi.fn();
+    const wrapper = mount({
+      components: { Actions },
+      setup() {
+        return {
+          items: [
+            {
+              key: "1",
+              label: "Action 1",
+              icon: "icon1",
+            },
+            {
+              key: "2",
+              label: "Action 2",
+              actionRender,
+            },
+          ],
+        };
+      },
+      template: `
+        <Actions :items="items">
+          <template #actionRender="{ item, index }">
+            <div v-if="item.key === '2'" :class="'slot-action-' + index">
+              {{ item.label }}
+            </div>
+          </template>
+        </Actions>
+      `,
+    });
+
+    expect(wrapper.find(".slot-action-1").text()).toBe("Action 2");
+    expect(actionRender).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe("ActionsMenu.findItem", () => {

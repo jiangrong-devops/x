@@ -24,4 +24,29 @@ describe("ActionsItem", () => {
 
     expect(wrapper.text()).toContain("default-icon");
   });
+
+  it("supports defaultIcon and runningIcon slots", () => {
+    const defaultWrapper = mount(ActionsItem, {
+      props: {
+        defaultIcon: "default-icon",
+      },
+      slots: {
+        defaultIcon: () => "slot-default",
+      },
+    });
+
+    const runningWrapper = mount(ActionsItem, {
+      props: {
+        defaultIcon: "default-icon",
+        runningIcon: "running-icon",
+        status: "running",
+      },
+      slots: {
+        runningIcon: () => "slot-running",
+      },
+    });
+
+    expect(defaultWrapper.text()).toContain("slot-default");
+    expect(runningWrapper.text()).toContain("slot-running");
+  });
 });

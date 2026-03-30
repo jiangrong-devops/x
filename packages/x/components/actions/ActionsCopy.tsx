@@ -7,7 +7,9 @@ import type {
 } from "vue";
 
 import { Typography } from "antdv-next";
-import { computed, defineComponent, useAttrs } from "vue";
+import { computed, defineComponent, useAttrs, useSlots } from "vue";
+
+import type { ActionsCopyIconSlotInfo } from "./interface";
 
 import useActionsStyle from "./style";
 
@@ -23,6 +25,16 @@ export interface ActionsCopyProps {
   classes?: Partial<Record<SemanticType, string>>;
   styles?: Partial<Record<SemanticType, CSSProperties>>;
 }
+
+const normalizeCopyIcons = (
+  icon: VNodeChild | undefined,
+): [VNodeChild | undefined, VNodeChild | undefined] => {
+  if (Array.isArray(icon)) {
+    return [icon[0], icon[1] ?? icon[0]];
+  }
+
+  return [icon, icon];
+};
 
 export const XActionsCopy = defineComponent({
   name: "XActionsCopy",
@@ -63,6 +75,7 @@ export const XActionsCopy = defineComponent({
   },
   setup(props) {
     const attrs = useAttrs();
+    const slots = useSlots();
     const [hashId, cssVarCls] = useActionsStyle(
       computed(() => props.prefixCls),
     );
@@ -71,6 +84,31 @@ export const XActionsCopy = defineComponent({
     const domAttrs = computed(() => {
       const { class: _class, style: _style, ...rest } = attrs;
       return rest;
+    });
+
+    const iconRenderSlot = computed(
+      () => slots.iconRender ?? slots["icon-render"],
+    );
+
+    const mergedCopyIcons = computed(() => {
+      const [defaultOriginNode, copiedOriginNode] = normalizeCopyIcons(
+        props.icon,
+      );
+
+      if (!iconRenderSlot.value) {
+        return props.icon;
+      }
+
+      return [
+        iconRenderSlot.value({
+          originNode: defaultOriginNode,
+          status: "default",
+        } satisfies ActionsCopyIconSlotInfo),
+        iconRenderSlot.value({
+          originNode: copiedOriginNode,
+          status: "copied",
+        } satisfies ActionsCopyIconSlotInfo),
+      ];
     });
 
     return () => (
@@ -91,7 +129,7 @@ export const XActionsCopy = defineComponent({
         prefixCls={copyCls}
         copyable={{
           text: props.text,
-          icon: props.icon as any,
+          icon: mergedCopyIcons.value as any,
         }}
       />
     );
