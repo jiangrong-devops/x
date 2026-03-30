@@ -5,12 +5,27 @@ import { Popover } from "antdv-next";
 import { useConfig } from "antdv-next/dist/config-provider/context";
 import { computed, defineComponent, ref, Transition, useAttrs } from "vue";
 
-import type { SourcesItem, SourcesProps, SourcesRef } from "./interface";
+import type {
+  SourcesItem,
+  SourcesItemSlotInfo,
+  SourcesProps,
+  SourcesRef,
+  SourcesTitleSlotInfo,
+} from "./interface";
 
 import useXComponentConfig from "../_utils/hooks/use-x-component-config";
 import initCollapseTransition from "../_utils/transition";
 import CarouselCard from "./components/CarouselCard";
 import useSourcesStyle from "./style";
+
+const hasRenderableNode = (node: unknown): boolean => {
+  if (Array.isArray(node))
+    return node.some(
+      item => item !== null && item !== undefined && item !== false,
+    );
+
+  return node !== null && node !== undefined && node !== false;
+};
 
 export const XSources = defineComponent({
   name: "XSources",
@@ -136,32 +151,87 @@ export const XSources = defineComponent({
       },
     ]);
 
+    const renderTitle = () => {
+      const originNode = props.title;
+      if (slots.title) {
+        return slots.title({
+          originNode,
+        } as SourcesTitleSlotInfo);
+      }
+
+      return originNode;
+    };
+
+    const renderItemNode = (
+      slotName: "iconRender" | "titleRender" | "description",
+      item: SourcesItem,
+      index: number,
+      originNode: any,
+    ) => {
+      const slot = slots[slotName];
+      if (slot) {
+        return slot({
+          item,
+          index,
+          originNode,
+        } as SourcesItemSlotInfo);
+      }
+
+      return originNode;
+    };
+
     return () => {
       const ContentNode = props.items ? (
         <ul class={`${props.prefixCls}-list`}>
-          {props.items.map((item, index) => (
-            <li
-              key={item.key ?? index}
-              class={`${props.prefixCls}-list-item`}
-              onClick={() => props.onClick?.(item)}
-            >
-              <a
-                class={`${props.prefixCls}-link`}
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
+          {props.items.map((item, index) => {
+            const iconNode = renderItemNode(
+              "iconRender",
+              item,
+              index,
+              item.icon,
+            );
+            const titleNode = renderItemNode(
+              "titleRender",
+              item,
+              index,
+              item.title,
+            );
+            const descriptionNode = renderItemNode(
+              "description",
+              item,
+              index,
+              item.description,
+            );
+
+            return (
+              <li
+                key={item.key ?? index}
+                class={`${props.prefixCls}-list-item`}
+                onClick={() => props.onClick?.(item)}
               >
-                {item.icon && (
-                  <span class={`${props.prefixCls}-link-icon`}>
-                    {item.icon}
+                <a
+                  class={`${props.prefixCls}-link`}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {hasRenderableNode(iconNode) && (
+                    <span class={`${props.prefixCls}-link-icon`}>
+                      {iconNode}
+                    </span>
+                  )}
+                  <span class={`${props.prefixCls}-link-title`}>
+                    {titleNode}
                   </span>
-                )}
-                <span class={`${props.prefixCls}-link-title`}>
-                  {item.title}
-                </span>
-              </a>
-            </li>
-          ))}
+                  {hasRenderableNode(descriptionNode) && (
+                    <span class={`${props.prefixCls}-link-description`}>
+                      {descriptionNode}
+                    </span>
+                  )}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         slots.default?.()
@@ -195,6 +265,21 @@ export const XSources = defineComponent({
                   prefixCls={props.prefixCls}
                   items={props.items}
                   onClick={props.onClick}
+                  iconRenderSlot={
+                    slots.iconRender
+                      ? info => slots.iconRender?.(info as SourcesItemSlotInfo)
+                      : undefined
+                  }
+                  titleRenderSlot={
+                    slots.titleRender
+                      ? info => slots.titleRender?.(info as SourcesItemSlotInfo)
+                      : undefined
+                  }
+                  descriptionSlot={
+                    slots.description
+                      ? info => slots.description?.(info as SourcesItemSlotInfo)
+                      : undefined
+                  }
                 />
               }
               open={props.inline ? undefined : false}
@@ -216,7 +301,7 @@ export const XSources = defineComponent({
                 ]}
                 style={props.styles?.title}
               >
-                <span class={`${props.prefixCls}-title`}>{props.title}</span>
+                <span class={`${props.prefixCls}-title`}>{renderTitle()}</span>
               </div>
             </Popover>
           ) : (
@@ -234,7 +319,7 @@ export const XSources = defineComponent({
                   class={`${props.prefixCls}-title-down-icon`}
                   rotate={isExpand.value ? 90 : 0}
                 />
-                <span class={`${props.prefixCls}-title`}>{props.title}</span>
+                <span class={`${props.prefixCls}-title`}>{renderTitle()}</span>
               </div>
               <Transition {...collapseTransition.value}>
                 {isExpand.value ? (

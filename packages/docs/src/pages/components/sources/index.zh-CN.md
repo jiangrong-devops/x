@@ -15,6 +15,7 @@ description: 展示引用的数据来源地址。
 <demo src="./demo/icon.vue">使用图标</demo>
 <demo src="./demo/expand.vue">展开</demo>
 <demo src="./demo/inline.vue">行内模式</demo>
+<demo src="./demo/render-slot.vue">插槽渲染</demo>
 
 ## API
 
@@ -47,6 +48,17 @@ interface SourcesItem {
   description?: VNodeChild;
 }
 ```
+
+### 插槽
+
+| 插槽名        | 说明             | 类型                                          |
+| ------------- | ---------------- | --------------------------------------------- |
+| `title`       | 顶部标题插槽     | `({ originNode }) => VNodeChild`              |
+| `iconRender`  | 来源图标渲染插槽 | `({ item, index, originNode }) => VNodeChild` |
+| `titleRender` | 来源标题渲染插槽 | `({ item, index, originNode }) => VNodeChild` |
+| `description` | 来源描述渲染插槽 | `({ item, index, originNode }) => VNodeChild` |
+
+插槽优先级高于同名属性内容；inline 与默认展开模式都会复用同一套 item 插槽。
 
 ## 语义化 DOM {#semantic-dom}
 

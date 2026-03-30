@@ -14,6 +14,7 @@ description: Show the source address of the referenced data.
 <demo src="./demo/icon.vue">Icon</demo>
 <demo src="./demo/expand.vue">Expand</demo>
 <demo src="./demo/inline.vue">Inline</demo>
+<demo src="./demo/render-slot.vue">Slot Render</demo>
 
 ## API
 
@@ -46,6 +47,17 @@ interface SourcesItem {
   description?: VNodeChild;
 }
 ```
+
+### Slots
+
+| Slot Name     | Description              | Type                                          |
+| ------------- | ------------------------ | --------------------------------------------- |
+| `title`       | Top title slot           | `({ originNode }) => VNodeChild`              |
+| `iconRender`  | Source icon render slot  | `({ item, index, originNode }) => VNodeChild` |
+| `titleRender` | Source title render slot | `({ item, index, originNode }) => VNodeChild` |
+| `description` | Source description slot  | `({ item, index, originNode }) => VNodeChild` |
+
+Slots take precedence over prop content. The same item slots apply to both default expand mode and inline mode.
 
 ## Semantic DOM {#semantic-dom}
 

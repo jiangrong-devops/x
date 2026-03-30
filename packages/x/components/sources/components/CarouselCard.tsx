@@ -4,7 +4,20 @@ import { LeftOutlined, RightOutlined } from "@antdv-next/icons";
 import { Carousel } from "antdv-next";
 import { defineComponent, nextTick, ref, watch } from "vue";
 
-import type { SourcesItem, SourcesProps } from "../interface";
+import type {
+  SourcesItem,
+  SourcesItemSlotInfo,
+  SourcesProps,
+} from "../interface";
+
+const hasRenderableNode = (node: unknown): boolean => {
+  if (Array.isArray(node))
+    return node.some(
+      item => item !== null && item !== undefined && item !== false,
+    );
+
+  return node !== null && node !== undefined && node !== false;
+};
 
 export interface CarouselCardProps {
   activeKey?: SourcesProps["activeKey"];
@@ -13,6 +26,9 @@ export interface CarouselCardProps {
   classes?: any;
   style?: any;
   onClick?: (item: SourcesItem) => void;
+  iconRenderSlot?: (info: SourcesItemSlotInfo) => any;
+  titleRenderSlot?: (info: SourcesItemSlotInfo) => any;
+  descriptionSlot?: (info: SourcesItemSlotInfo) => any;
 }
 
 const CarouselCard = defineComponent({
@@ -42,6 +58,18 @@ const CarouselCard = defineComponent({
       type: Function as PropType<CarouselCardProps["onClick"]>,
       default: undefined,
     },
+    iconRenderSlot: {
+      type: Function as PropType<CarouselCardProps["iconRenderSlot"]>,
+      default: undefined,
+    },
+    titleRenderSlot: {
+      type: Function as PropType<CarouselCardProps["titleRenderSlot"]>,
+      default: undefined,
+    },
+    descriptionSlot: {
+      type: Function as PropType<CarouselCardProps["descriptionSlot"]>,
+      default: undefined,
+    },
   },
   setup(props) {
     const compCls = `${props.prefixCls}-carousel`;
@@ -68,6 +96,23 @@ const CarouselCard = defineComponent({
     const handleClick = (item: SourcesItem) => {
       if (item.url) window.open(item.url, "_blank", "noopener,noreferrer");
       props.onClick?.(item);
+    };
+
+    const renderWithSlot = (
+      slotRender: ((info: SourcesItemSlotInfo) => any) | undefined,
+      item: SourcesItem,
+      index: number,
+      originNode: any,
+    ) => {
+      if (slotRender) {
+        return slotRender({
+          item,
+          index,
+          originNode,
+        });
+      }
+
+      return originNode;
     };
 
     return () => (
@@ -115,25 +160,48 @@ const CarouselCard = defineComponent({
             slide.value = nextSlide;
           }}
         >
-          {props.items?.map((item, index) => (
-            <div
-              key={item.key ?? index}
-              class={`${compCls}-item`}
-              onClick={() => handleClick(item)}
-            >
-              <div class={`${compCls}-item-title-wrapper`}>
-                {item.icon && (
-                  <span class={`${compCls}-item-icon`}>{item.icon}</span>
-                )}
-                <span class={`${compCls}-item-title`}>{item.title}</span>
-              </div>
-              {item.description && (
-                <div class={`${compCls}-item-description`}>
-                  {item.description}
+          {props.items?.map((item, index) =>
+            (() => {
+              const iconNode = renderWithSlot(
+                props.iconRenderSlot,
+                item,
+                index,
+                item.icon,
+              );
+              const titleNode = renderWithSlot(
+                props.titleRenderSlot,
+                item,
+                index,
+                item.title,
+              );
+              const descriptionNode = renderWithSlot(
+                props.descriptionSlot,
+                item,
+                index,
+                item.description,
+              );
+
+              return (
+                <div
+                  key={item.key ?? index}
+                  class={`${compCls}-item`}
+                  onClick={() => handleClick(item)}
+                >
+                  <div class={`${compCls}-item-title-wrapper`}>
+                    {hasRenderableNode(iconNode) && (
+                      <span class={`${compCls}-item-icon`}>{iconNode}</span>
+                    )}
+                    <span class={`${compCls}-item-title`}>{titleNode}</span>
+                  </div>
+                  {hasRenderableNode(descriptionNode) && (
+                    <div class={`${compCls}-item-description`}>
+                      {descriptionNode}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
+              );
+            })(),
+          )}
         </Carousel>
       </div>
     );

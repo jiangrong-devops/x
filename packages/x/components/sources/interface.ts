@@ -16,6 +16,16 @@ export interface SourcesItem {
   description?: VNodeChild;
 }
 
+export interface SourcesTitleSlotInfo {
+  originNode: VNodeChild;
+}
+
+export interface SourcesItemSlotInfo {
+  item: SourcesItem;
+  index: number;
+  originNode: VNodeChild;
+}
+
 export interface SourcesRef {
   nativeElement: HTMLElement;
 }
