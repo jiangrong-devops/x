@@ -4,6 +4,8 @@ import { tsxResolveTypes } from "vite-plugin-tsx-resolve-types";
 import vueResolveTypes from "vite-plugin-vue-resolve-types";
 import { defineConfig } from "vite-plus";
 
+import { LIB_EXTERNALS } from "./build.constants";
+
 export default defineConfig({
   base: "./",
   plugins: [
@@ -18,12 +20,13 @@ export default defineConfig({
     minify: false,
     sourcemap: false,
     rolldownOptions: {
-      external: ["vue", "antdv-next", "@antdv-next/icons", /^dayjs/],
+      external: LIB_EXTERNALS,
       output: {
         globals: {
           vue: "Vue",
           "antdv-next": "antd",
           "@antdv-next/icons": "AntdIcons",
+          mermaid: "mermaid",
           dayjs: "dayjs",
           // plugins: 'dayjs_plugin',
           // like this

@@ -45,6 +45,7 @@
     "@ant-design/fast-color": "catalog:prod",
     "@antdv-next/cssinjs": "catalog:prod",
     "@antdv-next/icons": "catalog:prod",
+    "@v-c/util": "catalog:prod",
     "@vueuse/core": "catalog:prod",
     "antdv-next": "catalog:prod",
     "dayjs": "catalog:prod",

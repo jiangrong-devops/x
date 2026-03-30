@@ -6,10 +6,13 @@ import { tsxResolveTypes } from "vite-plugin-tsx-resolve-types";
 import vueResolveTypes from "vite-plugin-vue-resolve-types";
 import { defineConfig } from "vite-plus";
 
+import { LIB_EXTERNALS, TEST_FILE_PATTERNS } from "./build.constants";
+
 const files = globSync([
   "./components/**/*.ts",
   "./components/**/*.tsx",
   "./components/**/*.vue",
+  ...TEST_FILE_PATTERNS,
 ]).map(file => `./${file}`);
 
 export default defineConfig({
@@ -29,20 +32,14 @@ export default defineConfig({
       tsconfigPath: "./tsconfig.app.json",
       entryRoot: "components",
       processor: "vue",
+      exclude: ["**/__tests__/**", "**/*.test.*"],
     }),
   ],
   build: {
     minify: false,
     sourcemap: false,
     rolldownOptions: {
-      external: [
-        "vue",
-        "antdv-next",
-        /^antdv-next\/.*/,
-        "@antdv-next/icons",
-        "@vueuse/core",
-        /^dayjs/,
-      ],
+      external: LIB_EXTERNALS,
 
       output: {
         preserveModules: true,
