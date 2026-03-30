@@ -32,6 +32,20 @@ export interface ConversationItemType
   style?: StyleValue;
 }
 
+export interface ConversationItemRenderInfo {
+  item: ConversationItemType;
+  index: number;
+  active: boolean;
+  originNode: VNodeChild;
+}
+
+export type ConversationItemRender =
+  | VNodeChild
+  | ((
+      item: ConversationItemType,
+      info: ConversationItemRenderInfo,
+    ) => VNodeChild);
+
 export interface DividerItemType {
   type: "divider";
   key?: string;
@@ -108,6 +122,8 @@ export interface ConversationsProps extends Omit<
     value: ConversationItemType["key"],
     item?: ItemType,
   ) => void;
+  labelRender?: ConversationItemRender;
+  iconRender?: ConversationItemRender;
   menu?:
     | ConversationsItemMenu
     | ((value: ConversationItemType) => ConversationsItemMenu);

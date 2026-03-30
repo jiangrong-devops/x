@@ -52,6 +52,18 @@ const XConversations = defineComponent({
       type: Function as PropType<ConversationsProps["onActiveChange"]>,
       default: undefined,
     },
+    labelRender: {
+      type: [String, Number, Object, Array, Function] as PropType<
+        ConversationsProps["labelRender"]
+      >,
+      default: undefined,
+    },
+    iconRender: {
+      type: [String, Number, Object, Array, Function] as PropType<
+        ConversationsProps["iconRender"]
+      >,
+      default: undefined,
+    },
     menu: {
       type: [Object, Function] as PropType<ConversationsProps["menu"]>,
       default: undefined,
@@ -94,7 +106,7 @@ const XConversations = defineComponent({
     },
   },
   emits: ["update:activeKey", "expand"],
-  setup(props, { expose, emit }) {
+  setup(props, { expose, emit, slots }) {
     const configCtx = useConfig();
     const attrs = useAttrs();
     const contextConfig = useXComponentConfig("conversations");
@@ -204,7 +216,7 @@ const XConversations = defineComponent({
       },
     });
 
-    const getItemNode = (itemData: ItemType[]) => {
+    const getItemNode = (itemData: ItemType[], indexRef: { value: number }) => {
       return itemData.map((conversationInfo, conversationIndex) => {
         if (conversationInfo.type === "divider") {
           return (
@@ -223,14 +235,21 @@ const XConversations = defineComponent({
           icon: _icon,
           ...restInfo
         } = baseConversationInfo;
+        const currentIndex = indexRef.value++;
+        const isActive = mergedActiveKey.value === baseConversationInfo.key;
 
         return (
           <ConversationsItem
             {...restInfo}
             key={baseConversationInfo.key ?? `key-${conversationIndex}`}
             info={baseConversationInfo}
+            index={currentIndex}
             prefixCls={props.prefixCls}
             direction={configCtx.value.direction}
+            labelRender={props.labelRender}
+            iconRender={props.iconRender}
+            labelRenderSlot={slots.labelRender}
+            iconRenderSlot={slots.iconRender}
             classes={[
               contextConfig.value.classes?.item,
               props.classes?.item,
@@ -246,89 +265,98 @@ const XConversations = defineComponent({
                 ? props.menu(baseConversationInfo)
                 : props.menu
             }
-            active={mergedActiveKey.value === baseConversationInfo.key}
+            active={isActive}
             onClick={onConversationItemClick}
           />
         );
       });
     };
 
-    return () => (
-      <ul
-        ref={rootRef}
-        {...domAttrs.value}
-        class={[
-          props.prefixCls,
-          props.rootClass,
-          contextConfig.value.classes?.root,
-          props.classes?.root,
-          hashId.value,
-          cssVarCls.value,
-          attrs.class,
-          props.class,
-          {
-            [`${props.prefixCls}-rtl`]: configCtx.value.direction === "rtl",
-          },
-        ]}
-        style={[
-          contextConfig.value.style,
-          contextConfig.value.styles?.root,
-          props.styles?.root,
-          attrs.style as StyleValue,
-          props.style,
-        ]}
-      >
-        {!!props.creation && (
-          <Creation
-            classes={[
-              contextConfig.value.classes?.creation,
-              props.classes?.creation,
-            ]}
-            style={{
-              ...contextConfig.value.styles?.creation,
-              ...props.styles?.creation,
-            }}
-            shortcutKeyInfo={creationShortcutInfo.value}
-            prefixCls={`${props.prefixCls}-creation`}
-            {...props.creation}
-          />
-        )}
-        {groupList.value.map((groupInfo: GroupInfoType, groupIndex: number) => {
-          const itemNode = getItemNode(groupInfo.data);
+    return () => {
+      const itemIndexRef = { value: 0 };
 
-          return groupInfo.enableGroup ? (
-            <GroupTitle
-              key={groupInfo.name || `key-${groupIndex}`}
-              prefixCls={props.prefixCls}
-              groupInfo={groupInfo}
+      return (
+        <ul
+          ref={rootRef}
+          {...domAttrs.value}
+          class={[
+            props.prefixCls,
+            props.rootClass,
+            contextConfig.value.classes?.root,
+            props.classes?.root,
+            hashId.value,
+            cssVarCls.value,
+            attrs.class,
+            props.class,
+            {
+              [`${props.prefixCls}-rtl`]: configCtx.value.direction === "rtl",
+            },
+          ]}
+          style={[
+            contextConfig.value.style,
+            contextConfig.value.styles?.root,
+            props.styles?.root,
+            attrs.style as StyleValue,
+            props.style,
+          ]}
+        >
+          {!!props.creation && (
+            <Creation
               classes={[
-                contextConfig.value.classes?.group,
-                props.classes?.group,
+                contextConfig.value.classes?.creation,
+                props.classes?.creation,
               ]}
-              enableCollapse={enableCollapse.value}
-              expandedKeys={mergedExpandedKeys.value}
-              onItemExpand={onExpand}
-              collapseTransition={collapseTransition.value}
-            >
-              <ul
-                class={[
-                  `${props.prefixCls}-list`,
-                  {
-                    [`${props.prefixCls}-group-collapsible-list`]:
-                      groupInfo.collapsible,
-                  },
-                ]}
-                style={[contextConfig.value.styles?.group, props.styles?.group]}
-              >
-                {itemNode}
-              </ul>
-            </GroupTitle>
-          ) : (
-            itemNode
-          );
-        })}
-      </ul>
-    );
+              style={{
+                ...contextConfig.value.styles?.creation,
+                ...props.styles?.creation,
+              }}
+              shortcutKeyInfo={creationShortcutInfo.value}
+              prefixCls={`${props.prefixCls}-creation`}
+              {...props.creation}
+            />
+          )}
+          {groupList.value.map(
+            (groupInfo: GroupInfoType, groupIndex: number) => {
+              const itemNode = getItemNode(groupInfo.data, itemIndexRef);
+
+              return groupInfo.enableGroup ? (
+                <GroupTitle
+                  key={groupInfo.name || `key-${groupIndex}`}
+                  prefixCls={props.prefixCls}
+                  groupInfo={groupInfo}
+                  classes={[
+                    contextConfig.value.classes?.group,
+                    props.classes?.group,
+                  ]}
+                  enableCollapse={enableCollapse.value}
+                  expandedKeys={mergedExpandedKeys.value}
+                  onItemExpand={onExpand}
+                  collapseTransition={collapseTransition.value}
+                >
+                  <ul
+                    class={[
+                      `${props.prefixCls}-list`,
+                      {
+                        [`${props.prefixCls}-group-collapsible-list`]:
+                          groupInfo.collapsible,
+                      },
+                    ]}
+                    style={[
+                      contextConfig.value.styles?.group,
+                      props.styles?.group,
+                    ]}
+                  >
+                    {itemNode}
+                  </ul>
+                </GroupTitle>
+              ) : (
+                itemNode
+              );
+            },
+          )}
+        </ul>
+      );
+    };
   },
 });
 
@@ -340,6 +368,8 @@ const ConversationsWithSub = XConversations as ConversationsType;
 ConversationsWithSub.Creation = Creation;
 
 export type {
+  ConversationItemRender,
+  ConversationItemRenderInfo,
   ConversationItemType,
   ConversationsProps,
   ConversationsRef,

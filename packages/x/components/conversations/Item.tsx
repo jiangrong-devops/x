@@ -1,4 +1,4 @@
-import type { PropType } from "vue";
+import type { PropType, VNodeChild } from "vue";
 
 import { EllipsisOutlined } from "@antdv-next/icons";
 import { Dropdown, Typography } from "antdv-next";
@@ -6,6 +6,7 @@ import { computed, defineComponent } from "vue";
 
 import type { DirectionType } from "../_utils/type";
 import type {
+  ConversationItemRenderInfo,
   ConversationItemType,
   ConversationsItemMenu,
   ConversationsProps,
@@ -13,10 +14,15 @@ import type {
 
 export interface ConversationsItemProps {
   info: ConversationItemType;
+  index: number;
   prefixCls?: string;
   direction?: DirectionType;
   menu?: ConversationsItemMenu;
   active?: boolean;
+  labelRender?: ConversationsProps["labelRender"];
+  iconRender?: ConversationsProps["iconRender"];
+  labelRenderSlot?: (info: ConversationItemRenderInfo) => VNodeChild;
+  iconRenderSlot?: (info: ConversationItemRenderInfo) => VNodeChild;
   classes?: any;
   style?: any;
   onClick?: ConversationsProps["onActiveChange"];
@@ -26,6 +32,29 @@ const stopPropagation = (event: Event) => {
   event.stopPropagation();
 };
 
+const hasRenderableNode = (node: VNodeChild): boolean => {
+  if (Array.isArray(node))
+    return node.some(
+      item => item !== null && item !== undefined && item !== false,
+    );
+
+  return node !== null && node !== undefined && node !== false;
+};
+
+const renderWithPriority = (
+  render: ConversationsProps["labelRender"],
+  slotRender: ConversationsItemProps["labelRenderSlot"],
+  info: ConversationItemRenderInfo,
+) => {
+  if (slotRender) return slotRender(info);
+
+  if (render !== undefined) {
+    return typeof render === "function" ? render(info.item, info) : render;
+  }
+
+  return info.originNode;
+};
+
 const ConversationsItem = defineComponent({
   name: "XConversationsItem",
   inheritAttrs: false,
@@ -33,6 +62,10 @@ const ConversationsItem = defineComponent({
     info: {
       type: Object as PropType<ConversationItemType>,
       required: true,
+    },
+    index: {
+      type: Number,
+      default: 0,
     },
     prefixCls: {
       type: String,
@@ -49,6 +82,26 @@ const ConversationsItem = defineComponent({
     active: {
       type: Boolean,
       default: false,
+    },
+    labelRender: {
+      type: [String, Number, Object, Array, Function] as PropType<
+        ConversationsItemProps["labelRender"]
+      >,
+      default: undefined,
+    },
+    iconRender: {
+      type: [String, Number, Object, Array, Function] as PropType<
+        ConversationsItemProps["iconRender"]
+      >,
+      default: undefined,
+    },
+    labelRenderSlot: {
+      type: Function as PropType<ConversationsItemProps["labelRenderSlot"]>,
+      default: undefined,
+    },
+    iconRenderSlot: {
+      type: Function as PropType<ConversationsItemProps["iconRenderSlot"]>,
+      default: undefined,
     },
     classes: {
       type: [String, Array, Object] as PropType<
@@ -104,6 +157,26 @@ const ConversationsItem = defineComponent({
 
     return () => {
       const disabled = props.info.disabled;
+      const labelNode = renderWithPriority(
+        props.labelRender,
+        props.labelRenderSlot,
+        {
+          item: props.info,
+          index: props.index,
+          active: props.active,
+          originNode: props.info.label,
+        },
+      );
+      const iconNode = renderWithPriority(
+        props.iconRender,
+        props.iconRenderSlot,
+        {
+          item: props.info,
+          index: props.index,
+          active: props.active,
+          originNode: props.info.icon,
+        },
+      );
 
       return (
         <li
@@ -116,11 +189,11 @@ const ConversationsItem = defineComponent({
             if (!disabled) props.onClick?.(props.info.key, props.info);
           }}
         >
-          {props.info.icon && (
-            <div class={`${props.prefixCls}-icon`}>{props.info.icon}</div>
+          {hasRenderableNode(iconNode) && (
+            <div class={`${props.prefixCls}-icon`}>{iconNode}</div>
           )}
           <Typography.Text class={`${props.prefixCls}-label`}>
-            {props.info.label}
+            {labelNode}
           </Typography.Text>
           {!disabled && props.menu && (
             <div onClick={stopPropagation}>

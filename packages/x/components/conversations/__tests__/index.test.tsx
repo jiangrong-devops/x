@@ -196,6 +196,99 @@ describe("Conversations", () => {
     expect(wrapper.find(".antd-conversations-menu-icon").exists()).toBe(false);
   });
 
+  it("supports labelRender and iconRender props", () => {
+    const labelRender = vi.fn((item: any, info: any) =>
+      h(
+        "span",
+        `${item.key}-${info.index}-${info.active ? "active" : "inactive"}`,
+      ),
+    );
+    const iconRender = vi.fn((item: any, info: any) =>
+      h("span", `icon-${item.key}-${info.index}`),
+    );
+
+    const wrapper = track(
+      mount(Conversations, {
+        props: {
+          items: [...items],
+          defaultActiveKey: "demo1",
+          labelRender,
+          iconRender,
+        },
+      }),
+    );
+
+    expect(labelRender).toHaveBeenCalled();
+    expect(iconRender).toHaveBeenCalled();
+    expect(wrapper.text()).toContain("demo1-0-active");
+    expect(wrapper.text()).toContain("icon-demo1-0");
+
+    const [firstItem, firstInfo] = labelRender.mock.calls[0]!;
+    expect(firstItem).toEqual(expect.objectContaining({ key: "demo1" }));
+    expect(firstInfo).toEqual(
+      expect.objectContaining({
+        item: expect.objectContaining({ key: "demo1" }),
+        index: 0,
+        active: true,
+        originNode: "What is Ant Design X ?",
+      }),
+    );
+  });
+
+  it("prefers labelRender and iconRender slots over props", () => {
+    const labelRender = vi.fn();
+    const iconRender = vi.fn();
+
+    const wrapper = track(
+      mount(Conversations, {
+        props: {
+          items: [...items],
+          labelRender,
+          iconRender,
+        },
+        slots: {
+          labelRender: ({ item, index }: any) =>
+            h("span", `slot-${item.key}-${index}`),
+          iconRender: ({ item, index }: any) =>
+            h("span", `slot-icon-${item.key}-${index}`),
+        },
+      }),
+    );
+
+    expect(wrapper.text()).toContain("slot-demo1-0");
+    expect(wrapper.text()).toContain("slot-icon-demo1-0");
+    expect(labelRender).not.toHaveBeenCalled();
+    expect(iconRender).not.toHaveBeenCalled();
+  });
+
+  it("falls back to item label and icon when no render is provided", () => {
+    const wrapper = track(
+      mount(Conversations, {
+        props: {
+          items: [...items],
+        },
+      }),
+    );
+
+    expect(wrapper.text()).toContain("What is Ant Design X ?");
+    expect(wrapper.find(".conversation-icon").exists()).toBe(true);
+  });
+
+  it("treats empty render result as explicit and does not fallback", () => {
+    const wrapper = track(
+      mount(Conversations, {
+        props: {
+          items: [...items],
+          labelRender: () => null,
+          iconRender: () => null,
+        },
+      }),
+    );
+
+    expect(wrapper.find(".conversation-icon").exists()).toBe(false);
+    expect(wrapper.text()).not.toContain("What is Ant Design X ?");
+  });
+
   it("supports grouping and custom group label", () => {
     const grouped = track(
       mount(Conversations, {

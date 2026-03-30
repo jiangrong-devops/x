@@ -15,6 +15,7 @@ description: Used to switch between multiple agents, update conversation turns, 
 <demo src="./demo/controlled-mode.vue">Controlled Mode</demo>
 <demo src="./demo/with-menu.vue">Operations</demo>
 <demo src="./demo/menu-trigger.vue">Custom Operations</demo>
+<demo src="./demo/label-icon-render.vue">Custom Label and Icon Rendering</demo>
 <demo src="./demo/group.vue">Group</demo>
 <demo src="./demo/group-collapsible.vue">Group collapsible</demo>
 <demo src="./demo/controlled-collapsible.vue"> controlled collapsible mode</demo>
@@ -25,7 +26,7 @@ description: Used to switch between multiple agents, update conversation turns, 
 
 ## API
 
-### ConversationsProps
+### Props
 
 | Property           | Description                                                             | Type                                                                                            | Default |
 | ------------------ | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------- |
@@ -33,6 +34,8 @@ description: Used to switch between multiple agents, update conversation turns, 
 | `defaultActiveKey` | Default selected value                                                  | `string \| number`                                                                              | -       |
 | `items`            | Data source for conversation list                                       | `ItemType[]`                                                                                    | `[]`    |
 | `onActiveChange`   | Callback for selection change                                           | `(value: string \| number, item?: ItemType) => void`                                            | -       |
+| `labelRender`      | Custom title renderer for conversation item                             | `VNodeChild \| ((item: ConversationItemType, info: ConversationItemRenderInfo) => VNodeChild)`  | -       |
+| `iconRender`       | Custom icon renderer for conversation item                              | `VNodeChild \| ((item: ConversationItemType, info: ConversationItemRenderInfo) => VNodeChild)`  | -       |
 | `menu`             | Operation menu for conversations                                        | `ConversationsItemMenu \| ((conversation: ConversationItemType) => ConversationsItemMenu)`      | -       |
 | `groupable`        | If grouping is supported, it defaults to the `Conversation.group` field | `boolean \| GroupableProps`                                                                     | -       |
 | `shortcutKeys`     | Shortcut key operations                                                 | `{ creation?: ShortcutKeys<number>; items?: ShortcutKeys<'number'> \| ShortcutKeys<number>[] }` | -       |
@@ -40,6 +43,16 @@ description: Used to switch between multiple agents, update conversation turns, 
 | `styles`           | Semantic structure styles                                               | `Partial<Record<'root' \| 'creation' \| 'group' \| 'item', CSSProperties>>`                     | -       |
 | `classes`          | Semantic structure class names                                          | `Partial<Record<'root' \| 'creation' \| 'group' \| 'item', string>>`                            | -       |
 | `rootClass`        | Root node className                                                     | `string`                                                                                        | -       |
+
+### Slots
+
+| Slot          | Description                    | Type                                                  |
+| ------------- | ------------------------------ | ----------------------------------------------------- |
+| `labelRender` | Conversation title render slot | `({ item, index, active, originNode }) => VNodeChild` |
+| `iconRender`  | Conversation icon render slot  | `({ item, index, active, originNode }) => VNodeChild` |
+
+Title render priority: `labelRender` slot > `labelRender` prop > `item.label`.
+Icon render priority: `iconRender` slot > `iconRender` prop > `item.icon`.
 
 ### ItemType
 
@@ -49,13 +62,13 @@ type ItemType = ConversationItemType | DividerItemType;
 
 #### ConversationItemType
 
-| Property   | Description                                                 | Type               | Default |
-| ---------- | ----------------------------------------------------------- | ------------------ | ------- |
-| `key`      | Unique identifier                                           | `string \| number` | -       |
-| `label`    | Conversation name                                           | `VNodeChild`       | -       |
-| `group`    | Conversation type, linked to `ConversationsProps.groupable` | `string`           | -       |
-| `icon`     | Conversation icon                                           | `VNodeChild`       | -       |
-| `disabled` | Whether to disable                                          | `boolean`          | -       |
+| Property   | Description                                    | Type               | Default |
+| ---------- | ---------------------------------------------- | ------------------ | ------- |
+| `key`      | Unique identifier                              | `string \| number` | -       |
+| `label`    | Conversation name                              | `VNodeChild`       | -       |
+| `group`    | Conversation type, linked to `props.groupable` | `string`           | -       |
+| `icon`     | Conversation icon                              | `VNodeChild`       | -       |
+| `disabled` | Whether to disable                             | `boolean`          | -       |
 
 #### DividerItemType
 
