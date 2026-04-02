@@ -4,7 +4,9 @@ import { fileURLToPath } from "node:url";
 import { glob } from "tinyglobby";
 
 const DEFAULT_LOCALE = "zh-CN";
-const SITE_URL = process.env.LLM_SITE_URL?.replace(/\/$/, "") || "";
+const DEFAULT_SITE_URL = "https://x.antdv-next.com";
+const SITE_URL =
+  process.env.LLM_SITE_URL?.replace(/\/$/, "") || DEFAULT_SITE_URL;
 
 function normalizePath(value) {
   return value.split(path.sep).join("/");
@@ -55,6 +57,30 @@ function toOutputRelativePath(relativePath, locale) {
 function toMarkdownUrl(outputRelativePath) {
   const urlPath = `/${normalizePath(outputRelativePath)}`;
   return SITE_URL ? `${SITE_URL}${urlPath}` : urlPath;
+}
+
+function toAbsoluteSiteUrl(urlPath) {
+  if (!urlPath.startsWith("/")) return urlPath;
+  if (urlPath.startsWith("//")) return urlPath;
+  return SITE_URL ? `${SITE_URL}${urlPath}` : urlPath;
+}
+
+function absolutizeRootRelativeUrls(markdown) {
+  if (!SITE_URL) return markdown;
+
+  return markdown
+    .replace(
+      /(!?\[[^\]]*?\]\()(?<url>\/(?!\/)[^) \t\r\n]+)(?<suffix>(?:\s+"[^"]*")?\))/g,
+      (_, prefix, url, suffix) => `${prefix}${toAbsoluteSiteUrl(url)}${suffix}`,
+    )
+    .replace(
+      /(^\s*\[[^\]]+?\]:\s*)(?<url>\/(?!\/)\S+)/gm,
+      (_, prefix, url) => `${prefix}${toAbsoluteSiteUrl(url)}`,
+    )
+    .replace(
+      /(\b(?:href|src)=["'])(?<url>\/(?!\/)[^"']+)(["'])/g,
+      (_, prefix, url, suffix) => `${prefix}${toAbsoluteSiteUrl(url)}${suffix}`,
+    );
 }
 
 function escapeRegExp(value) {
@@ -123,7 +149,7 @@ function getTopSection(relativePath) {
 }
 
 function buildStandalonePage(title, content) {
-  return [`# ${title}`, "", content, ""].join("\n");
+  return [`# ${title}`, "", absolutizeRootRelativeUrls(content), ""].join("\n");
 }
 
 async function readSemanticFile(outputDir, fileName) {
@@ -172,7 +198,9 @@ async function collectDocsByLocale(pagesDir, locale) {
 
       try {
         const demoSource = await fs.readFile(demoPath, "utf-8");
-        const description = extractDemoDescription(demoSource, locale);
+        const description = absolutizeRootRelativeUrls(
+          extractDemoDescription(demoSource, locale),
+        );
         const code = stripDemoDocsBlocks(demoSource);
         const lang = path.extname(demo.src).slice(1) || "vue";
 
@@ -206,6 +234,7 @@ async function collectDocsByLocale(pagesDir, locale) {
     }
 
     merged += body.slice(cursor);
+    merged = absolutizeRootRelativeUrls(merged);
 
     const fullContent = [
       "---",
@@ -284,10 +313,10 @@ async function generateLlms() {
     "",
     "## Navigation",
     "",
-    "- [Full Documentation (EN)](./llms-full.txt)",
-    "- [Full Documentation (CN)](./llms-full-cn.txt)",
-    "- [Semantic Documentation (EN)](./llms-semantic.md)",
-    "- [Semantic Documentation (CN)](./llms-semantic-cn.md)",
+    `- [Full Documentation (EN)](${toMarkdownUrl("llms-full.txt")})`,
+    `- [Full Documentation (CN)](${toMarkdownUrl("llms-full-cn.txt")})`,
+    `- [Semantic Documentation (EN)](${toMarkdownUrl("llms-semantic.md")})`,
+    `- [Semantic Documentation (CN)](${toMarkdownUrl("llms-semantic-cn.md")})`,
     "",
     renderLocaleSection("## Docs (EN)", enItems),
     "",

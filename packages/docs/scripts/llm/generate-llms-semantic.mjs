@@ -3,7 +3,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { glob } from "tinyglobby";
 
-const SITE_URL = process.env.LLM_SITE_URL?.replace(/\/$/, "") || "";
+const DEFAULT_SITE_URL = "https://x.antdv-next.com";
+const SITE_URL =
+  process.env.LLM_SITE_URL?.replace(/\/$/, "") || DEFAULT_SITE_URL;
 
 function normalizePath(value) {
   return value.split(path.sep).join("/");
