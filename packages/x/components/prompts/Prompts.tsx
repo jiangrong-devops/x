@@ -177,9 +177,10 @@ export const XPrompts = defineComponent({
     });
 
     const triggerItemClick = (item: PromptDataItem, nested: boolean) => {
-      if (nested || item.disabled) return;
+      if (item.disabled || (!nested && hasChildren(item))) return;
 
       const info: PromptsClickInfo = { data: item };
+      props.onItemClick?.(info);
       emit("itemClick", info);
     };
 
@@ -271,7 +272,7 @@ export const XPrompts = defineComponent({
                   nested ? mergedStyles.value.subItem : mergedStyles.value.item,
                   item.style,
                 ]}
-                onClick={() => triggerItemClick(item, itemHasChildren)}
+                onClick={() => triggerItemClick(item, nested)}
               >
                 {hasRenderableNode(iconNode) && (
                   <div class={`${props.prefixCls}-icon`}>{iconNode}</div>
