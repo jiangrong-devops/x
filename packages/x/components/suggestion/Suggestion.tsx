@@ -12,17 +12,9 @@ import type {
 } from "./interface";
 
 import useXComponentConfig from "../_utils/hooks/use-x-component-config";
+import { hasRenderableNode } from "../_utils/vue";
 import useStyle from "./style";
 import useActive from "./useActive";
-
-const hasRenderableNode = (node: unknown): boolean => {
-  if (Array.isArray(node))
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-
-  return node !== null && node !== undefined && node !== false;
-};
 
 const XSuggestion = defineComponent({
   name: "AxSuggestion",

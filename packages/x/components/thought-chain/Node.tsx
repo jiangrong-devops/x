@@ -14,17 +14,8 @@ import type {
   ThoughtChainTitleSlotInfo,
 } from "./interface";
 
+import { hasRenderableNode } from "../_utils/vue";
 import { STATUS_ICON_MAP } from "./Status";
-
-function hasRenderableNode(node: VNodeChild | null | undefined) {
-  if (Array.isArray(node)) {
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-  }
-
-  return node !== null && node !== undefined && node !== false;
-}
 
 export default defineComponent({
   name: "ThoughtChainNode",

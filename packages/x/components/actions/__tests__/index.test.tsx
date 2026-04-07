@@ -178,6 +178,44 @@ describe("Actions", () => {
     expect(wrapper.find(".slot-action-1").text()).toBe("Action 2");
     expect(actionRender).toHaveBeenCalledTimes(1);
   });
+
+  it("ignores empty iconRender and actionRender slot branches", () => {
+    const wrapper = mount({
+      components: { Actions },
+      setup() {
+        return {
+          items: [
+            {
+              key: "copy",
+              label: "Copy",
+              icon: h("span", { class: "origin-copy-icon" }, "copy"),
+            },
+            {
+              key: "retry",
+              label: "Retry",
+              icon: h("span", { class: "origin-retry-icon" }, "retry"),
+            },
+          ],
+        };
+      },
+      template: `
+        <Actions :items="items">
+          <template #icon-render="{ item }">
+            <span v-if="item.key === 'copy'" class="slot-copy-icon">copy slot</span>
+          </template>
+
+          <template #action-render="{ item }">
+            <button v-if="item.key === 'retry'" class="slot-retry-action">retry slot</button>
+          </template>
+        </Actions>
+      `,
+    });
+
+    expect(wrapper.find(".slot-copy-icon").exists()).toBe(true);
+    expect(wrapper.find(".slot-retry-action").exists()).toBe(true);
+    expect(wrapper.find(".origin-copy-icon").exists()).toBe(false);
+    expect(wrapper.find(".origin-retry-icon").exists()).toBe(false);
+  });
 });
 
 describe("ActionsMenu.findItem", () => {

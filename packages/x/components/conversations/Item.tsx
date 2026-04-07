@@ -12,6 +12,8 @@ import type {
   ConversationsProps,
 } from "./interface";
 
+import { hasRenderableNode } from "../_utils/vue";
+
 export interface ConversationsItemProps {
   info: ConversationItemType;
   index: number;
@@ -30,15 +32,6 @@ export interface ConversationsItemProps {
 
 const stopPropagation = (event: Event) => {
   event.stopPropagation();
-};
-
-const hasRenderableNode = (node: VNodeChild): boolean => {
-  if (Array.isArray(node))
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-
-  return node !== null && node !== undefined && node !== false;
 };
 
 const renderWithPriority = (

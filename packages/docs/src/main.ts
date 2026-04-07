@@ -1,3 +1,4 @@
+import Antdx from "@antdv-next/x";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 
@@ -15,6 +16,7 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.use(i18n);
+app.use(Antdx);
 app.component("Demo", Demo);
 app.component("DemoGroup", DemoGroup);
 app.component("ComponentOverview", ComponentOverview);

@@ -14,6 +14,7 @@ import type {
 } from "./interface";
 
 import useXComponentConfig from "../_utils/hooks/use-x-component-config";
+import { hasRenderableNode } from "../_utils/vue";
 import { EditableContent } from "./EditableContent";
 import Loading from "./loading";
 import useBubbleStyle from "./style";
@@ -26,14 +27,6 @@ function renderBubbleSlot(
 ) {
   if (!slot) return null;
   return typeof slot === "function" ? slot(content, info) : slot;
-}
-
-function hasRenderableNode(node: any): boolean {
-  if (Array.isArray(node))
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-  return node !== null && node !== undefined && node !== false;
 }
 
 export const XBubble = defineComponent({

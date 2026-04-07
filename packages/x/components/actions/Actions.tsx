@@ -19,6 +19,7 @@ import type {
 } from "./interface";
 
 import useXComponentConfig from "../_utils/hooks/use-x-component-config";
+import { isEmptyNode } from "../_utils/vue";
 import Item from "./Item";
 import useActionsStyle from "./style";
 
@@ -162,9 +163,14 @@ export const XActions = defineComponent({
 
           const mergedItem: ItemType = {
             ...item,
-            icon: slottedIcon ?? item.icon,
+            icon:
+              slottedIcon !== undefined && !isEmptyNode(slottedIcon)
+                ? slottedIcon
+                : item.icon,
             actionRender:
-              slotActionNode !== undefined ? slotActionNode : item.actionRender,
+              slotActionNode !== undefined && !isEmptyNode(slotActionNode)
+                ? slotActionNode
+                : item.actionRender,
           };
 
           return (

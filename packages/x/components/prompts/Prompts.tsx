@@ -22,6 +22,7 @@ import type {
 } from "./interface";
 
 import useXComponentConfig from "../_utils/hooks/use-x-component-config";
+import { hasRenderableNode } from "../_utils/vue";
 import usePromptsStyle from "./style";
 
 function hasChildren(item: PromptDataItem): item is PromptsItemType {
@@ -42,15 +43,6 @@ function getItemDomAttrs(item: PromptDataItem) {
   delete domAttrs.children;
 
   return domAttrs;
-}
-
-function hasRenderableNode(node: unknown): boolean {
-  if (Array.isArray(node))
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-
-  return node !== null && node !== undefined && node !== false;
 }
 
 export const XPrompts = defineComponent({

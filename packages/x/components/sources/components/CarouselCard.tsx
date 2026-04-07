@@ -10,14 +10,7 @@ import type {
   SourcesProps,
 } from "../interface";
 
-const hasRenderableNode = (node: unknown): boolean => {
-  if (Array.isArray(node))
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-
-  return node !== null && node !== undefined && node !== false;
-};
+import { hasRenderableNode } from "../../_utils/vue";
 
 export interface CarouselCardProps {
   activeKey?: SourcesProps["activeKey"];

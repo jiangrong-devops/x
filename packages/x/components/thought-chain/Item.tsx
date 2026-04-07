@@ -11,18 +11,9 @@ import type {
   ThoughtChainItemTitleSlotInfo,
 } from "./interface";
 
+import { hasRenderableNode } from "../_utils/vue";
 import { STATUS_ICON_MAP } from "./Status";
 import useThoughtChainStyle from "./style";
-
-function hasRenderableNode(node: VNodeChild | null | undefined) {
-  if (Array.isArray(node)) {
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-  }
-
-  return node !== null && node !== undefined && node !== false;
-}
 
 export const XThoughtChainItem = defineComponent({
   name: "AxThoughtChainItem",

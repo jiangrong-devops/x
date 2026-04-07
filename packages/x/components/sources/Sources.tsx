@@ -15,17 +15,9 @@ import type {
 
 import useXComponentConfig from "../_utils/hooks/use-x-component-config";
 import initCollapseTransition from "../_utils/transition";
+import { hasRenderableNode } from "../_utils/vue";
 import CarouselCard from "./components/CarouselCard";
 import useSourcesStyle from "./style";
-
-const hasRenderableNode = (node: unknown): boolean => {
-  if (Array.isArray(node))
-    return node.some(
-      item => item !== null && item !== undefined && item !== false,
-    );
-
-  return node !== null && node !== undefined && node !== false;
-};
 
 export const XSources = defineComponent({
   name: "AxSources",
