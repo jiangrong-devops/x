@@ -6,6 +6,7 @@
   "bugs": {
     "url": "https://github.com/antdv-next/x/issues"
   },
+  "license": "MIT",
   "bin": {
     "x-skill": "dist/cli.js"
   },
