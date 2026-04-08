@@ -1,33 +1,83 @@
 <script setup lang="ts">
-// TODO: 待实现 Attachments 组件后，替换占位为真实文件上传面板
-import { PaperClipOutlined } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Button, Flex } from "antdv-next";
-import { ref } from "vue";
+import type {
+  AttachmentsProps,
+  AttachmentsRef,
+  SenderRef,
+} from "@antdv-next/x";
+
+import { CloudUploadOutlined, PaperClipOutlined } from "@antdv-next/icons";
+import { onBeforeUnmount, ref } from "vue";
+
+type Attachment = Exclude<AttachmentsProps["items"], undefined>[number];
 
 const open = ref(false);
 const text = ref("");
-const pastedFiles = ref<string[]>([]);
+const items = shallowRef<Attachment[]>([]);
 
-const senderRef = ref<InstanceType<typeof Sender>>();
+const senderRef = ref<SenderRef>();
+const attachmentsRef = ref<AttachmentsRef>();
+
+onBeforeUnmount(() => {
+  items.value.forEach(item => {
+    if (item.url?.startsWith("blob:")) {
+      URL.revokeObjectURL(item.url);
+    }
+  });
+});
 
 const onPasteFile = (files: FileList) => {
-  // TODO: 替换为 Attachments.upload(file)
   for (const file of files) {
-    pastedFiles.value.push(file.name);
+    attachmentsRef.value?.upload(file);
   }
   open.value = true;
 };
 
+const onChange = ({
+  file,
+  fileList,
+}: {
+  file: Attachment;
+  fileList: Attachment[];
+}) => {
+  items.value = fileList.map(item => {
+    if (
+      item.uid === file.uid &&
+      file.status !== "removed" &&
+      item.originFileObj
+    ) {
+      if (item.url?.startsWith("blob:")) {
+        URL.revokeObjectURL(item.url);
+      }
+
+      return {
+        ...item,
+        url: URL.createObjectURL(item.originFileObj),
+      };
+    }
+
+    return item;
+  });
+};
+
+const placeholder = (type: "inline" | "drop") =>
+  type === "drop"
+    ? {
+        title: "Drop file here",
+      }
+    : {
+        title: "Paste or upload files",
+        description: "Paste files into the input box or click to select files",
+      };
+
 const onSubmit = () => {
-  pastedFiles.value = [];
+  items.value = [];
   text.value = "";
 };
 </script>
 
 <template>
-  <Flex :style="{ height: '220px' }" align="end">
-    <Sender
+  <a-flex :style="{ height: '220px' }" align="end">
+    <ax-sender
       ref="senderRef"
       :value="text"
       :on-change="
@@ -39,7 +89,7 @@ const onSubmit = () => {
       :on-submit="onSubmit"
     >
       <template #header>
-        <Sender.Header
+        <ax-sender-header
           title="Attachments"
           :open="open"
           :on-open-change="
@@ -49,35 +99,35 @@ const onSubmit = () => {
           "
           :styles="{ content: { padding: 0 } }"
         >
-          <!-- TODO: 替换为 Attachments 组件 -->
-          <div
-            :style="{
-              padding: '24px',
-              textAlign: 'center',
-              color: '#999',
-              border: '1px dashed #d9d9d9',
-              borderRadius: '8px',
-              margin: '8px',
-            }"
+          <ax-attachments
+            ref="attachmentsRef"
+            :before-upload="() => false"
+            :items="items"
+            :on-change="onChange"
+            :placeholder="placeholder"
+            :get-drop-container="() => senderRef?.nativeElement"
           >
-            <div v-if="pastedFiles.length">
-              已粘贴文件: {{ pastedFiles.join(", ") }}
-            </div>
-            <div v-else>
-              TODO: Attachments 组件占位 — 请尝试粘贴文件到输入框
-            </div>
-          </div>
-        </Sender.Header>
+            <template #placeholder-icon>
+              <CloudUploadOutlined />
+            </template>
+          </ax-attachments>
+        </ax-sender-header>
       </template>
       <template #prefix>
-        <Button type="text" :style="{ fontSize: '16px' }" @click="open = !open">
+        <a-button
+          type="text"
+          :style="{ fontSize: '16px' }"
+          @click="
+            open ? (open = false) : attachmentsRef?.select({ multiple: true })
+          "
+        >
           <template #icon>
             <PaperClipOutlined />
           </template>
-        </Button>
+        </a-button>
       </template>
-    </Sender>
-  </Flex>
+    </ax-sender>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { SenderProps } from "@antdv-next/x";
 import type { MenuProps } from "antdv-next";
 
 import {
@@ -10,11 +9,8 @@ import {
   PaperClipOutlined,
   SearchOutlined,
 } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Button, Divider, Dropdown, Flex, message } from "antdv-next";
-import { h, ref, watch } from "vue";
-
-const SenderSwitch = Sender.Switch;
+import { message } from "antdv-next";
+import { ref, watch } from "vue";
 
 interface AgentItem {
   icon: any;
@@ -33,8 +29,8 @@ const activeAgentKey = ref("ai_writing");
 
 const agentItems = Object.entries(agentMap).map(([key, { icon, label }]) => ({
   key,
-  icon: h(icon),
   label,
+  icon,
 }));
 
 const agentItemClick: MenuProps["onClick"] = item => {
@@ -69,94 +65,79 @@ const onCancel = () => {
   loading.value = false;
   message.error("取消发送！");
 };
-
-const footerRender: SenderProps["footer"] = (actionNode, { components }) => {
-  const { SendButton, LoadingButton } = components;
-  return h(
-    Flex,
-    { justify: "space-between", align: "center" },
-    {
-      default: () => [
-        h(
-          Flex,
-          { gap: "small", align: "center" },
-          {
-            default: () => [
-              h(
-                Button,
-                { style: IconStyle, type: "text" },
-                { icon: () => h(PaperClipOutlined) },
-              ),
-              h(SenderSwitch, {
-                value: deepThink.value,
-                onChange: (checked: boolean) => {
-                  deepThink.value = checked;
-                },
-                icon: h(OpenAIOutlined),
-                checkedChildren: h("div", null, [
-                  "深度搜索：",
-                  h("span", { style: SwitchTextStyle }, "开启"),
-                ]),
-                unCheckedChildren: h("div", null, [
-                  "深度搜索：",
-                  h("span", { style: SwitchTextStyle }, "关闭"),
-                ]),
-              }),
-              h(
-                Dropdown,
-                {
-                  menu: {
-                    selectedKeys: [activeAgentKey.value],
-                    onClick: agentItemClick,
-                    items: agentItems,
-                  },
-                },
-                {
-                  default: () =>
-                    h(
-                      SenderSwitch,
-                      {
-                        value: false,
-                        icon: h(SearchOutlined),
-                      },
-                      { default: () => "功能应用" },
-                    ),
-                },
-              ),
-            ],
-          },
-        ),
-        h(
-          Flex,
-          { align: "center" },
-          {
-            default: () => [
-              h(
-                Button,
-                { type: "text", style: IconStyle },
-                { icon: () => h(ApiOutlined) },
-              ),
-              h(Divider, { type: "vertical" }),
-              loading.value ? h(LoadingButton) : h(SendButton),
-            ],
-          },
-        ),
-      ],
-    },
-  );
-};
 </script>
 
 <template>
-  <Sender
+  <ax-sender
     :loading="loading"
     placeholder="按 Enter 发送消息"
-    :footer="footerRender"
     :suffix="false"
     :auto-size="{ minRows: 3, maxRows: 6 }"
     :on-submit="onSubmit"
     :on-cancel="onCancel"
-  />
+  >
+    <template #footer="{ components }">
+      <a-flex justify="space-between" align="center">
+        <a-flex gap="small" align="center">
+          <a-button :style="IconStyle" type="text">
+            <template #icon>
+              <PaperClipOutlined />
+            </template>
+          </a-button>
+          <ax-sender-switch
+            :value="deepThink"
+            :on-change="(checked: boolean) => (deepThink = checked)"
+          >
+            <template #icon>
+              <OpenAIOutlined />
+            </template>
+            <template #checkedChildren>
+              <div>
+                深度搜索：
+                <span :style="SwitchTextStyle">开启</span>
+              </div>
+            </template>
+            <template #unCheckedChildren>
+              <div>
+                深度搜索：
+                <span :style="SwitchTextStyle">关闭</span>
+              </div>
+            </template>
+          </ax-sender-switch>
+          <a-dropdown
+            :menu="{
+              selectedKeys: [activeAgentKey],
+              onClick: agentItemClick,
+              items: agentItems,
+            }"
+          >
+            <template #iconRender="{ key }">
+              <SearchOutlined v-if="key === 'deep_search'" />
+              <CodeOutlined v-else-if="key === 'ai_code'" />
+              <EditOutlined v-else-if="key === 'ai_writing'" />
+            </template>
+            <ax-sender-switch :value="false">
+              <template #icon>
+                <SearchOutlined />
+              </template>
+              功能应用
+            </ax-sender-switch>
+          </a-dropdown>
+        </a-flex>
+        <a-flex align="center">
+          <a-button type="text" :style="IconStyle">
+            <template #icon>
+              <ApiOutlined />
+            </template>
+          </a-button>
+          <a-divider type="vertical" />
+          <component
+            :is="loading ? components.LoadingButton : components.SendButton"
+          />
+        </a-flex>
+      </a-flex>
+    </template>
+  </ax-sender>
 </template>
 
 <docs lang="zh-CN">

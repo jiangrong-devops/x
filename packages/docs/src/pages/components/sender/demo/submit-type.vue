@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Sender } from "@antdv-next/x";
 import { message } from "antdv-next";
 
 function handleSubmit() {
@@ -8,7 +7,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Sender
+  <ax-sender
     submit-type="shiftEnter"
     placeholder="Press Shift + Enter to send message"
     :on-submit="handleSubmit"

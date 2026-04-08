@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SenderProps, SuggestionItem } from "@antdv-next/x";
+import type { SuggestionItem } from "@antdv-next/x";
 import type { MenuProps } from "antdv-next";
 
 import {
@@ -14,11 +14,8 @@ import {
   ProfileOutlined,
   SearchOutlined,
 } from "@antdv-next/icons";
-import { Sender, Suggestion } from "@antdv-next/x";
-import { Button, Divider, Dropdown, Flex, message } from "antdv-next";
-import { h, nextTick, onBeforeUnmount, ref } from "vue";
-
-const SenderSwitch = Sender.Switch;
+import { message } from "antdv-next";
+import { nextTick, onBeforeUnmount, ref } from "vue";
 
 const agentMap: Record<string, { icon: any; label: string }> = {
   deep_search: { icon: SearchOutlined, label: "Deep Search" },
@@ -36,7 +33,6 @@ const suggestions: SuggestionItem[] = [
   {
     label: "Check some knowledge",
     value: "knowledge",
-    icon: h(OpenAIFilled),
     children: [
       { label: "About React", value: "react" },
       { label: "About Ant Design", value: "antd" },
@@ -53,14 +49,14 @@ const senderRef = useTemplateRef("senderRef");
 
 const agentItems = Object.entries(agentMap).map(([key, { icon, label }]) => ({
   key,
-  icon: h(icon),
   label,
+  icon,
 }));
 
 const fileItems = Object.entries(fileMap).map(([key, { icon, label }]) => ({
   key,
-  icon: h(icon),
   label,
+  icon,
 }));
 
 const agentItemClick: MenuProps["onClick"] = item => {
@@ -130,125 +126,117 @@ const onCancel = () => {
   loading.value = false;
   message.error("Cancel sending!");
 };
-
-const footerRender: SenderProps["footer"] = actionNode => {
-  return h(
-    Flex,
-    { justify: "space-between", align: "center" },
-    {
-      default: () => [
-        h(
-          Flex,
-          { gap: "small", align: "center" },
-          {
-            default: () => [
-              h(
-                Button,
-                { style: iconStyle, type: "text" },
-                { icon: () => h(PaperClipOutlined) },
-              ),
-              h(SenderSwitch, {
-                value: deepThink.value,
-                onChange: (checked: boolean) => {
-                  deepThink.value = checked;
-                },
-                icon: h(OpenAIOutlined),
-                checkedChildren: h("div", null, [
-                  "Deep Think:",
-                  h("span", { style: switchTextStyle }, "on"),
-                ]),
-                unCheckedChildren: h("div", null, [
-                  "Deep Think:",
-                  h("span", { style: switchTextStyle }, "off"),
-                ]),
-              }),
-              h(
-                Dropdown,
-                {
-                  menu: {
-                    selectedKeys: [activeAgentKey.value],
-                    onClick: agentItemClick,
-                    items: agentItems,
-                  },
-                },
-                {
-                  default: () =>
-                    h(
-                      SenderSwitch,
-                      {
-                        value: false,
-                        icon: h(AntDesignOutlined),
-                      },
-                      { default: () => "Agent" },
-                    ),
-                },
-              ),
-              fileItems.length
-                ? h(
-                    Dropdown,
-                    {
-                      menu: {
-                        onClick: fileItemClick,
-                        items: fileItems,
-                      },
-                    },
-                    {
-                      default: () =>
-                        h(
-                          SenderSwitch,
-                          {
-                            value: false,
-                            icon: h(ProfileOutlined),
-                          },
-                          { default: () => "Files" },
-                        ),
-                    },
-                  )
-                : null,
-            ],
-          },
-        ),
-        h(
-          Flex,
-          { align: "center" },
-          {
-            default: () => [
-              h(
-                Button,
-                { type: "text", style: iconStyle },
-                { icon: () => h(ApiOutlined) },
-              ),
-              h(Divider, { type: "vertical" }),
-              actionNode,
-            ],
-          },
-        ),
-      ],
-    },
-  );
-};
 </script>
 
 <template>
-  <Flex vertical gap="middle">
-    <Suggestion :items="suggestions" :on-select="onSelectSuggestion">
+  <a-flex vertical gap="middle">
+    <ax-suggestion :items="suggestions" :on-select="onSelectSuggestion">
       <template #default="{ onTrigger, onKeyDown }">
-        <Sender
+        <ax-sender
           ref="senderRef"
           :loading="loading"
           :value="value"
           placeholder="Press Enter to send message"
-          :footer="footerRender"
           :suffix="false"
           :auto-size="{ minRows: 3, maxRows: 6 }"
           :on-change="onSenderChange"
-          :on-key-down="event => onSenderKeyDown(event, onTrigger, onKeyDown)"
+          :on-key-down="
+            (event: KeyboardEvent) =>
+              onSenderKeyDown(event, onTrigger, onKeyDown)
+          "
           :on-submit="onSubmit"
           :on-cancel="onCancel"
-        />
+        >
+          <template #footer="{ components }">
+            <a-flex justify="space-between" align="center">
+              <a-flex gap="small" align="center">
+                <a-button :style="iconStyle" type="text">
+                  <template #icon>
+                    <PaperClipOutlined />
+                  </template>
+                </a-button>
+                <ax-sender-switch
+                  :value="deepThink"
+                  :on-change="(checked: boolean) => (deepThink = checked)"
+                >
+                  <template #icon>
+                    <OpenAIOutlined />
+                  </template>
+                  <template #checkedChildren>
+                    <div>
+                      Deep Think:
+                      <span :style="switchTextStyle">on</span>
+                    </div>
+                  </template>
+                  <template #unCheckedChildren>
+                    <div>
+                      Deep Think:
+                      <span :style="switchTextStyle">off</span>
+                    </div>
+                  </template>
+                </ax-sender-switch>
+                <a-dropdown
+                  :menu="{
+                    selectedKeys: [activeAgentKey],
+                    onClick: agentItemClick,
+                    items: agentItems,
+                  }"
+                >
+                  <template #iconRender="{ key }">
+                    <SearchOutlined v-if="key === 'deep_search'" />
+                    <CodeOutlined v-else-if="key === 'ai_code'" />
+                    <EditOutlined v-else-if="key === 'ai_writing'" />
+                  </template>
+                  <ax-sender-switch :value="false">
+                    <template #icon>
+                      <AntDesignOutlined />
+                    </template>
+                    Agent
+                  </ax-sender-switch>
+                </a-dropdown>
+                <a-dropdown
+                  v-if="fileItems.length"
+                  :menu="{
+                    onClick: fileItemClick,
+                    items: fileItems,
+                  }"
+                >
+                  <template #iconRender="{ key }">
+                    <FileImageOutlined v-if="key === 'file_image'" />
+                  </template>
+                  <ax-sender-switch :value="false">
+                    <template #icon>
+                      <ProfileOutlined />
+                    </template>
+                    Files
+                  </ax-sender-switch>
+                </a-dropdown>
+              </a-flex>
+              <a-flex align="center">
+                <a-button type="text" :style="iconStyle">
+                  <template #icon>
+                    <ApiOutlined />
+                  </template>
+                </a-button>
+                <a-divider type="vertical" />
+                <component :is="components.SpeechButton" />
+                <a-divider type="vertical" />
+                <component
+                  :is="
+                    loading ? components.LoadingButton : components.SendButton
+                  "
+                />
+              </a-flex>
+            </a-flex>
+          </template>
+        </ax-sender>
       </template>
-    </Suggestion>
-  </Flex>
+
+      <template #iconRender="{ item }">
+        <OpenAIFilled v-if="item.value === 'knowledge'" />
+      </template>
+    </ax-suggestion>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

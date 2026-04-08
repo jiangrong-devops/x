@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { OpenAIOutlined } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { message, Space, Typography } from "antdv-next";
-import { h, ref } from "vue";
+import { message } from "antdv-next";
+import { ref } from "vue";
 
 const value = ref("");
 const loading = ref(false);
@@ -18,36 +17,33 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Sender
+  <ax-sender
     submit-type="shiftEnter"
     :value="value"
     :loading="loading"
     :on-change="(v: string) => (value = v)"
     :on-submit="handleSubmit"
     :on-cancel="() => (loading = false)"
-    :suffix="
-      (_: any, info: any) => {
-        const { SendButton, LoadingButton, ClearButton, SpeechButton } =
-          info.components;
-        return h(Space, { size: 'small' }, () => [
-          h(
-            Typography.Text,
-            { type: 'secondary', style: { whiteSpace: 'nowrap' } },
-            () => h('small', null, '`Shift + Enter` to submit'),
-          ),
-          h(ClearButton),
-          h(SpeechButton),
-          loading
-            ? h(LoadingButton)
-            : h(SendButton, {
-                type: 'primary',
-                icon: h(OpenAIOutlined),
-                disabled: false,
-              }),
-        ]);
-      }
-    "
-  />
+  >
+    <template #suffix="{ components }">
+      <a-space size="small">
+        <a-typography-text type="secondary" :style="{ whiteSpace: 'nowrap' }">
+          <small>`Shift + Enter` to submit</small>
+        </a-typography-text>
+        <component :is="components.ClearButton" />
+        <component :is="components.SpeechButton" />
+        <component
+          :is="loading ? components.LoadingButton : components.SendButton"
+          type="primary"
+          :disabled="false"
+        >
+          <template v-if="!loading" #icon>
+            <OpenAIOutlined />
+          </template>
+        </component>
+      </a-space>
+    </template>
+  </ax-sender>
 </template>
 
 <docs lang="zh-CN">

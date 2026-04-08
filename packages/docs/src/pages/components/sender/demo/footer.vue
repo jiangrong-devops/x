@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ApiOutlined, LinkOutlined, SearchOutlined } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Button, Divider, Flex, Switch } from "antdv-next";
-import { h, onBeforeUnmount, ref, watch } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 
 const loading = ref(false);
 const value = ref("");
@@ -24,42 +22,55 @@ onBeforeUnmount(() => {
 });
 
 const iconStyle = { fontSize: "18px" };
-
-function footerRender(_: any, info: any) {
-  const { SendButton, LoadingButton, SpeechButton } = info.components;
-  return h(Flex, { justify: "space-between", align: "center" }, () => [
-    h(Flex, { gap: "small", align: "center" }, () => [
-      h(Button, { style: iconStyle, type: "text", icon: h(LinkOutlined) }),
-      h(Divider, { type: "vertical" }),
-      "Deep Thinking",
-      h(Switch, { size: "small" }),
-      h(Divider, { type: "vertical" }),
-      h(Button, { icon: h(SearchOutlined) }, () => "Global Search"),
-    ]),
-    h(Flex, { align: "center" }, () => [
-      h(Button, { type: "text", style: iconStyle, icon: h(ApiOutlined) }),
-      h(Divider, { type: "vertical" }),
-      h(SpeechButton, { style: iconStyle }),
-      h(Divider, { type: "vertical" }),
-      loading.value
-        ? h(LoadingButton, { type: "default" })
-        : h(SendButton, { type: "primary", disabled: false }),
-    ]),
-  ]);
-}
 </script>
 
 <template>
-  <Sender
+  <ax-sender
     :value="value"
     :auto-size="{ minRows: 2, maxRows: 6 }"
     placeholder="Press Enter to send message"
-    :footer="footerRender"
     :suffix="false"
     :on-change="(v: string) => (value = v)"
     :on-submit="() => (loading = true)"
     :on-cancel="() => (loading = false)"
-  />
+  >
+    <template #footer="{ components }">
+      <a-flex justify="space-between" align="center">
+        <a-flex gap="small" align="center">
+          <a-button :style="iconStyle" type="text">
+            <template #icon>
+              <LinkOutlined />
+            </template>
+          </a-button>
+          <a-divider type="vertical" />
+          <span>Deep Thinking</span>
+          <a-switch size="small" />
+          <a-divider type="vertical" />
+          <a-button>
+            <template #icon>
+              <SearchOutlined />
+            </template>
+            Global Search
+          </a-button>
+        </a-flex>
+        <a-flex align="center">
+          <a-button type="text" :style="iconStyle">
+            <template #icon>
+              <ApiOutlined />
+            </template>
+          </a-button>
+          <a-divider type="vertical" />
+          <component :is="components.SpeechButton" :style="iconStyle" />
+          <a-divider type="vertical" />
+          <component
+            :is="loading ? components.LoadingButton : components.SendButton"
+            :type="loading ? 'default' : 'primary'"
+            :disabled="false"
+          />
+        </a-flex>
+      </a-flex>
+    </template>
+  </ax-sender>
 </template>
 
 <docs lang="zh-CN">

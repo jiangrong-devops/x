@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Sender } from "@antdv-next/x";
 import { message } from "antdv-next";
 
 function handleSubmit() {
@@ -8,7 +7,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Sender :allow-speech="true" :on-submit="handleSubmit" />
+  <ax-sender :allow-speech="true" :on-submit="handleSubmit" />
 </template>
 
 <docs lang="zh-CN">

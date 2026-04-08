@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { SmileOutlined } from "@antdv-next/icons";
-import { Sender, SenderHeader } from "@antdv-next/x";
-import { Button, Divider, Flex, Typography } from "antdv-next";
-import { computed, h } from "vue";
+import { computed } from "vue";
 
 import { SemanticPreview } from "@/components/semantic";
 import { useLocale } from "@/composables/use-locale";
@@ -63,56 +61,51 @@ const headerSemantics = computed(() => [
   { name: "header", desc: headerLocale.value.header },
   { name: "content", desc: headerLocale.value.content },
 ]);
-
-const prefixNode = h(Button, {
-  type: "text",
-  icon: h(SmileOutlined),
-});
-
-const footerNode = h(Flex, { gap: "small", align: "center" }, () => [
-  h(Sender.Switch, null, { default: () => "Deep Search" }),
-  h(
-    Typography.Text,
-    { type: "secondary" },
-    () => "Deep thinking can understand the intent behind.",
-  ),
-]);
-
-function renderHeader(classNames: Record<string, string>) {
-  return h(
-    SenderHeader,
-    {
-      open: true,
-      title: "Header",
-      classNames,
-    },
-    {
-      default: () => "Content",
-    },
-  );
-}
 </script>
 
 <template>
-  <Flex vertical>
+  <a-flex vertical>
     <SemanticPreview component-name="Sender" :semantics="senderSemantics">
       <template #default="{ classes }">
-        <Sender
-          :class-names="classes"
-          :prefix="prefixNode"
-          :footer="footerNode"
-        />
+        <ax-sender :class-names="classes">
+          <template #prefix>
+            <a-button type="text">
+              <template #icon>
+                <SmileOutlined />
+              </template>
+            </a-button>
+          </template>
+
+          <template #footer>
+            <a-flex gap="small" align="center">
+              <ax-sender-switch>Deep Search</ax-sender-switch>
+              <a-typography-text type="secondary">
+                Deep thinking can understand the intent behind.
+              </a-typography-text>
+            </a-flex>
+          </template>
+        </ax-sender>
       </template>
     </SemanticPreview>
 
-    <Divider :style="{ margin: 0, padding: 0 }" />
+    <a-divider :style="{ margin: 0, padding: 0 }" />
 
     <SemanticPreview component-name="SenderHeader" :semantics="headerSemantics">
       <template #default="{ classes }">
-        <Sender :header="renderHeader(classes)" />
+        <ax-sender>
+          <template #header>
+            <ax-sender-header
+              title="Header"
+              :open="true"
+              :class-names="classes"
+            >
+              Content
+            </ax-sender-header>
+          </template>
+        </ax-sender>
       </template>
     </SemanticPreview>
-  </Flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

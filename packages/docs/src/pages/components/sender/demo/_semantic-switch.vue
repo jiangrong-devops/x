@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { SearchOutlined } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { computed, h } from "vue";
+import { computed } from "vue";
 
 import { SemanticPreview } from "@/components/semantic";
 import { useLocale } from "@/composables/use-locale";
@@ -38,12 +37,15 @@ const semantics = computed(() => [
 <template>
   <SemanticPreview component-name="SenderSwitch" :semantics="semantics">
     <template #default="{ classes }">
-      <Sender.Switch
+      <ax-sender-switch
         checked-children="Deep Search: on"
         un-checked-children="Deep Search: off"
-        :icon="h(SearchOutlined)"
         :class-names="classes"
-      />
+      >
+        <template #icon>
+          <SearchOutlined />
+        </template>
+      </ax-sender-switch>
     </template>
   </SemanticPreview>
 </template>

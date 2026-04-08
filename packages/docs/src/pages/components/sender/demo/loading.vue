@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Sender } from "@antdv-next/x";
-import { Flex, message } from "antdv-next";
+import { message } from "antdv-next";
 import { ref } from "vue";
 
 const value = ref("");
@@ -23,8 +22,8 @@ function handleCancel() {
 </script>
 
 <template>
-  <Flex vertical gap="middle">
-    <Sender
+  <a-flex vertical gap="middle">
+    <ax-sender
       :value="value"
       :loading="loading"
       placeholder="Type and send to see loading state"
@@ -32,7 +31,7 @@ function handleCancel() {
       :on-submit="handleSubmit"
       :on-cancel="handleCancel"
     />
-  </Flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

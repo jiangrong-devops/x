@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import type { SenderProps } from "@antdv-next/x";
+import type {
+  AttachmentsProps,
+  AttachmentsRef,
+  SenderProps,
+  SenderRef,
+} from "@antdv-next/x";
 
-import { PaperClipOutlined } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Badge, Button, Flex, Tooltip } from "antdv-next";
-import { computed, h, ref } from "vue";
+import { CloudUploadOutlined, PaperClipOutlined } from "@antdv-next/icons";
+import { computed, onBeforeUnmount, ref } from "vue";
+
+type Attachment = Exclude<AttachmentsProps["items"], undefined>[number];
 
 const slotConfig: SenderProps["slotConfig"] = [
   { type: "text", value: "Please help me search for news about " },
@@ -21,60 +26,63 @@ const slotConfig: SenderProps["slotConfig"] = [
 const loading = ref(false);
 const open = ref(false);
 const value = ref("");
-const fileCount = ref(0);
+const items = shallowRef<Attachment[]>([]);
 
 const submitDisabled = computed(
-  () => fileCount.value === 0 && !value.value && !loading.value,
+  () => items.value.length === 0 && !value.value && !loading.value,
 );
 
-const senderRef = ref<InstanceType<typeof Sender>>();
+const senderRef = ref<SenderRef>();
+const attachmentsRef = ref<AttachmentsRef>();
 
-const senderHeader = h(
-  Sender.Header,
-  {
-    title: "Attachments",
-    open: open.value,
-    onOpenChange: (val: boolean) => {
-      open.value = val;
-    },
-    styles: { content: { padding: 0 } },
-  },
-  {
-    default: () =>
-      h(
-        "div",
-        {
-          style: {
-            padding: "24px",
-            textAlign: "center",
-            color: "#999",
-            border: "1px dashed #d9d9d9",
-            borderRadius: "8px",
-            margin: "8px",
-          },
-        },
-        "TODO: Attachments 组件占位",
-      ),
-  },
-);
+onBeforeUnmount(() => {
+  items.value.forEach(item => {
+    if (item.url?.startsWith("blob:")) {
+      URL.revokeObjectURL(item.url);
+    }
+  });
+});
 
-const suffixRender: SenderProps["suffix"] = (_oriNode, { components }) => {
-  const { SendButton, LoadingButton } = components;
-  if (loading.value) {
-    return h(
-      Tooltip,
-      { title: "点击取消" },
-      {
-        default: () => h(LoadingButton),
-      },
-    );
-  }
-  return h(SendButton, { disabled: submitDisabled.value });
+const onChange = ({
+  file,
+  fileList,
+}: {
+  file: Attachment;
+  fileList: Attachment[];
+}) => {
+  items.value = fileList.map(item => {
+    if (
+      item.uid === file.uid &&
+      file.status !== "removed" &&
+      item.originFileObj
+    ) {
+      if (item.url?.startsWith("blob:")) {
+        URL.revokeObjectURL(item.url);
+      }
+
+      return {
+        ...item,
+        url: URL.createObjectURL(item.originFileObj),
+      };
+    }
+
+    return item;
+  });
 };
+
+const placeholder = (type: "inline" | "drop") =>
+  type === "drop"
+    ? {
+        title: "Drop file here",
+      }
+    : {
+        title: "Upload files",
+        description: "Click or drag files to this area to upload",
+      };
 
 const onSubmit = () => {
   senderRef.value?.clear();
-  fileCount.value = 0;
+  items.value = [];
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
@@ -83,11 +91,10 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <Flex :style="{ height: '350px' }" align="end">
-    <Sender
+  <a-flex :style="{ height: '350px' }" align="end">
+    <ax-sender
       ref="senderRef"
       submit-type="enter"
-      :header="senderHeader"
       :slot-config="slotConfig"
       :on-change="
         (v: string) => {
@@ -95,20 +102,59 @@ const onSubmit = () => {
         }
       "
       placeholder="按 Enter 发送消息"
-      :suffix="suffixRender"
       :on-submit="onSubmit"
     >
+      <template #header>
+        <ax-sender-header
+          title="Attachments"
+          :open="open"
+          :on-open-change="(val: boolean) => (open = val)"
+          :styles="{ content: { padding: 0 } }"
+        >
+          <ax-attachments
+            ref="attachmentsRef"
+            :before-upload="() => false"
+            :items="items"
+            :on-change="onChange"
+            :placeholder="placeholder"
+            :get-drop-container="() => senderRef?.nativeElement"
+          >
+            <template #placeholder-icon>
+              <CloudUploadOutlined />
+            </template>
+          </ax-attachments>
+        </ax-sender-header>
+      </template>
+
       <template #prefix>
-        <Badge :dot="fileCount > 0 && !open">
-          <Button type="text" @click="open = !open">
+        <a-badge :dot="items.length > 0 && !open">
+          <a-button
+            type="text"
+            @click="
+              open
+                ? (open = false)
+                : attachmentsRef?.select({ multiple: true }) || (open = true)
+            "
+          >
             <template #icon>
               <PaperClipOutlined :style="{ fontSize: '16px' }" />
             </template>
-          </Button>
-        </Badge>
+          </a-button>
+        </a-badge>
       </template>
-    </Sender>
-  </Flex>
+
+      <template #suffix="{ components }">
+        <a-tooltip v-if="loading" title="点击取消">
+          <component :is="components.LoadingButton" />
+        </a-tooltip>
+        <component
+          :is="components.SendButton"
+          v-else
+          :disabled="submitDisabled"
+        />
+      </template>
+    </ax-sender>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

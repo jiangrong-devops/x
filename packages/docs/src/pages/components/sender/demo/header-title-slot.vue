@@ -4,8 +4,7 @@ import {
   PaperClipOutlined,
   PlusOutlined,
 } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Button, Flex, Tag, Typography, message } from "antdv-next";
+import { message } from "antdv-next";
 import { ref } from "vue";
 
 const open = ref(true);
@@ -16,64 +15,68 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Flex :style="{ height: '350px' }" align="end">
-    <Sender placeholder="试试 Header title slot" :on-submit="handleSubmit">
+  <a-flex :style="{ height: '350px' }" align="end">
+    <ax-sender placeholder="试试 Header title slot" :on-submit="handleSubmit">
       <template #header>
-        <Sender.Header
+        <ax-sender-header
           :open="open"
           :on-open-change="(next: boolean) => (open = next)"
         >
           <template #title>
-            <Flex align="center" justify="space-between" style="width: 100%">
-              <Flex align="center" gap="small">
+            <a-flex align="center" justify="space-between" style="width: 100%">
+              <a-flex align="center" gap="small">
                 <CloudUploadOutlined />
                 <span>Upload Sample</span>
-                <Tag color="blue">3 files</Tag>
-              </Flex>
-              <Typography.Text type="secondary">2MB left</Typography.Text>
-            </Flex>
+                <a-tag color="blue">3 files</a-tag>
+              </a-flex>
+              <a-typography-text type="secondary">2MB left</a-typography-text>
+            </a-flex>
           </template>
 
-          <Flex
+          <a-flex
             vertical
             align="center"
             gap="small"
             :style="{ marginBlock: '24px' }"
           >
             <CloudUploadOutlined :style="{ fontSize: '4em' }" />
-            <Typography.Title :level="5" :style="{ margin: 0 }">
+            <a-typography-title :level="5" :style="{ margin: 0 }">
               Drag file here (just demo)
-            </Typography.Title>
-            <Typography.Text type="secondary">
+            </a-typography-title>
+            <a-typography-text type="secondary">
               Support pdf, doc, xlsx, ppt, txt, image file types
-            </Typography.Text>
-            <Button @click="message.info('Mock select file')"
-              >Select File</Button
-            >
-          </Flex>
-        </Sender.Header>
+            </a-typography-text>
+            <a-button @click="message.info('Mock select file')">
+              Select File
+            </a-button>
+          </a-flex>
+        </ax-sender-header>
       </template>
 
       <template #prefix>
-        <Button type="text" :style="{ fontSize: '16px' }" @click="open = !open">
+        <a-button
+          type="text"
+          :style="{ fontSize: '16px' }"
+          @click="open = !open"
+        >
           <template #icon>
             <PaperClipOutlined />
           </template>
-        </Button>
+        </a-button>
       </template>
 
       <template #suffix="{ components }">
-        <Flex align="center" gap="small">
-          <Button type="text">
+        <a-flex align="center" gap="small">
+          <a-button type="text">
             <template #icon>
               <PlusOutlined />
             </template>
-          </Button>
+          </a-button>
           <component :is="components.SendButton" type="primary" />
-        </Flex>
+        </a-flex>
       </template>
-    </Sender>
-  </Flex>
+    </ax-sender>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

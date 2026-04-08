@@ -4,54 +4,52 @@ import {
   SearchOutlined,
   ThunderboltOutlined,
 } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Badge, Flex, Tag, Typography } from "antdv-next";
 import { ref } from "vue";
 
 const checked = ref(true);
 </script>
 
 <template>
-  <Flex vertical gap="middle">
-    <Flex align="center" gap="small">
+  <a-flex vertical gap="middle">
+    <a-flex align="center" gap="small">
       Slot content:
-      <Sender.Switch
+      <ax-sender-switch
         :value="checked"
         :on-change="(next: boolean) => (checked = next)"
       >
         <template #icon>
-          <Badge dot :offset="[-2, 10]">
+          <a-badge dot :offset="[-2, 10]">
             <SearchOutlined />
-          </Badge>
+          </a-badge>
         </template>
         <template #checkedChildren>
-          <Flex align="center" gap="small">
+          <a-flex align="center" gap="small">
             <CheckCircleOutlined />
             <span>Deep Search On</span>
-            <Tag color="green">Active</Tag>
-          </Flex>
+            <a-tag color="green">Active</a-tag>
+          </a-flex>
         </template>
         <template #unCheckedChildren>
-          <Flex align="center" gap="small">
+          <a-flex align="center" gap="small">
             <ThunderboltOutlined />
             <span>Deep Search Off</span>
-            <Typography.Text type="secondary">Manual</Typography.Text>
-          </Flex>
+            <a-typography-text type="secondary">Manual</a-typography-text>
+          </a-flex>
         </template>
-      </Sender.Switch>
-    </Flex>
+      </ax-sender-switch>
+    </a-flex>
 
-    <Flex align="center" gap="small">
+    <a-flex align="center" gap="small">
       Mixed with default slot:
-      <Sender.Switch>
+      <ax-sender-switch>
         <template #icon>
           <SearchOutlined />
         </template>
         <template #unCheckedChildren>Search</template>
-        <Typography.Text type="secondary">Beta</Typography.Text>
-      </Sender.Switch>
-    </Flex>
-  </Flex>
+        <a-typography-text type="secondary">Beta</a-typography-text>
+      </ax-sender-switch>
+    </a-flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

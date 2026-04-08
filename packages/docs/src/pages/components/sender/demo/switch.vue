@@ -1,59 +1,75 @@
 <script setup lang="ts">
 import { SearchOutlined } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Flex } from "antdv-next";
-import { h, ref } from "vue";
+import { ref } from "vue";
 
 const controlled = ref(false);
 </script>
 
 <template>
-  <Flex vertical gap="middle">
-    <Flex align="center" gap="small">
+  <a-flex vertical gap="middle">
+    <a-flex align="center" gap="small">
       Default:
-      <Sender.Switch :icon="h(SearchOutlined)">Deep Search</Sender.Switch>
-    </Flex>
-    <Flex align="center" gap="small">
+      <ax-sender-switch>
+        <template #icon>
+          <SearchOutlined />
+        </template>
+        Deep Search
+      </ax-sender-switch>
+    </a-flex>
+    <a-flex align="center" gap="small">
       Custom checked/unchecked:
-      <Sender.Switch
+      <ax-sender-switch
         checked-children="Deep Search: on"
         un-checked-children="Deep Search: off"
-        :icon="h(SearchOutlined)"
-      />
-    </Flex>
-    <Flex align="center" gap="small">
+      >
+        <template #icon>
+          <SearchOutlined />
+        </template>
+      </ax-sender-switch>
+    </a-flex>
+    <a-flex align="center" gap="small">
       Disabled:
-      <Sender.Switch :disabled="true" :icon="h(SearchOutlined)"
-        >Deep Search</Sender.Switch
-      >
-    </Flex>
-    <Flex align="center" gap="small">
+      <ax-sender-switch :disabled="true">
+        <template #icon>
+          <SearchOutlined />
+        </template>
+        Deep Search
+      </ax-sender-switch>
+    </a-flex>
+    <a-flex align="center" gap="small">
       Loading:
-      <Sender.Switch :loading="true" :icon="h(SearchOutlined)"
-        >Deep Search</Sender.Switch
-      >
-    </Flex>
-    <Flex align="center" gap="small">
+      <ax-sender-switch :loading="true">
+        <template #icon>
+          <SearchOutlined />
+        </template>
+        Deep Search
+      </ax-sender-switch>
+    </a-flex>
+    <a-flex align="center" gap="small">
       DefaultValue:
-      <Sender.Switch
-        :icon="h(SearchOutlined)"
+      <ax-sender-switch
         :default-value="true"
         :on-change="(checked: boolean) => console.log('toggled', checked)"
       >
+        <template #icon>
+          <SearchOutlined />
+        </template>
         Deep Search
-      </Sender.Switch>
-    </Flex>
-    <Flex align="center" gap="small">
+      </ax-sender-switch>
+    </a-flex>
+    <a-flex align="center" gap="small">
       Controlled:
-      <Sender.Switch
-        :icon="h(SearchOutlined)"
+      <ax-sender-switch
         :value="controlled"
         :on-change="(v: boolean) => (controlled = v)"
       >
+        <template #icon>
+          <SearchOutlined />
+        </template>
         Deep Search
-      </Sender.Switch>
-    </Flex>
-  </Flex>
+      </ax-sender-switch>
+    </a-flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

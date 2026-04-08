@@ -4,8 +4,7 @@ import {
   SearchOutlined,
   SettingOutlined,
 } from "@antdv-next/icons";
-import { Sender } from "@antdv-next/x";
-import { Button, Flex, Tag, Typography, message } from "antdv-next";
+import { message } from "antdv-next";
 import { ref } from "vue";
 
 const value = ref("");
@@ -18,44 +17,44 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Sender
+  <ax-sender
     :value="value"
     placeholder="试试用 slot 自定义布局"
     :on-change="(nextValue: string) => (value = nextValue)"
     :on-submit="handleSubmit"
   >
     <template #header>
-      <Sender.Header
+      <ax-sender-header
         title="会话配置"
         :open="headerOpen"
         :on-open-change="(open: boolean) => (headerOpen = open)"
       >
-        <Flex gap="small" wrap="wrap">
-          <Tag color="blue">gpt-4.1</Tag>
-          <Tag color="green">联网搜索</Tag>
-          <Tag color="gold">低温度</Tag>
-        </Flex>
-      </Sender.Header>
+        <a-flex gap="small" wrap="wrap">
+          <a-tag color="blue">gpt-4.1</a-tag>
+          <a-tag color="green">联网搜索</a-tag>
+          <a-tag color="gold">低温度</a-tag>
+        </a-flex>
+      </ax-sender-header>
     </template>
 
     <template #prefix>
-      <Button type="text">
+      <a-button type="text">
         <template #icon>
           <PaperClipOutlined />
         </template>
-      </Button>
+      </a-button>
     </template>
 
     <template #suffix="{ components }">
-      <Flex align="center" gap="small">
-        <Typography.Text type="secondary">
+      <a-flex align="center" gap="small">
+        <a-typography-text type="secondary">
           <small>Enter 发送</small>
-        </Typography.Text>
-        <Button type="text">
+        </a-typography-text>
+        <a-button type="text">
           <template #icon>
             <SettingOutlined />
           </template>
-        </Button>
+        </a-button>
         <component :is="components.SpeechButton" />
         <component :is="components.ClearButton" />
         <component
@@ -63,23 +62,23 @@ function handleSubmit() {
           type="primary"
           :disabled="!value"
         />
-      </Flex>
+      </a-flex>
     </template>
 
     <template #footer>
-      <Flex justify="space-between" align="center">
-        <Typography.Text type="secondary">
+      <a-flex justify="space-between" align="center">
+        <a-typography-text type="secondary">
           通过 `#header / #prefix / #suffix / #footer` 定制布局
-        </Typography.Text>
-        <Button type="link">
+        </a-typography-text>
+        <a-button type="link">
           <template #icon>
             <SearchOutlined />
           </template>
           更多工具
-        </Button>
-      </Flex>
+        </a-button>
+      </a-flex>
     </template>
-  </Sender>
+  </ax-sender>
 </template>
 
 <docs lang="zh-CN">

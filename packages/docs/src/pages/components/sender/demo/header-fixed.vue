@@ -1,27 +1,9 @@
 <script setup lang="ts">
 import { EnterOutlined } from "@antdv-next/icons";
-import { Sender, SenderHeader } from "@antdv-next/x";
-import { Flex, message, Space, Switch, Typography } from "antdv-next";
-import { h, ref } from "vue";
+import { message } from "antdv-next";
+import { ref } from "vue";
 
 const hasRef = ref(true);
-
-function headerRender() {
-  return h(SenderHeader, {
-    open: hasRef.value,
-    title: h(Space, null, () => [
-      h(EnterOutlined),
-      h(
-        Typography.Text,
-        { type: "secondary" },
-        () => '"Tell more about Ant Design X"',
-      ),
-    ]),
-    onOpenChange: (val: boolean) => {
-      hasRef.value = val;
-    },
-  });
-}
 
 function handleSubmit() {
   message.success("Send message successfully!");
@@ -29,15 +11,31 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Flex vertical gap="middle" align="flex-start">
-    <Switch
+  <a-flex vertical gap="middle" align="flex-start">
+    <a-switch
       :checked="hasRef"
       checked-children="With Reference"
       un-checked-children="With Reference"
       @change="hasRef = !hasRef"
     />
-    <Sender :header="headerRender" :on-submit="handleSubmit" />
-  </Flex>
+    <ax-sender :on-submit="handleSubmit">
+      <template #header>
+        <ax-sender-header
+          :open="hasRef"
+          :on-open-change="(val: boolean) => (hasRef = val)"
+        >
+          <template #title>
+            <a-space>
+              <EnterOutlined />
+              <a-typography-text type="secondary">
+                "Tell more about Antdv Next X"
+              </a-typography-text>
+            </a-space>
+          </template>
+        </ax-sender-header>
+      </template>
+    </ax-sender>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

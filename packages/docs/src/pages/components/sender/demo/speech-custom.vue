@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { Sender } from "@antdv-next/x";
 import { ref } from "vue";
 
 const recording = ref(false);
 </script>
 
 <template>
-  <Sender
+  <ax-sender
     :allow-speech="{
       recording,
       onRecordingChange: (next: boolean) => {

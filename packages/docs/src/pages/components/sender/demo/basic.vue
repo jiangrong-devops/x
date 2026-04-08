@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Sender } from "@antdv-next/x";
-import { Flex, message } from "antdv-next";
+import { message } from "antdv-next";
 import { onBeforeUnmount, ref, watch } from "vue";
 
 const value = ref("Hello? this is X!");
@@ -23,8 +22,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Flex vertical gap="middle">
-    <Sender
+  <a-flex vertical gap="middle">
+    <ax-sender
       :loading="loading"
       :value="value"
       :auto-size="{ minRows: 4, maxRows: 6 }"
@@ -43,14 +42,14 @@ onBeforeUnmount(() => {
         }
       "
     />
-    <Sender
+    <ax-sender
       value="Force as loading"
       :loading="true"
       :read-only="true"
       :auto-size="true"
     />
-    <Sender :disabled="true" value="Set to disabled" :allow-speech="true" />
-  </Flex>
+    <ax-sender :disabled="true" value="Set to disabled" :allow-speech="true" />
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">
