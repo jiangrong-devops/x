@@ -2,7 +2,6 @@
 import type { XNotificationOpenArgs } from "@antdv-next/x";
 
 import { Notification as notification } from "@antdv-next/x";
-import { Button, Flex } from "antdv-next";
 
 const describeInfo: Record<NotificationPermission, string> = {
   denied: "通知权限已被拒绝，你需要在浏览器网站设置中手动重置通知权限。",
@@ -34,26 +33,26 @@ const [{ permission }, { open, requestPermission, close }] =
 </script>
 
 <template>
-  <Flex vertical gap="middle">
+  <a-flex vertical gap="middle">
     <span>{{ describeInfo[permission] }}</span>
-    <Flex gap="middle">
-      <Button
+    <a-flex gap="middle">
+      <a-button
         type="primary"
         :disabled="permission !== 'default'"
         @click="requestPermission()"
       >
         {{ permission === "default" ? "请求权限" : `通知权限：${permission}` }}
-      </Button>
-      <Button
+      </a-button>
+      <a-button
         type="primary"
         :disabled="permission !== 'granted'"
         @click="open(openData)"
       >
         发送通知
-      </Button>
-      <Button danger :disabled="permission !== 'granted'" @click="close()">
+      </a-button>
+      <a-button danger :disabled="permission !== 'granted'" @click="close()">
         关闭所有
-      </Button>
-    </Flex>
-  </Flex>
+      </a-button>
+    </a-flex>
+  </a-flex>
 </template>
