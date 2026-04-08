@@ -7,7 +7,6 @@ import {
   ShareAltOutlined,
   StopOutlined,
 } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
 import { theme } from "antdv-next";
 import { computed, h } from "vue";
 
@@ -63,7 +62,7 @@ const menuConfig: ConversationsProps["menu"] = conversation => ({
 </script>
 
 <template>
-  <Conversations
+  <ax-conversations
     default-active-key="item1"
     :menu="menuConfig"
     :items="items"

@@ -8,9 +8,8 @@ import {
   FileSearchOutlined,
   SignatureOutlined,
 } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
-import { Flex, Tag, theme } from "antdv-next";
-import { computed, h, ref } from "vue";
+import { theme } from "antdv-next";
+import { computed, ref } from "vue";
 
 const { token } = theme.useToken();
 
@@ -24,22 +23,18 @@ const agentItems: ConversationsProps["items"] = [
   {
     key: "write",
     label: "Help Me Write",
-    icon: h(SignatureOutlined),
   },
   {
     key: "coding",
     label: "AI Coding",
-    icon: h(CodeOutlined),
   },
   {
     key: "createImage",
     label: "Create Image",
-    icon: h(FileImageOutlined),
   },
   {
     key: "deepSearch",
     label: "Deep Search",
-    icon: h(FileSearchOutlined),
   },
   {
     key: "inDepthResearch",
@@ -82,17 +77,17 @@ function newChatClick() {
 <template>
   <div style="margin-bottom: 16px">
     You can switch sessions using the shortcut key:
-    <Tag>Alt/⌥</Tag>
+    <a-tag>Alt/⌥</a-tag>
     +
-    <Tag>number</Tag>
+    <a-tag>number</a-tag>
     , and create new chat using the shortcut key:
-    <Tag>Win/⌘</Tag>
+    <a-tag>Win/⌘</a-tag>
     +
-    <Tag>K</Tag>
+    <a-tag>K</a-tag>
     .
   </div>
 
-  <Conversations
+  <ax-conversations
     :creation="{ onClick: newChatClick }"
     :style="style"
     default-active-key="write"
@@ -106,22 +101,28 @@ function newChatClick() {
       items: ['Alt', 'number'],
     }"
     :groupable="{
-      label: group => {
-        if (group !== 'Today') {
-          return h(
-            Flex,
-            { gap: 'small' },
-            {
-              default: () => [h(CodeSandboxOutlined), group],
-            },
-          );
-        }
-        return group;
-      },
       collapsible: group => group !== 'Today',
     }"
     :items="items"
-  />
+  >
+    <template #iconRender="{ item }">
+      <SignatureOutlined v-if="item.key === 'write'" />
+      <CodeOutlined v-else-if="item.key === 'coding'" />
+      <FileImageOutlined v-else-if="item.key === 'createImage'" />
+      <FileSearchOutlined v-else-if="item.key === 'deepSearch'" />
+    </template>
+
+    <template #groupLabelRender="{ group, originNode }">
+      <span
+        v-if="group !== 'Today'"
+        style="display: inline-flex; align-items: center; gap: 8px"
+      >
+        <CodeSandboxOutlined />
+        {{ originNode }}
+      </span>
+      <template v-else>{{ originNode }}</template>
+    </template>
+  </ax-conversations>
 </template>
 
 <docs lang="zh-CN">

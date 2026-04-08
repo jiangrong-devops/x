@@ -64,6 +64,12 @@ const XConversations = defineComponent({
       >,
       default: undefined,
     },
+    groupLabelRender: {
+      type: [String, Number, Object, Array, Function] as PropType<
+        ConversationsProps["groupLabelRender"]
+      >,
+      default: undefined,
+    },
     menu: {
       type: [Object, Function] as PropType<ConversationsProps["menu"]>,
       default: undefined,
@@ -324,6 +330,8 @@ const XConversations = defineComponent({
                   key={groupInfo.name || `key-${groupIndex}`}
                   prefixCls={props.prefixCls}
                   groupInfo={groupInfo}
+                  groupLabelRender={props.groupLabelRender}
+                  groupLabelRenderSlot={slots.groupLabelRender}
                   classes={[
                     contextConfig.value.classes?.group,
                     props.classes?.group,
@@ -376,6 +384,8 @@ export type {
   CreationProps,
   DividerItemType,
   GroupableProps,
+  GroupLabelRender,
+  GroupLabelRenderInfo,
   ItemType,
 } from "./interface";
 

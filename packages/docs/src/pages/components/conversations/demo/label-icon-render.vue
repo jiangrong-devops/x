@@ -2,7 +2,6 @@
 import type { ConversationsProps } from "@antdv-next/x";
 
 import { MessageOutlined } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
 import { theme } from "antdv-next";
 import { computed, h } from "vue";
 
@@ -30,7 +29,7 @@ const iconRender: ConversationsProps["iconRender"] = (_item, info) =>
 </script>
 
 <template>
-  <Conversations
+  <ax-conversations
     default-active-key="item-1"
     :items="items"
     :style="style"
@@ -46,7 +45,7 @@ const iconRender: ConversationsProps["iconRender"] = (_item, info) =>
     <template #iconRender="{ index }">
       <span class="slot-icon">{{ index + 1 }}</span>
     </template>
-  </Conversations>
+  </ax-conversations>
 </template>
 
 <style scoped>

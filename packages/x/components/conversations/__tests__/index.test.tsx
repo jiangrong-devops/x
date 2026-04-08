@@ -329,6 +329,61 @@ describe("Conversations", () => {
     expect(noGroup.text()).not.toContain("group-pinned");
   });
 
+  it("prefers groupLabelRender slot over prop", () => {
+    const groupLabelRender = vi.fn();
+
+    const wrapper = track(
+      mount(Conversations, {
+        props: {
+          items: [...items],
+          groupable: {
+            label: group => `group-${group}`,
+          },
+          groupLabelRender,
+        },
+        slots: {
+          groupLabelRender: ({ group, originNode }: any) =>
+            h("span", { class: "group-slot-label" }, `${group}-${originNode}`),
+        },
+      }),
+    );
+
+    expect(wrapper.find(".group-slot-label").text()).toBe(
+      "pinned-group-pinned",
+    );
+    expect(groupLabelRender).not.toHaveBeenCalled();
+  });
+
+  it("supports groupLabelRender prop", () => {
+    const groupLabelRender = vi.fn((group: string, info: any) =>
+      h("span", { class: "group-prop-label" }, `${group}-${info.originNode}`),
+    );
+
+    const wrapper = track(
+      mount(Conversations, {
+        props: {
+          items: [...items],
+          groupable: {
+            label: group => `group-${group}`,
+          },
+          groupLabelRender,
+        },
+      }),
+    );
+
+    expect(wrapper.find(".group-prop-label").text()).toBe(
+      "pinned-group-pinned",
+    );
+    expect(groupLabelRender).toHaveBeenCalledWith(
+      "pinned",
+      expect.objectContaining({
+        group: "pinned",
+        groupInfo: expect.objectContaining({ name: "pinned" }),
+        originNode: "group-pinned",
+      }),
+    );
+  });
+
   it("supports collapsible groups", async () => {
     const wrapper = track(
       mount(Conversations, {

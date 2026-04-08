@@ -8,7 +8,6 @@ import {
   FileSearchOutlined,
   SignatureOutlined,
 } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
 import { theme } from "antdv-next";
 import { computed, h, ref } from "vue";
 
@@ -24,22 +23,18 @@ const agentItems: ConversationsProps["items"] = [
   {
     key: "write",
     label: "Help Me Write",
-    icon: h(SignatureOutlined),
   },
   {
     key: "coding",
     label: "AI Coding",
-    icon: h(CodeOutlined),
   },
   {
     key: "createImage",
     label: "Create Image",
-    icon: h(FileImageOutlined),
   },
   {
     key: "deepSearch",
     label: "Deep Search",
-    icon: h(FileSearchOutlined),
   },
   {
     type: "divider",
@@ -70,7 +65,7 @@ function newChatClick() {
 </script>
 
 <template>
-  <Conversations
+  <ax-conversations
     :creation="{
       label: 'Create a new chat',
       align: 'start',
@@ -81,7 +76,14 @@ function newChatClick() {
     default-active-key="write"
     :style="style"
     groupable
-  />
+  >
+    <template #iconRender="{ item }">
+      <SignatureOutlined v-if="item.key === 'write'" />
+      <CodeOutlined v-else-if="item.key === 'coding'" />
+      <FileImageOutlined v-else-if="item.key === 'createImage'" />
+      <FileSearchOutlined v-else-if="item.key === 'deepSearch'" />
+    </template>
+  </ax-conversations>
 </template>
 
 <docs lang="zh-CN">

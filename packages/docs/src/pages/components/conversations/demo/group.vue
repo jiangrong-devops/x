@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ConversationsProps } from "@antdv-next/x";
 
-import { Conversations } from "@antdv-next/x";
 import { theme } from "antdv-next";
 import { computed } from "vue";
 
@@ -26,7 +25,7 @@ const items: ConversationsProps["items"] = Array.from({ length: 6 }).map(
 </script>
 
 <template>
-  <Conversations
+  <ax-conversations
     :items="items"
     default-active-key="item1"
     :style="style"

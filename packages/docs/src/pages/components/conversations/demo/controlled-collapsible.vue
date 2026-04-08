@@ -2,9 +2,8 @@
 import type { ConversationsProps } from "@antdv-next/x";
 
 import { FieldTimeOutlined } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
-import { Flex, theme } from "antdv-next";
-import { computed, h, ref } from "vue";
+import { theme } from "antdv-next";
+import { computed, ref } from "vue";
 
 const { token } = theme.useToken();
 const expandedKeys = ref(["Yesterday"]);
@@ -25,14 +24,6 @@ const items: ConversationsProps["items"] = Array.from({ length: 9 }).map(
 );
 
 const groupable = computed<ConversationsProps["groupable"]>(() => ({
-  label: group =>
-    h(
-      Flex,
-      { gap: "small" },
-      {
-        default: () => [h(FieldTimeOutlined), group],
-      },
-    ),
   collapsible: group => group !== "Today",
   expandedKeys: expandedKeys.value,
   onExpand: keys => {
@@ -42,12 +33,19 @@ const groupable = computed<ConversationsProps["groupable"]>(() => ({
 </script>
 
 <template>
-  <Conversations
+  <ax-conversations
     :items="items"
     default-active-key="item1"
     :style="style"
     :groupable="groupable"
-  />
+  >
+    <template #groupLabelRender="{ group }">
+      <span style="display: inline-flex; align-items: center; gap: 8px">
+        <FieldTimeOutlined />
+        {{ group }}
+      </span>
+    </template>
+  </ax-conversations>
 </template>
 
 <docs lang="zh-CN">

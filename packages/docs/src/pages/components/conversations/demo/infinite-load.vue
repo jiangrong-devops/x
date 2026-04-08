@@ -2,9 +2,12 @@
 import type { ConversationsProps } from "@antdv-next/x";
 
 import { RedoOutlined } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
-import { Avatar, Divider, Spin, theme } from "antdv-next";
-import { computed, h, onMounted, ref } from "vue";
+import { theme } from "antdv-next";
+import { computed, onMounted, ref } from "vue";
+
+type ConversationListItem = NonNullable<ConversationsProps["items"]>[number] & {
+  avatar?: string;
+};
 
 const { token } = theme.useToken();
 const loading = ref(false);
@@ -20,8 +23,6 @@ const style = computed(() => ({
 
 const hasMore = computed(() => (data.value?.length ?? 0) < 50);
 
-const loadingIndicator = h(RedoOutlined, { spin: true });
-
 async function loadMoreData() {
   if (loading.value || !hasMore.value) return;
 
@@ -33,12 +34,14 @@ async function loadMoreData() {
     );
     const body = await response.json();
 
-    const formattedData = (body.results || []).map((item: any) => ({
-      key: item.email,
-      label: `${item.name.title} ${item.name.first} ${item.name.last}`,
-      icon: h(Avatar, { src: item.picture.thumbnail }),
-      group: item.nat,
-    }));
+    const formattedData = (body.results || []).map(
+      (item: any): ConversationListItem => ({
+        key: item.email,
+        label: `${item.name.title} ${item.name.first} ${item.name.last}`,
+        avatar: item.picture.thumbnail,
+        group: item.nat,
+      }),
+    );
 
     data.value = [...(data.value ?? []), ...formattedData];
   } finally {
@@ -61,13 +64,27 @@ onMounted(() => {
 
 <template>
   <div id="scrollableDiv" :style="style" @scroll="onScroll">
-    <Conversations :items="data" default-active-key="demo1" groupable />
+    <ax-conversations :items="data" default-active-key="demo1" groupable>
+      <template #iconRender="{ item }">
+        <a-avatar
+          v-if="'avatar' in item && item.avatar"
+          :src="item.avatar"
+          size="small"
+        />
+      </template>
+    </ax-conversations>
 
     <div v-if="loading" style="text-align: center">
-      <Spin :indicator="loadingIndicator" size="small" />
+      <a-spin size="small">
+        <template #indicator>
+          <RedoOutlined spin />
+        </template>
+      </a-spin>
     </div>
 
-    <Divider v-if="!hasMore" plain> It is all, nothing more 🤐 </Divider>
+    <a-divider v-if="!hasMore" plain>
+      All conversations have been loaded.
+    </a-divider>
   </div>
 </template>
 

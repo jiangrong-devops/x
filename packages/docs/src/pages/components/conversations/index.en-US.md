@@ -36,6 +36,7 @@ description: Used to switch between multiple agents, update conversation turns, 
 | `onActiveChange`   | Callback for selection change                                           | `(value: string \| number, item?: ItemType) => void`                                            | -       |
 | `labelRender`      | Custom title renderer for conversation item                             | `VNodeChild \| ((item: ConversationItemType, info: ConversationItemRenderInfo) => VNodeChild)`  | -       |
 | `iconRender`       | Custom icon renderer for conversation item                              | `VNodeChild \| ((item: ConversationItemType, info: ConversationItemRenderInfo) => VNodeChild)`  | -       |
+| `groupLabelRender` | Custom renderer for group title                                         | `VNodeChild \| ((group: string, info: GroupLabelRenderInfo) => VNodeChild)`                     | -       |
 | `menu`             | Operation menu for conversations                                        | `ConversationsItemMenu \| ((conversation: ConversationItemType) => ConversationsItemMenu)`      | -       |
 | `groupable`        | If grouping is supported, it defaults to the `Conversation.group` field | `boolean \| GroupableProps`                                                                     | -       |
 | `shortcutKeys`     | Shortcut key operations                                                 | `{ creation?: ShortcutKeys<number>; items?: ShortcutKeys<'number'> \| ShortcutKeys<number>[] }` | -       |
@@ -46,13 +47,15 @@ description: Used to switch between multiple agents, update conversation turns, 
 
 ### Slots
 
-| Slot          | Description                    | Type                                                  |
-| ------------- | ------------------------------ | ----------------------------------------------------- |
-| `labelRender` | Conversation title render slot | `({ item, index, active, originNode }) => VNodeChild` |
-| `iconRender`  | Conversation icon render slot  | `({ item, index, active, originNode }) => VNodeChild` |
+| Slot               | Description                    | Type                                                  |
+| ------------------ | ------------------------------ | ----------------------------------------------------- |
+| `labelRender`      | Conversation title render slot | `({ item, index, active, originNode }) => VNodeChild` |
+| `iconRender`       | Conversation icon render slot  | `({ item, index, active, originNode }) => VNodeChild` |
+| `groupLabelRender` | Group title render slot        | `({ group, groupInfo, originNode }) => VNodeChild`    |
 
 Title render priority: `labelRender` slot > `labelRender` prop > `item.label`.
 Icon render priority: `iconRender` slot > `iconRender` prop > `item.icon`.
+Group title render priority: `groupLabelRender` slot > `groupLabelRender` prop > `groupable.label` prop > `group`.
 
 ### ItemType
 

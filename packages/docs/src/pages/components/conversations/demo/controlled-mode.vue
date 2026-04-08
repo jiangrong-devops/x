@@ -7,9 +7,8 @@ import {
   FileSearchOutlined,
   SignatureOutlined,
 } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
-import { Button, Flex, theme } from "antdv-next";
-import { computed, h, ref } from "vue";
+import { theme } from "antdv-next";
+import { computed, ref } from "vue";
 
 const activeKey = ref<string | number>("write");
 const { token } = theme.useToken();
@@ -24,45 +23,43 @@ const items: ConversationsProps["items"] = [
   {
     key: "write",
     label: "Help Me Write",
-    icon: h(SignatureOutlined),
   },
   {
     key: "coding",
     label: "AI Coding",
-    icon: h(CodeOutlined),
   },
   {
     key: "createImage",
     label: "Create Image",
-    icon: h(FileImageOutlined),
   },
   {
     key: "deepSearch",
     label: "Deep Search",
-    icon: h(FileSearchOutlined),
   },
 ];
 </script>
 
 <template>
-  <Flex vertical gap="small" align="flex-start">
-    <Conversations
-      :active-key="activeKey"
+  <a-flex vertical gap="small" align="flex-start">
+    <ax-conversations
+      v-model:active-key="activeKey"
       :shortcut-keys="{ items: ['Alt', 'number'] }"
-      :on-active-change="
-        value => {
-          activeKey = value;
-        }
-      "
       :items="items"
       :style="style"
-    />
+    >
+      <template #iconRender="{ item }">
+        <SignatureOutlined v-if="item.key === 'write'" />
+        <CodeOutlined v-else-if="item.key === 'coding'" />
+        <FileImageOutlined v-else-if="item.key === 'createImage'" />
+        <FileSearchOutlined v-else-if="item.key === 'deepSearch'" />
+      </template>
+    </ax-conversations>
 
-    <Flex gap="small">
-      <Button @click="activeKey = 'write'"> Active First </Button>
-      <Button @click="activeKey = 'deepSearch'"> Active Last </Button>
-    </Flex>
-  </Flex>
+    <a-flex gap="small">
+      <a-button @click="activeKey = 'write'"> Active First </a-button>
+      <a-button @click="activeKey = 'deepSearch'"> Active Last </a-button>
+    </a-flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ConversationsProps } from "@antdv-next/x";
 
-import { Conversations } from "@antdv-next/x";
 import { computed } from "vue";
 
 import { SemanticPreview } from "@/components/semantic";
@@ -76,7 +75,7 @@ const creation: ConversationsProps["creation"] = {
 <template>
   <SemanticPreview component-name="Conversations" :semantics="semantics">
     <template #default="{ classes }">
-      <Conversations
+      <ax-conversations
         :style="{ width: '200px' }"
         :items="items"
         :classes="classes"

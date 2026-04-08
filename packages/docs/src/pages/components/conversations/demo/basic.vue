@@ -7,9 +7,8 @@ import {
   FileSearchOutlined,
   SignatureOutlined,
 } from "@antdv-next/icons";
-import { Conversations } from "@antdv-next/x";
-import { Flex, Switch, theme } from "antdv-next";
-import { computed, h, ref } from "vue";
+import { theme } from "antdv-next";
+import { computed, ref } from "vue";
 
 const { token } = theme.useToken();
 const deepSearchChecked = ref(false);
@@ -24,45 +23,45 @@ const items = computed<ConversationsProps["items"]>(() => [
   {
     key: "write",
     label: "Help Me Write",
-    icon: h(SignatureOutlined),
   },
   {
     key: "coding",
     label: "AI Coding",
-    icon: h(CodeOutlined),
   },
   {
     key: "createImage",
     label: "Create Image",
-    icon: h(FileImageOutlined),
   },
   {
     key: "deepSearch",
     disabled: !deepSearchChecked.value,
-    label: h(
-      Flex,
-      { gap: "small", align: "center" },
-      {
-        default: () => [
-          "Deep Search",
-          h(Switch, {
-            size: "small",
-            checked: deepSearchChecked.value,
-            onClick: (e: Event) => e.stopPropagation(),
-            onChange: (value: boolean) => {
-              deepSearchChecked.value = value;
-            },
-          }),
-        ],
-      },
-    ),
-    icon: h(FileSearchOutlined),
+    label: "Deep Search",
   },
 ]);
 </script>
 
 <template>
-  <Conversations :items="items" default-active-key="write" :style="style" />
+  <ax-conversations :items="items" default-active-key="write" :style="style">
+    <template #iconRender="{ item }">
+      <SignatureOutlined v-if="item.key === 'write'" />
+      <CodeOutlined v-else-if="item.key === 'coding'" />
+      <FileImageOutlined v-else-if="item.key === 'createImage'" />
+      <FileSearchOutlined v-else-if="item.key === 'deepSearch'" />
+    </template>
+
+    <template #labelRender="{ item, originNode }">
+      <a-flex v-if="item.key === 'deepSearch'" gap="small" align="center">
+        <span>{{ originNode }}</span>
+        <a-switch
+          size="small"
+          :checked="deepSearchChecked"
+          @click.stop
+          @change="deepSearchChecked = $event"
+        />
+      </a-flex>
+      <template v-else>{{ originNode }}</template>
+    </template>
+  </ax-conversations>
 </template>
 
 <docs lang="zh-CN">

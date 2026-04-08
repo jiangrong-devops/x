@@ -1,13 +1,21 @@
-import type { PropType, TransitionProps } from "vue";
+import type { PropType, TransitionProps, VNodeChild } from "vue";
 
 import { RightOutlined } from "@antdv-next/icons";
 import { computed, defineComponent, Transition } from "vue";
 
-import type { GroupInfoType } from "./interface";
+import type {
+  GroupInfoType,
+  GroupLabelRenderInfo,
+  GroupLabelRender,
+} from "./interface";
+
+import { hasRenderableNode } from "../_utils/vue";
 
 export interface GroupTitleProps {
   prefixCls?: string;
   groupInfo: GroupInfoType;
+  groupLabelRender?: GroupLabelRender;
+  groupLabelRenderSlot?: (info: GroupLabelRenderInfo) => VNodeChild;
   classes?: any;
   enableCollapse?: boolean;
   expandedKeys?: string[];
@@ -25,6 +33,16 @@ const GroupTitle = defineComponent({
     groupInfo: {
       type: Object as PropType<GroupInfoType>,
       required: true,
+    },
+    groupLabelRender: {
+      type: [String, Number, Object, Array, Function] as PropType<
+        GroupTitleProps["groupLabelRender"]
+      >,
+      default: undefined,
+    },
+    groupLabelRenderSlot: {
+      type: Function as PropType<GroupTitleProps["groupLabelRenderSlot"]>,
+      default: undefined,
     },
     classes: {
       type: [String, Array, Object] as PropType<GroupTitleProps["classes"]>,
@@ -60,11 +78,27 @@ const GroupTitle = defineComponent({
 
     const labelNode = computed(() => {
       const { label, name } = props.groupInfo;
+      const originNode =
+        typeof label === "function"
+          ? label(name, { groupInfo: props.groupInfo })
+          : label || name;
+      const renderInfo: GroupLabelRenderInfo = {
+        group: name,
+        groupInfo: props.groupInfo,
+        originNode,
+      };
 
-      if (typeof label === "function")
-        return label(name, { groupInfo: props.groupInfo });
+      if (props.groupLabelRenderSlot) {
+        return props.groupLabelRenderSlot(renderInfo);
+      }
 
-      return label || name;
+      if (props.groupLabelRender !== undefined) {
+        return typeof props.groupLabelRender === "function"
+          ? props.groupLabelRender(name, renderInfo)
+          : props.groupLabelRender;
+      }
+
+      return originNode;
     });
 
     return () => (
@@ -82,7 +116,7 @@ const GroupTitle = defineComponent({
               props.onItemExpand?.(props.groupInfo.name);
           }}
         >
-          {labelNode.value && (
+          {hasRenderableNode(labelNode.value) && (
             <div class={`${props.prefixCls}-group-label`}>
               {labelNode.value}
             </div>

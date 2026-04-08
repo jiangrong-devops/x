@@ -46,6 +46,16 @@ export type ConversationItemRender =
       info: ConversationItemRenderInfo,
     ) => VNodeChild);
 
+export interface GroupLabelRenderInfo {
+  group: string;
+  groupInfo: GroupInfoType;
+  originNode: VNodeChild;
+}
+
+export type GroupLabelRender =
+  | VNodeChild
+  | ((group: string, info: GroupLabelRenderInfo) => VNodeChild);
+
 export interface DividerItemType {
   type: "divider";
   key?: string;
@@ -124,6 +134,7 @@ export interface ConversationsProps extends Omit<
   ) => void;
   labelRender?: ConversationItemRender;
   iconRender?: ConversationItemRender;
+  groupLabelRender?: GroupLabelRender;
   menu?:
     | ConversationsItemMenu
     | ((value: ConversationItemType) => ConversationsItemMenu);
