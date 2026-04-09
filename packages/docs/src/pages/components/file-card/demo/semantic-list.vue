@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { FileCardListProps } from "@antdv-next/x";
 
-import { FileCardList } from "@antdv-next/x";
 import { computed } from "vue";
 
 import { SemanticPreview } from "@/components/semantic";
@@ -50,7 +49,7 @@ const items: FileCardListProps["items"] = Array.from({ length: 3 }, () => ({
 <template>
   <SemanticPreview component-name="FileCardList" :semantics="semantics">
     <template #default="{ classes }">
-      <FileCardList :items="items" :classes="classes" />
+      <ax-file-card-list :items="items" :classes="classes" />
     </template>
   </SemanticPreview>
 </template>

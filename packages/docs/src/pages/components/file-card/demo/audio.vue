@@ -1,21 +1,16 @@
-<script setup lang="ts">
-import { FileCard } from "@antdv-next/x";
-import { Flex } from "antdv-next";
-</script>
-
 <template>
-  <Flex vertical gap="middle">
-    <FileCard
+  <a-flex vertical gap="middle">
+    <ax-file-card
       name="audio-file.mp3"
       src="https://mdn.alipayobjects.com/cto_doraemon/afts/file/HFTcTLugiIAAAAAAgCAAAAgAehe3AQBr"
     />
-    <FileCard
+    <ax-file-card
       name="video-file.mp4"
       src="https://mdn.alipayobjects.com/doraemon_plugin/afts/file/vl7tSa-m3jEAAAAAAAAAAAAAeur1AQBr"
     />
-    <FileCard name="audio-file.mp3" :byte="1024" type="file" />
-    <FileCard name="video-file.mp4" :byte="1024" type="file" />
-  </Flex>
+    <ax-file-card name="audio-file.mp3" :byte="1024" type="file" />
+    <ax-file-card name="video-file.mp4" :byte="1024" type="file" />
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

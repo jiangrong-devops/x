@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { AndroidOutlined } from "@antdv-next/icons";
-import { FileCard } from "@antdv-next/x";
-import { Flex } from "antdv-next";
-import { h } from "vue";
 </script>
 
 <template>
-  <Flex vertical gap="middle">
-    <FileCard icon="pdf" name="txt-file.txt" :byte="1024" />
-    <FileCard
-      :icon="
-        h(AndroidOutlined, { style: { fontSize: '36px', color: '#22b35e' } })
-      "
-      name="android-file.apk"
-      :byte="1024"
+  <a-flex vertical gap="middle">
+    <ax-file-card
+      icon="pdf"
+      name="antdv-next-x-guide.pdf"
+      :byte="1024 * 1024"
     />
-  </Flex>
+
+    <ax-file-card name="antdv-next-x-android.apk" :byte="1024 * 1024">
+      <template #iconRender>
+        <AndroidOutlined style="font-size: 36px; color: #22b35e" />
+      </template>
+    </ax-file-card>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

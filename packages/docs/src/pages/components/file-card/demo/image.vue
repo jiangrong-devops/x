@@ -1,15 +1,10 @@
-<script setup lang="ts">
-import { FileCard } from "@antdv-next/x";
-import { Flex } from "antdv-next";
-</script>
-
 <template>
-  <Flex vertical gap="middle">
-    <FileCard
+  <a-flex vertical gap="middle">
+    <ax-file-card
       name="image-file.png"
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
     />
-    <FileCard
+    <ax-file-card
       :styles="{
         file: {
           width: 100,
@@ -19,13 +14,13 @@ import { Flex } from "antdv-next";
       name="image-file.png"
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
     />
-    <FileCard
+    <ax-file-card
       type="file"
       name="image-file.png"
       :byte="1024"
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
     />
-  </Flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { FileCard } from "@antdv-next/x";
-import { Button, Flex, Space } from "antdv-next";
 import { h, onBeforeUnmount, ref } from "vue";
 
 const loading = ref(true);
@@ -51,15 +50,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Flex gap="middle" vertical>
-    <Space>
-      <Button :disabled="loading" @click="handleStartLoading">
+  <a-flex gap="middle" vertical>
+    <a-space>
+      <a-button :disabled="loading" @click="handleStartLoading">
         Start Loading
-      </Button>
-      <Button @click="handleLoadComplete"> Load Complete </Button>
-    </Space>
+      </a-button>
+      <a-button @click="handleLoadComplete"> Load Complete </a-button>
+    </a-space>
 
-    <FileCard
+    <ax-file-card
       :loading="loading"
       :styles="{
         file: {
@@ -76,7 +75,7 @@ onBeforeUnmount(() => {
       :src="src ? `${src}?${Date.now()}` : ''"
     />
 
-    <FileCard
+    <ax-file-card
       :loading="loading"
       :image-props="{
         placeholder: createPlaceholder(),
@@ -84,7 +83,7 @@ onBeforeUnmount(() => {
       name="image-file.png"
       :src="src ? `${src}?${Date.now()}` : ''"
     />
-  </Flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

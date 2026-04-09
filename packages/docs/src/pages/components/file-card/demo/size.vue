@@ -1,13 +1,10 @@
-<script setup lang="ts">
-import { FileCard } from "@antdv-next/x";
-import { Flex } from "antdv-next";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <Flex vertical gap="middle">
-    <FileCard name="pdf-file.pdf" :byte="1024" size="small" />
-    <FileCard name="pdf-file.pdf" :byte="1024" size="default" />
-  </Flex>
+  <a-flex vertical gap="middle">
+    <ax-file-card name="pdf-file.pdf" :byte="1024" size="small" />
+    <ax-file-card name="pdf-file.pdf" :byte="1024" size="default" />
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

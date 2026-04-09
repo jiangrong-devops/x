@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { FileCardProps } from "@antdv-next/x";
 
-import { FileCardList } from "@antdv-next/x";
-import { Flex } from "antdv-next";
-
 const files: FileCardProps[] = [
   {
     name: "excel-file.xlsx",
@@ -43,15 +40,15 @@ const largeImages: FileCardProps[] = Array.from({ length: 3 }).map(() => ({
 </script>
 
 <template>
-  <Flex vertical gap="middle" style="width: 900px">
-    <FileCardList :items="files" removable />
-    <FileCardList :items="files" removable size="small" />
-    <FileCardList :items="images" />
-    <FileCardList
+  <a-flex vertical gap="middle" style="width: 900px">
+    <ax-file-card-list :items="files" removable />
+    <ax-file-card-list :items="files" removable size="small" />
+    <ax-file-card-list :items="images" />
+    <ax-file-card-list
       :styles="{ file: { width: '230px', height: '230px' } }"
       :items="largeImages"
     />
-  </Flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

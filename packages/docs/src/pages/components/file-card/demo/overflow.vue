@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { FileCardListProps, FileCardProps } from "@antdv-next/x";
 
-import { FileCardList } from "@antdv-next/x";
-import { Flex, Segmented } from "antdv-next";
 import { ref } from "vue";
 
 const images: FileCardProps[] = Array.from({ length: 50 }).map((_, index) => ({
@@ -42,8 +40,8 @@ const overflow = ref<FileCardListProps["overflow"]>("wrap");
 </script>
 
 <template>
-  <Flex vertical gap="middle">
-    <Segmented
+  <a-flex vertical gap="middle">
+    <a-segmented
       :options="[
         { value: 'wrap', label: 'Wrap' },
         { value: 'scrollX', label: 'Scroll X' },
@@ -53,12 +51,12 @@ const overflow = ref<FileCardListProps["overflow"]>("wrap");
       style="margin-inline-end: auto"
       @change="value => (overflow = value as FileCardListProps['overflow'])"
     />
-    <FileCardList
+    <ax-file-card-list
       :items="[...images, ...files]"
       removable
       :overflow="overflow"
     />
-  </Flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

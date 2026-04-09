@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { DownloadOutlined } from "@antdv-next/icons";
-import { FileCard } from "@antdv-next/x";
-import { Button, Flex, message, Typography } from "antdv-next";
-import { h } from "vue";
-
-const { Text } = Typography;
+import { message } from "antdv-next";
 
 const [messageApi, contextHolder] = message.useMessage();
 
@@ -33,62 +29,13 @@ const handleDownload = (url: string, fileName: string) => {
 
 <template>
   <component :is="contextHolder" />
-  <Flex vertical gap="middle">
-    <FileCard
+  <a-flex vertical gap="middle">
+    <ax-file-card
       v-for="(file, index) in fileData"
       :key="index"
       :name="file.name"
       :src="file.src"
       :byte="file.byte"
-      :description="
-        ({ size, src, name }) =>
-          h(
-            Flex,
-            {
-              align: 'center',
-              justify: 'space-between',
-              style: { width: '100%' },
-            },
-            {
-              default: () => [
-                h(
-                  Text,
-                  {
-                    type: 'secondary',
-                    style: { fontSize: '12px' },
-                  },
-                  {
-                    default: () => `Size: ${size}`,
-                  },
-                ),
-                h(
-                  Button,
-                  {
-                    type: 'text',
-                    size: 'small',
-                    icon: h(DownloadOutlined),
-                    onClick:
-                      src && name
-                        ? (e: Event) => {
-                            e.stopPropagation();
-                            handleDownload(src, name);
-                          }
-                        : undefined,
-                    style: {
-                      fontSize: '12px',
-                      padding: '2px 8px',
-                      height: 'auto',
-                      lineHeight: 1.5,
-                    },
-                  },
-                  {
-                    default: () => 'Download',
-                  },
-                ),
-              ],
-            },
-          )
-      "
       :styles="{
         file: {
           width: 300,
@@ -99,8 +46,33 @@ const handleDownload = (url: string, fileName: string) => {
           lineHeight: 1.5,
         },
       }"
-    />
-  </Flex>
+    >
+      <template #description="{ info }">
+        <a-flex align="center" justify="space-between" style="width: 100%">
+          <a-typography-text type="secondary" style="font-size: 12px">
+            文件大小：{{ info.size }}
+          </a-typography-text>
+          <a-button
+            type="text"
+            size="small"
+            :disabled="!info.src || !info.name"
+            style="
+              font-size: 12px;
+              padding: 2px 8px;
+              height: auto;
+              line-height: 1.5;
+            "
+            @click.stop="handleDownload(info.url, info.name)"
+          >
+            <template #icon>
+              <DownloadOutlined />
+            </template>
+            下载
+          </a-button>
+        </a-flex>
+      </template>
+    </ax-file-card>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

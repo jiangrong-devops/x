@@ -1,26 +1,21 @@
-<script setup lang="ts">
-import { FileCard } from "@antdv-next/x";
-import { Flex } from "antdv-next";
-</script>
-
 <template>
-  <Flex vertical gap="middle">
-    <FileCard name="excel-has-long-long-long-name.xlsx" :byte="1024" />
-    <FileCard name="word-file.docx" :byte="1024" />
-    <FileCard name="pdf-file.pdf" :byte="1024" />
-    <FileCard name="ppt-file.pptx" :byte="1024" />
-    <FileCard name="zip-file.zip" :byte="1024" />
-    <FileCard name="txt-file.txt" :byte="1024" />
-    <FileCard name="markdown-file.md" :byte="1024" />
-    <FileCard name="java-file.java" :byte="1024" />
-    <FileCard name="javascript-file.js" :byte="1024" />
-    <FileCard name="python-file.py" :byte="1024" />
-    <FileCard
+  <a-flex vertical gap="middle">
+    <ax-file-card name="excel-has-long-long-long-name.xlsx" :byte="1024" />
+    <ax-file-card name="word-file.docx" :byte="1024" />
+    <ax-file-card name="pdf-file.pdf" :byte="1024" />
+    <ax-file-card name="ppt-file.pptx" :byte="1024" />
+    <ax-file-card name="zip-file.zip" :byte="1024" />
+    <ax-file-card name="txt-file.txt" :byte="1024" />
+    <ax-file-card name="markdown-file.md" :byte="1024" />
+    <ax-file-card name="java-file.java" :byte="1024" />
+    <ax-file-card name="javascript-file.js" :byte="1024" />
+    <ax-file-card name="python-file.py" :byte="1024" />
+    <ax-file-card
       :styles="{ file: { width: 350 } }"
       name="excel-file.xlsx"
       :byte="1024"
     />
-  </Flex>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

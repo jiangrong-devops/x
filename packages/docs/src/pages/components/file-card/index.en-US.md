@@ -46,11 +46,11 @@ description: Display files in the form of cards.
 
 ### FileCard Slots
 
-| Slot Name     | Description      | Type                                   |
-| ------------- | ---------------- | -------------------------------------- |
-| `description` | Description slot | `({ info, originNode }) => VNodeChild` |
-| `mask`        | Mask slot        | `({ info, originNode }) => VNodeChild` |
-| `iconRender`  | Icon render slot | `({ info, originNode }) => VNodeChild` |
+| Slot Name     | Description             | Type                                   |
+| ------------- | ----------------------- | -------------------------------------- |
+| `description` | Description render slot | `({ info, originNode }) => VNodeChild` |
+| `mask`        | Mask render slot        | `({ info, originNode }) => VNodeChild` |
+| `iconRender`  | Icon render slot        | `({ info, originNode }) => VNodeChild` |
 
 Slots take precedence over prop-driven content. `originNode` is the node resolved from props or default rendering.
 
@@ -88,14 +88,14 @@ type PresetIcons =
 
 ### FileCardList Slots
 
-| Slot Name     | Description           | Type                                                |
-| ------------- | --------------------- | --------------------------------------------------- |
-| `description` | Card description slot | `({ item, index, info, originNode }) => VNodeChild` |
-| `mask`        | Card mask slot        | `({ item, index, info, originNode }) => VNodeChild` |
-| `iconRender`  | Card icon render slot | `({ item, index, info, originNode }) => VNodeChild` |
-| `extension`   | List extension slot   | `({ items }) => VNodeChild`                         |
+| Slot Name     | Description                  | Type                                                |
+| ------------- | ---------------------------- | --------------------------------------------------- |
+| `description` | Card description render slot | `({ item, index, info, originNode }) => VNodeChild` |
+| `mask`        | Card mask render slot        | `({ item, index, info, originNode }) => VNodeChild` |
+| `iconRender`  | Card icon render slot        | `({ item, index, info, originNode }) => VNodeChild` |
+| `extension`   | List extension render slot   | `({ items }) => VNodeChild`                         |
 
-`FileCardList` forwards `FileCard` slots to each rendered card and adds the current `item` and `index`.
+`FileCardList` forwards same-name `FileCard` slots to each rendered card, then adds the current `item` and `index`.
 
 Prefer the `FileCardList` export. Legacy `FileCard.List` syntax remains compatible.
 

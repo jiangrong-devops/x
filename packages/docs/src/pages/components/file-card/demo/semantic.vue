@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FileCard } from "@antdv-next/x";
 import { computed } from "vue";
 
 import { SemanticPreview } from "@/components/semantic";
@@ -40,7 +39,7 @@ const semantics = computed(() => [
 <template>
   <SemanticPreview component-name="FileCard" :semantics="semantics">
     <template #default="{ classes }">
-      <FileCard name="pdf-file.pdf" :byte="1024" :classes="classes" />
+      <ax-file-card name="pdf-file.pdf" :byte="1024" :classes="classes" />
     </template>
   </SemanticPreview>
 </template>
