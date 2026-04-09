@@ -68,7 +68,8 @@ async function getHighlighter() {
 
 async function loadLang(lang: string) {
   const loader = LANG_LOADERS[lang];
-  if (!loader || loadedLangs.has(lang)) return false;
+  if (!loader) return false;
+  if (loadedLangs.has(lang)) return true;
 
   const instance = await getHighlighter();
   const mod = await loader();
