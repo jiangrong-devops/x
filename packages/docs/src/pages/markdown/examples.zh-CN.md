@@ -11,7 +11,7 @@ order: 2
 
 <!-- prettier-ignore -->
 <demo src="./demo/basic.vue">基础渲染</demo>
-<demo src="./streaming/demo/combined.vue">流式渲染</demo>
+<demo src="./demo/streaming-combined.vue">流式渲染</demo>
 <demo src="./demo/code-highlighter.vue">组件扩展</demo>
 <demo src="./demo/custom-plugin.vue">插件扩展</demo>
 <demo src="./demo/escape-raw-html.vue">安全与链接</demo>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { CodeHighlighter } from "@antdv-next/x";
 import { computed } from "vue";
 
 import { SemanticPreview } from "@/components/semantic";
@@ -20,8 +19,7 @@ const locales = {
   },
 } as const;
 
-const code = `import React from 'react';
-import { XMarkdown } from '@ant-design/x-markdown';
+const code = `import { XMarkdown } from '@antdv-next/x-markdown';
 
 const App = () => <XMarkdown content='Hello World' />;
 export default App;
@@ -44,7 +42,7 @@ const semantics = computed(() => [
 <template>
   <SemanticPreview component-name="CodeHighlighter" :semantics="semantics">
     <template #default="{ classes }">
-      <CodeHighlighter
+      <ax-code-highlighter
         :content="code"
         language="typescript"
         :classes="classes"

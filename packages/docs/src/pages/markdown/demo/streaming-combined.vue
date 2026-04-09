@@ -2,32 +2,22 @@
 import type { Component } from "vue";
 
 import { SettingOutlined } from "@antdv-next/icons";
-import { Bubble } from "@antdv-next/x";
 import { XMarkdown } from "@antdv-next/x-markdown";
-import {
-  Button,
-  Flex,
-  Input,
-  Popover,
-  Skeleton,
-  Switch,
-  Typography,
-} from "antdv-next";
+import { Skeleton } from "antdv-next";
 import { computed, defineComponent, h, onBeforeUnmount, ref, watch } from "vue";
 
 import { useDarkMode } from "@/composables/use-dark-mode";
 
-const { Text } = Typography;
 const { isDark } = useDarkMode();
 
-const text = `# Ant Design X
+const text = `# Antdv Next X
 
-Ant Design X 是一款 AI 应用复合工具集，融合了 UI 组件库、流式 Markdown 渲染引擎和 AI SDK，为开发者提供构建下一代 AI 驱动应用的完整工具链。
+Antdv Next X 是一款 AI 应用复合工具集，融合了 Vue UI 组件库、流式 Markdown 渲染引擎和 AI SDK，为开发者提供构建下一代 AI 驱动应用的完整工具链。
 
-![Ant Design X](https://mdn.alipayobjects.com/huamei_yz9z7c/afts/img/0lMhRYbo0-8AAAAAQDAAAAgADlJoAQFr/original)
+![Antdv Next X](https://x.antdv-next.com/x.svg)
 
 
-基于 Ant Design 设计体系的 React UI 库、专为 AI 驱动界面设计，开箱即用的智能对话组件、无缝集成 API 服务，快速搭建智能应用界面，查看详情请点击 [Ant Design X](https://github.com/ant-design/x)。
+基于 Antdv Next 设计体系，专为 AI 驱动界面设计，提供开箱即用的智能对话组件与 API 集成能力，帮助你快速搭建智能应用界面。查看详情请点击 [Antdv Next X](https://github.com/antdv-next/x)。
 `;
 
 const enableAnimation = ref(true);
@@ -124,85 +114,93 @@ const runStream = () => {
       overflow: hidden;
     "
   >
-    <Flex
+    <a-flex
       vertical
       gap="middle"
       style="flex: 1; min-height: 0; overflow: hidden"
     >
-      <Flex gap="small" justify="end" style="flex-shrink: 0">
-        <Popover trigger="click" placement="bottomRight">
+      <a-flex gap="small" justify="end" style="flex-shrink: 0">
+        <a-popover trigger="click" placement="bottomRight">
           <template #content>
-            <Flex vertical :gap="10">
-              <Flex
+            <a-flex vertical :gap="10">
+              <a-flex
                 align="center"
                 justify="space-between"
                 :gap="16"
                 style="min-width: 180px"
               >
-                <Text style="font-size: 12px; margin: 0; white-space: nowrap"
-                  >Animation</Text
+                <a-typography-text
+                  style="font-size: 12px; margin: 0; white-space: nowrap"
                 >
-                <Switch size="small" v-model:checked="enableAnimation" />
-              </Flex>
-              <Flex
+                  Animation
+                </a-typography-text>
+                <a-switch size="small" v-model:checked="enableAnimation" />
+              </a-flex>
+              <a-flex
                 align="center"
                 justify="space-between"
                 :gap="16"
                 style="min-width: 180px"
               >
-                <Text style="font-size: 12px; margin: 0; white-space: nowrap"
-                  >Syntax Cache</Text
+                <a-typography-text
+                  style="font-size: 12px; margin: 0; white-space: nowrap"
                 >
-                <Switch size="small" v-model:checked="enableCache" />
-              </Flex>
-              <Flex
+                  Syntax Cache
+                </a-typography-text>
+                <a-switch size="small" v-model:checked="enableCache" />
+              </a-flex>
+              <a-flex
                 align="center"
                 justify="space-between"
                 :gap="16"
                 style="min-width: 180px"
               >
-                <Text style="font-size: 12px; margin: 0; white-space: nowrap"
-                  >Tail</Text
+                <a-typography-text
+                  style="font-size: 12px; margin: 0; white-space: nowrap"
                 >
-                <Switch size="small" v-model:checked="tailEnabled" />
-              </Flex>
-              <Flex
+                  Tail
+                </a-typography-text>
+                <a-switch size="small" v-model:checked="tailEnabled" />
+              </a-flex>
+              <a-flex
                 align="center"
                 justify="space-between"
                 :gap="16"
                 style="min-width: 180px"
               >
-                <Text style="font-size: 12px; margin: 0; white-space: nowrap"
-                  >Tail Content</Text
+                <a-typography-text
+                  style="font-size: 12px; margin: 0; white-space: nowrap"
                 >
-                <Input
+                  Tail Content
+                </a-typography-text>
+                <a-input
                   size="small"
                   style="width: 80px"
                   v-model:value="tailContent"
                   :disabled="!tailEnabled"
                 />
-              </Flex>
-            </Flex>
+              </a-flex>
+            </a-flex>
           </template>
-          <Button type="default" size="small">
+          <a-button type="default" size="small">
             <template #icon>
               <SettingOutlined />
             </template>
             Config
-          </Button>
-        </Popover>
-        <Button
+          </a-button>
+        </a-popover>
+        <a-button
           type="primary"
           size="small"
           style="align-self: flex-end"
           @click="runStream"
         >
           Run Stream
-        </Button>
-      </Flex>
+        </a-button>
+      </a-flex>
 
-      <Flex style="flex: 1; min-height: 0; overflow: auto">
-        <Bubble :content="text.slice(0, index)">
+      <a-flex style="flex: 1; min-height: 0; overflow: auto">
+        <ax-bubble :content="text.slice(0, index)">
           <template #contentRender="{ content }">
             <XMarkdown
               :class-name="markdownClass"
@@ -220,9 +218,9 @@ const runStream = () => {
               :components="loadingComponents"
             />
           </template>
-        </Bubble>
-      </Flex>
-    </Flex>
+        </ax-bubble>
+      </a-flex>
+    </a-flex>
   </div>
 </template>
 

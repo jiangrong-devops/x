@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { CodeHighlighter } from "@antdv-next/x";
 import { ref } from "vue";
 
 const code = `import { createApp } from 'vue';
@@ -12,7 +11,7 @@ const theme = ref<"light" | "dark">("light");
 </script>
 
 <template>
-  <CodeHighlighter
+  <ax-code-highlighter
     :content="code"
     language="typescript"
     :show-theme-toggle="true"

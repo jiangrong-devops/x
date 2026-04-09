@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { CodeHighlighter } from "@antdv-next/x";
 import { ref } from "vue";
 
 const code = `const fibonacci = (n: number): number => {
@@ -22,7 +21,7 @@ const showLineNumbers = ref(false);
       显示行号
     </label>
   </div>
-  <CodeHighlighter
+  <ax-code-highlighter
     :content="code"
     language="typescript"
     :show-line-numbers="showLineNumbers"

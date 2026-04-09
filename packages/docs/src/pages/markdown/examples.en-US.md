@@ -11,7 +11,7 @@ Use this page for a quick setup to render LLM Markdown output, then scale to str
 
 <!-- prettier-ignore -->
 <demo src="./demo/basic.vue">Basic Rendering</demo>
-<demo src="./streaming/demo/combined.vue">Streaming Rendering</demo>
+<demo src="./demo/streaming-combined.vue">Streaming Rendering</demo>
 <demo src="./demo/code-highlighter.vue">Component Extension</demo>
 <demo src="./demo/custom-plugin.vue">Plugin Extension</demo>
 <demo src="./demo/escape-raw-html.vue">Security & Links</demo>

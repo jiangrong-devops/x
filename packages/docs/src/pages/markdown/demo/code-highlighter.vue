@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { Bubble, CodeHighlighter } from "@antdv-next/x";
 import { XMarkdown } from "@antdv-next/x-markdown";
-import { Button, Flex } from "antdv-next";
 import {
   computed,
   defineComponent,
@@ -58,17 +56,23 @@ function extractText(nodes: VNode[]): string {
     .join("");
 }
 
+const { isDark } = useDarkMode();
+const markdownClass = computed(() =>
+  isDark.value ? "x-markdown-dark" : "x-markdown-light",
+);
+
 const CodeRenderer = defineComponent({
   name: "CodeRenderer",
   setup(_, { attrs, slots }) {
-    const lang = computed(() => {
+    const language = computed(() => {
       const dataLang =
         typeof attrs["data-lang"] === "string" ? attrs["data-lang"] : "";
       const dataLangCamel =
         typeof attrs.dataLang === "string" ? attrs.dataLang : "";
       const langAttr = typeof attrs.lang === "string" ? attrs.lang : "";
       const className = typeof attrs.class === "string" ? attrs.class : "";
-      const classLang = className.match(/(?:^|\s)language-([^\s]+)/)?.[1] ?? "";
+      const classLang =
+        className.match(/(?:^|\\s)language-([^\\s]+)/)?.[1] ?? "";
       return dataLang || dataLangCamel || langAttr || classLang;
     });
 
@@ -88,23 +92,22 @@ const CodeRenderer = defineComponent({
     });
 
     return () => {
-      const code = extractText(slots.default?.() ?? []);
-      if (!isBlock.value && !lang.value) {
-        return h("code", code);
+      const defaultNodes = slots.default?.() ?? [];
+      const code = extractText(defaultNodes);
+
+      if (!isBlock.value && !language.value) {
+        return h("code", attrs, defaultNodes);
       }
-      return h(CodeHighlighter, {
+      const AxCodeHighlighter = resolveComponent("ax-code-highlighter");
+
+      return h(AxCodeHighlighter, {
         content: code,
-        language: lang.value || "text",
+        language: language.value || "text",
         theme: isDark.value ? "dark" : "light",
       });
     };
   },
 });
-
-const { isDark } = useDarkMode();
-const markdownClass = computed(() =>
-  isDark.value ? "x-markdown-dark" : "x-markdown-light",
-);
 
 const index = ref(0);
 const contentRef = ref<HTMLElement | null>(null);
@@ -182,18 +185,18 @@ const rerender = () => {
 </script>
 
 <template>
-  <Flex
+  <a-flex
     vertical
     :gap="8"
     style="height: 600px; overflow: auto"
     :class="markdownClass"
     ref="contentRef"
   >
-    <Flex justify="flex-end">
-      <Button @click="rerender">Re-Render</Button>
-    </Flex>
+    <a-flex justify="flex-end">
+      <a-button @click="rerender">Re-Render</a-button>
+    </a-flex>
 
-    <Bubble :content="text.slice(0, index)" variant="outlined">
+    <ax-bubble :content="text.slice(0, index)" variant="outlined">
       <template #contentRender="{ content }">
         <XMarkdown
           :content="content"
@@ -201,8 +204,8 @@ const rerender = () => {
           paragraph-tag="div"
         />
       </template>
-    </Bubble>
-  </Flex>
+    </ax-bubble>
+  </a-flex>
 </template>
 
 <docs lang="zh-CN">

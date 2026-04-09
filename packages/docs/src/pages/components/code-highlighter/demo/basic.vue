@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { CodeHighlighter } from "@antdv-next/x";
-
 const code = `function greet(name: string) {
   console.log(\`Hello, \${name}!\`);
   return {
@@ -15,7 +13,7 @@ console.log(result);`;
 </script>
 
 <template>
-  <CodeHighlighter :content="code" language="typescript" />
+  <ax-code-highlighter :content="code" language="typescript" />
 </template>
 
 <docs lang="zh-CN">

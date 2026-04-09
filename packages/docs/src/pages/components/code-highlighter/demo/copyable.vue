@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { CodeHighlighter } from "@antdv-next/x";
 import { ref } from "vue";
 
 const code = `# Python Example
@@ -28,7 +27,7 @@ function handleCopy() {
 </script>
 
 <template>
-  <CodeHighlighter :content="code" language="python" @copy="handleCopy" />
+  <ax-code-highlighter :content="code" language="python" @copy="handleCopy" />
 </template>
 
 <docs lang="zh-CN">
