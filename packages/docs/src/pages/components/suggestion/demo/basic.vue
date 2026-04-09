@@ -20,8 +20,8 @@ const items: SuggestionItem[] = [
         value: "vue",
       },
       {
-        label: "About Design Tokens",
-        value: "tokens",
+        label: "About Antdv Next X",
+        value: "antdv next x",
       },
     ],
   },
