@@ -10,7 +10,8 @@ Basic usage.
 import type { ActionsProps } from "@antdv-next/x";
 
 import { EditOutlined, RedoOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
+const { message } = App.useApp();
 
 const items: ActionsProps["items"] = [
   {

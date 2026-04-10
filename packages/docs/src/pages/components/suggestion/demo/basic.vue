@@ -2,8 +2,9 @@
 import type { SuggestionItem } from "@antdv-next/x";
 
 import { BulbOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { onBeforeUnmount, ref } from "vue";
+const { message } = App.useApp();
 
 const value = ref("");
 const loading = ref(false);

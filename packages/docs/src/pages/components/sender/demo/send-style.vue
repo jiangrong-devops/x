@@ -2,8 +2,9 @@
 import type { ButtonProps } from "antdv-next";
 
 import { SendOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { onBeforeUnmount, ref, watch } from "vue";
+const { message } = App.useApp();
 
 const value = ref("Ask something?");
 const loading = ref(false);

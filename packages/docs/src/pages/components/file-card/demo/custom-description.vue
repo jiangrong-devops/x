@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { DownloadOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
+const { message } = App.useApp();
 
 const [messageApi, contextHolder] = message.useMessage();
 

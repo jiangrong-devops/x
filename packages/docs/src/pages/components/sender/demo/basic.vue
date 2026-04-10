@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { onBeforeUnmount, ref, watch } from "vue";
+const { message } = App.useApp();
 
 const value = ref("Hello? this is X!");
 const loading = ref(false);

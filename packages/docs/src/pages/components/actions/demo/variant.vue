@@ -2,8 +2,9 @@
 import type { ActionsProps } from "@antdv-next/x";
 
 import { RedoOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { ref } from "vue";
+const { message } = App.useApp();
 
 const curPage = ref(1);
 

@@ -14,8 +14,9 @@ import {
   ProfileOutlined,
   SearchOutlined,
 } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { nextTick, onBeforeUnmount, ref } from "vue";
+const { message } = App.useApp();
 
 const agentMap: Record<string, { icon: any; label: string }> = {
   deep_search: { icon: SearchOutlined, label: "Deep Search" },

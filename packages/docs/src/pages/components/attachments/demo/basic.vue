@@ -34,8 +34,9 @@
 
 <script setup lang="ts">
 import { CloudUploadOutlined, LinkOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { ref } from "vue";
+const { message } = App.useApp();
 
 const fullScreenDrop = ref(false);
 const containerRef = ref<HTMLDivElement>();

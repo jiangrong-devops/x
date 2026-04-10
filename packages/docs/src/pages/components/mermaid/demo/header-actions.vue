@@ -2,8 +2,9 @@
 import type { MermaidProps } from "@antdv-next/x";
 
 import { EditOutlined, ShareAltOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { computed, ref } from "vue";
+const { message } = App.useApp();
 
 const enableZoom = ref(true);
 const enableDownload = ref(true);

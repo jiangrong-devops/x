@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { ref } from "vue";
+const { message } = App.useApp();
 
 const value = ref("");
 const loading = ref(false);

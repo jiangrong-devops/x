@@ -9,7 +9,8 @@ import {
   RocketOutlined,
   SmileOutlined,
 } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
+const { message } = App.useApp();
 
 const items: PromptsProps["items"] = [
   {

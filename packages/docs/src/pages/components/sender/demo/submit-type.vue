@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { message } from "antdv-next";
+import { App } from "antdv-next";
+const { message } = App.useApp();
 
 function handleSubmit() {
   message.success("Send message successfully!");

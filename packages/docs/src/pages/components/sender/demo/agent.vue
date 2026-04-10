@@ -9,8 +9,9 @@ import {
   PaperClipOutlined,
   SearchOutlined,
 } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { ref, watch } from "vue";
+const { message } = App.useApp();
 
 interface AgentItem {
   icon: any;

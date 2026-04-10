@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { EnterOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { ref } from "vue";
+const { message } = App.useApp();
 
 const hasRef = ref(true);
 

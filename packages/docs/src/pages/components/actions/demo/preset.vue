@@ -6,8 +6,9 @@ import type {
 } from "@antdv-next/x";
 
 import { CheckOutlined, ShareAltOutlined } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 import { computed, ref } from "vue";
+const { message } = App.useApp();
 
 const curPage = ref(1);
 const feedbackStatus = ref<ActionsFeedbackProps["value"]>("default");
