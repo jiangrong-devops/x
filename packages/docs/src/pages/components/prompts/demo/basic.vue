@@ -8,7 +8,7 @@ import {
   SmileOutlined,
   WarningOutlined,
 } from "@antdv-next/icons";
-import { message } from "antdv-next";
+import { App } from "antdv-next";
 
 const items: PromptsProps["items"] = [
   {
@@ -38,6 +38,7 @@ const items: PromptsProps["items"] = [
   },
 ];
 
+const { message } = App.useApp();
 function onItemClick(info: PromptsClickInfo) {
   message.success(`You clicked a prompt: ${info.data.label}`);
 }
