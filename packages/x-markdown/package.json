@@ -3,7 +3,9 @@
   "version": "0.0.2",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    "plugins",
+    "themes"
   ],
   "type": "module",
   "sideEffects": [
@@ -19,11 +21,10 @@
     },
     "./style.css": "./dist/index.css",
     "./plugins/*": {
-      "types": "./dist/plugins/*/index.d.ts",
-      "import": "./dist/plugins/*/index.js"
+      "types": "./plugins/*/index.d.ts",
+      "import": "./plugins/*/index.js"
     },
-    "./themes/light.css": "./dist/themes/light.css",
-    "./themes/dark.css": "./dist/themes/dark.css",
+    "./themes/*.css": "./themes/*.css",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -31,7 +32,7 @@
   },
   "scripts": {
     "type-check": "vue-tsc --project tsconfig.build.json --noEmit",
-    "build": "vp build --config vite.build.config.ts && node ./scripts/add-css-import.mjs && node ./scripts/copy-themes.mjs"
+    "build": "vp build --config vite.build.config.ts && vp build --config vite.build.config.ts --mode plugins && node ./scripts/add-css-import.mjs && node ./scripts/copy-themes.mjs"
   },
   "dependencies": {
     "dompurify": "^3.1.0",

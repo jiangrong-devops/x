@@ -11,7 +11,9 @@ let content = readFileSync(indexJs, "utf-8");
 
 // Add CSS import at the beginning of the file
 const cssImport = 'import "./index.css";\n';
-content = cssImport + content;
+if (!content.startsWith(cssImport)) {
+  content = cssImport + content;
+}
 
 // Write back to file
 writeFileSync(indexJs, content, "utf-8");
