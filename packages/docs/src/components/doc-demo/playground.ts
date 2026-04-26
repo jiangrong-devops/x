@@ -86,7 +86,7 @@ onUnmounted(() => observer?.disconnect());
   "imports": {
      "vue": "https://cdn.jsdelivr.net/npm/@vue/runtime-dom@latest/dist/runtime-dom.esm-browser.js",
     "@vue/shared": "https://cdn.jsdelivr.net/npm/@vue/shared@latest/dist/shared.esm-bundler.js",
-    "@antdv-next/x": "https://cdn.jsdelivr.net/npm/@antdv-next/x@latest/dist-browser/index.es.js",
+    "@antdv-next/x": "https://cdn.jsdelivr.net/npm/@antdv-next/x@latest/es/antdv-next-x.esm.js",
     "@antdv-next/x/": "https://cdn.jsdelivr.net/npm/@antdv-next/x/@latest/",
     "@antdv-next/x-markdown": "https://cdn.jsdelivr.net/npm/@antdv-next/x-markdown@latest/dist/index.js",
     "@antdv-next/x-markdown/themes/": "https://cdn.jsdelivr.net/npm/@antdv-next/x-markdown@latest/themes/",

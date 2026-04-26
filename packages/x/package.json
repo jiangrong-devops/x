@@ -4,14 +4,15 @@
   "license": "MIT",
   "files": [
     "dist",
-    "dist-browser",
+    "es",
     "global.d.ts"
   ],
   "type": "module",
   "sideEffects": [
     "./dist/*.css",
     "./dist/index.esm.js",
-    "./dist/index.umd.js"
+    "./dist/index.umd.js",
+    "./es/antdv-next-x.esm.js"
   ],
   "main": "dist/index.js",
   "module": "./dist/index.js",
@@ -24,22 +25,24 @@
     },
     "./browser": {
       "types": "./dist/index.d.ts",
-      "import": "./dist-browser/index.es.js",
-      "require": "./dist-browser/index.umd.js"
+      "import": "./es/antdv-next-x.esm.js"
     },
     "./dist/*": {
       "types": "./dist/*.d.ts",
       "import": "./dist/*.js",
       "require": "./dist/*.js"
     },
-    "./dist-browser/*": {
+    "./es/*": {
       "types": "./dist/index.d.ts",
-      "import": "./dist-browser/*.js",
-      "require": "./dist-browser/*.js"
+      "import": "./es/*.js"
     },
     "./global.d.ts": "./global.d.ts",
     "./global": "./global.d.ts",
     "./package.json": "./package.json",
+    "./es/antdv-next-x.esm.js": {
+      "types": "./dist/index.d.ts",
+      "import": "./es/antdv-next-x.esm.js"
+    },
     "./dist/index.esm.js": "./dist/index.esm.js",
     "./dist/index.umd.js": "./dist/index.umd.js"
   },
@@ -51,8 +54,7 @@
     "build:comp": "vp build --config vite.build.config.ts",
     "build:esm": "vp build --config vite.esm.config.ts",
     "build:umd": "vp build --config vite.umd.config.ts",
-    "build:browser": "vp build --config vite.browser.config.ts",
-    "build": "vp run build:comp && vp run build:esm && vp run build:umd && vp run build:browser"
+    "build": "vp run build:comp && vp run build:esm && vp run build:umd"
   },
   "dependencies": {
     "@ant-design/fast-color": "catalog:prod",
