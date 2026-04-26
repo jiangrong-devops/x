@@ -2,10 +2,8 @@
 import type { Component } from "vue";
 
 import { XMarkdown } from "@antdv-next/x-markdown";
-import { Button, Card, Segmented, Skeleton } from "antdv-next";
+import { Button, Card, Segmented, Skeleton, theme } from "antdv-next";
 import { computed, defineComponent, h, onBeforeUnmount, ref, watch } from "vue";
-
-import { useDarkMode } from "@/composables/use-dark-mode";
 
 const demos = [
   {
@@ -64,7 +62,8 @@ UI components, streaming Markdown, and AI SDK in one toolkit.
   },
 ];
 
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 
 const currentDemo = ref(0);
 const index = ref(0);
@@ -321,12 +320,7 @@ const handleDemoChange = (value: string | number) => {
     </div>
 
     <div
-      style="
-        display: flex;
-        gap: 16px;
-        width: 100%;
-        transition: max-height 0.25s ease;
-      "
+      class="flex w-full gap-4 transition-[max-height] duration-250"
       :style="{
         minHeight: `${previewMinHeight}px`,
         maxHeight: `${previewMaxHeight}px`,
@@ -335,28 +329,13 @@ const handleDemoChange = (value: string | number) => {
       <Card
         title="Markdown Source"
         size="small"
-        style="flex: 1; display: flex; flex-direction: column; min-width: 0"
-        :bodyStyle="{
-          flex: 1,
-          minHeight: 0,
-          display: 'flex',
-          flexDirection: 'column',
-        }"
+        class="flex flex-1 flex-col min-w-0"
+        :bodyStyle="{ flex: 1, minHeight: 0 }"
       >
         <div
           ref="sourceRef"
-          style="
-            flex: 1;
-            min-height: 0;
-            background: var(--ant-color-fill-quaternary);
-            padding: 12px;
-            border-radius: 6px;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow: auto;
-            font-size: 12px;
-            line-height: 1.5;
-          "
+          class="flex-1 min-h-0 overflow-auto whitespace-pre-wrap break-words rounded-md p-3 text-xs leading-6"
+          style="background: var(--ant-color-fill-quaternary)"
         >
           {{ currentContent.slice(0, index) }}
         </div>
@@ -365,13 +344,8 @@ const handleDemoChange = (value: string | number) => {
       <Card
         title="Rendered Output"
         size="small"
-        style="flex: 1; display: flex; flex-direction: column; min-width: 0"
-        :bodyStyle="{
-          flex: 1,
-          minHeight: 0,
-          display: 'flex',
-          flexDirection: 'column',
-        }"
+        class="flex flex-1 flex-col min-w-0"
+        :bodyStyle="{ flex: 1, minHeight: 0 }"
       >
         <template #extra>
           <Button size="small" @click="rerender">Re-Render</Button>
@@ -379,15 +353,7 @@ const handleDemoChange = (value: string | number) => {
 
         <div
           ref="contentRef"
-          style="
-            flex: 1;
-            min-height: 0;
-            overflow: auto;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--ant-color-border-secondary);
-            background: var(--ant-color-bg-container);
-          "
+          class="flex-1 min-h-0 overflow-auto rounded-md border border-[var(--ant-color-border-secondary)] bg-[var(--ant-color-bg-container)] p-3"
           :class="markdownClass"
         >
           <XMarkdown

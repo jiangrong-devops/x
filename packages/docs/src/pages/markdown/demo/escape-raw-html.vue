@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { SettingOutlined } from "@antdv-next/icons";
 import { XMarkdown } from "@antdv-next/x-markdown";
-import { Button, Flex, Popover, Space, Switch, Typography } from "antdv-next";
+import {
+  Button,
+  Flex,
+  Popover,
+  Space,
+  Switch,
+  Typography,
+  theme,
+} from "antdv-next";
 import { computed, ref } from "vue";
 
-import { useDarkMode } from "@/composables/use-dark-mode";
-
 const { Text } = Typography;
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 
 const markdownClass = computed(() =>
   isDark.value ? "x-markdown-dark" : "x-markdown-light",

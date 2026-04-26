@@ -70,6 +70,7 @@ import {
   Pagination,
   Space,
   message,
+  theme,
 } from "antdv-next";
 import enUS from "antdv-next/dist/locale/en_US";
 import zhCN from "antdv-next/dist/locale/zh_CN";
@@ -89,7 +90,6 @@ import {
 import "@antdv-next/x-markdown/themes/index.css";
 import "@antdv-next/x-markdown/themes/dark.css";
 import "@antdv-next/x-markdown/themes/light.css";
-import { useDarkMode } from "@/composables/use-dark-mode";
 import { useLocale } from "@/composables/use-locale";
 
 interface ChatMessage extends XModelMessage {
@@ -225,7 +225,8 @@ const useStyles = createStyles(({ token, css }) => ({
 }));
 
 const { locale: docsLocale } = useLocale();
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 const { styles } = useStyles();
 
 const markdownClass = computed(() =>

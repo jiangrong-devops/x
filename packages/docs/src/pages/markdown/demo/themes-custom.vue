@@ -3,7 +3,6 @@ import { XMarkdown } from "@antdv-next/x-markdown";
 import { theme } from "antdv-next";
 import { computed } from "vue";
 
-import { useDarkMode } from "@/composables/use-dark-mode";
 import { useLocale } from "@/composables/use-locale";
 
 const ThemeMarkdownZh = `
@@ -45,8 +44,8 @@ See [x-markdown theme docs](/markdown/themes-en).
 `;
 
 const { locale } = useLocale();
-const { isDark } = useDarkMode();
-const { token } = theme.useToken();
+const { token, theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 
 const content = computed(() =>
   locale.value === "zh-CN" ? ThemeMarkdownZh : ThemeMarkdownEn,
@@ -68,14 +67,14 @@ const customVars = computed(() =>
         "--dark-bg": token.value.colorFillSecondary,
         "--border-color": token.value.colorBorder,
       }
-    : {
+    : ({
         "--primary-color": token.value.colorLink,
         "--primary-color-hover": token.value.colorLinkHover,
         "--heading-color": token.value.colorTextHeading,
         "--text-color": token.value.colorText,
         "--light-bg": token.value.colorFillSecondary,
         "--border-color": token.value.colorBorder,
-      },
+      } as Record<string, string>),
 );
 
 const containerStyle = computed(() => ({

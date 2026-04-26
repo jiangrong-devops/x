@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { XMarkdown } from "@antdv-next/x-markdown";
+import { theme } from "antdv-next";
 import {
   computed,
   defineComponent,
@@ -10,8 +11,6 @@ import {
   watch,
   type VNode,
 } from "vue";
-
-import { useDarkMode } from "@/composables/use-dark-mode";
 
 const text = `
 Here's a Python code block example that demonstrates how to calculate Fibonacci numbers:
@@ -56,7 +55,8 @@ function extractText(nodes: VNode[]): string {
     .join("");
 }
 
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 const markdownClass = computed(() =>
   isDark.value ? "x-markdown-dark" : "x-markdown-light",
 );

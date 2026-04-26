@@ -20,12 +20,11 @@ import { computed, defineComponent, h, onUnmounted, ref, watch } from "vue";
 import "@antdv-next/x-markdown/themes/index.css";
 import "@antdv-next/x-markdown/themes/light.css";
 import "@antdv-next/x-markdown/themes/dark.css";
-import { useDarkMode } from "@/composables/use-dark-mode";
 
 const { Text } = Typography;
 const { TextArea } = Input;
-const { token } = theme.useToken();
-const { isDark } = useDarkMode();
+const { token, theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 
 const DEFAULT_SOURCE = `# XMarkdown Playground
 
@@ -466,12 +465,10 @@ const themeOptions = [
               :bordered="false"
               :spell-check="false"
               :style="{
-                padding: '12px',
                 height: viewportHeight,
-                resize: 'none',
-                overflowY: 'auto',
                 fontFamily: 'Menlo, Monaco, Consolas, monospace',
               }"
+              class="overflow-y-auto resize-none p-3"
             />
           </Card>
 
@@ -480,15 +477,14 @@ const themeOptions = [
             :style="{ flex: '1 1 0', minWidth: '0' }"
             :bodyStyle="{ padding: '1px' }"
           >
-            <div :style="previewShellStyle" class="h-[var(--xmd-playground-viewport-height)] flex flex-col">
+            <div
+              :style="previewShellStyle"
+              class="h-[var(--xmd-playground-viewport-height)] flex flex-col"
+            >
               <div
                 :class="markdownClassName"
-                :style="{
-                  padding: '12px',
-                  flex: '1',
-                  overflowY: 'auto',
-                  '--xmd-playground-viewport-height': viewportHeight,
-                }"
+                :style="{ padding: '12px' }"
+                class="flex-1 overflow-y-auto"
               >
                 <XMarkdown
                   :content="previewContent"

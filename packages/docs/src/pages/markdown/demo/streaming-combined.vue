@@ -3,12 +3,11 @@ import type { Component } from "vue";
 
 import { SettingOutlined } from "@antdv-next/icons";
 import { XMarkdown } from "@antdv-next/x-markdown";
-import { Skeleton } from "antdv-next";
+import { Skeleton, theme } from "antdv-next";
 import { computed, defineComponent, h, onBeforeUnmount, ref, watch } from "vue";
 
-import { useDarkMode } from "@/composables/use-dark-mode";
-
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 
 const text = `# Antdv Next X
 

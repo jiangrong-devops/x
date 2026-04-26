@@ -10,10 +10,9 @@ import {
   Space,
   Switch,
   Typography,
+  theme,
 } from "antdv-next";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-
-import { useDarkMode } from "@/composables/use-dark-mode";
 
 const text = `
 # Antv Next X: AI Conversation UI Framework
@@ -48,7 +47,8 @@ Based on the RICH interaction paradigm:
 `;
 
 const { Text } = Typography;
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 
 const enableAnimation = ref(true);
 const enableTail = ref(false);

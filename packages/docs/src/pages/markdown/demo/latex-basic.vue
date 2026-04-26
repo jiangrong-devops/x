@@ -2,10 +2,8 @@
 import { Bubble } from "@antdv-next/x";
 import { XMarkdown } from "@antdv-next/x-markdown";
 import Latex from "@antdv-next/x-markdown/plugins/Latex";
-import { Button, Flex } from "antdv-next";
+import { Button, Flex, theme } from "antdv-next";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-
-import { useDarkMode } from "@/composables/use-dark-mode";
 
 const text = `
 ## 行内公式
@@ -264,7 +262,8 @@ const markdownConfig = {
   extensions: Latex(),
 };
 
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 const markdownClass = computed(() =>
   isDark.value ? "x-markdown-dark" : "x-markdown-light",
 );

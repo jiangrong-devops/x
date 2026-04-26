@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Bubble } from "@antdv-next/x";
 import { XMarkdown } from "@antdv-next/x-markdown";
-import { Button, Flex, Spin } from "antdv-next";
+import { Button, Flex, Spin, theme } from "antdv-next";
 import {
   computed,
   defineComponent,
@@ -13,8 +13,6 @@ import {
   watch,
   type VNode,
 } from "vue";
-
-import { useDarkMode } from "@/composables/use-dark-mode";
 
 const text = `
 **[Infographic](https://github.com/antvis/Infographic)**, An Infographic Generation and Rendering Framework, bring words to life with AI!
@@ -201,7 +199,8 @@ const components = {
   code: CodeRenderer,
 };
 
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 const markdownClass = computed(() =>
   isDark.value ? "x-markdown-dark" : "x-markdown-light",
 );

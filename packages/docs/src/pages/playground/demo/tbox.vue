@@ -50,7 +50,15 @@ import {
   useXConversations,
   XRequest,
 } from "@antdv-next/x-sdk";
-import { Avatar, Button, Flex, Pagination, Space, message } from "antdv-next";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Pagination,
+  Space,
+  message,
+  theme,
+} from "antdv-next";
 import enUS from "antdv-next/dist/locale/en_US";
 import zhCN from "antdv-next/dist/locale/zh_CN";
 import { createStyles } from "antdv-style";
@@ -67,7 +75,6 @@ import {
 import "@antdv-next/x-markdown/themes/index.css";
 import "@antdv-next/x-markdown/themes/dark.css";
 import "@antdv-next/x-markdown/themes/light.css";
-import { useDarkMode } from "@/composables/use-dark-mode";
 import { useLocale } from "@/composables/use-locale";
 
 const BASE_URL = "https://api.x.ant.design/api/big_model_glm-4.5-flash";
@@ -185,7 +192,8 @@ const useStyles = createStyles(({ token, css }) => ({
 }));
 
 const { locale: docsLocale } = useLocale();
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 const { styles } = useStyles();
 
 const markdownClass = computed(() =>

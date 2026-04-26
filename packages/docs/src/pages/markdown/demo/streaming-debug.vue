@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { Bubble } from "@antdv-next/x";
 import { XMarkdown } from "@antdv-next/x-markdown";
-import { Button, Flex, Space } from "antdv-next";
+import { Button, Flex, Space, theme } from "antdv-next";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-
-import { useDarkMode } from "@/composables/use-dark-mode";
 
 const text = `
 # Antv Next X: The Ultimate AI Conversation UI Framework
@@ -59,7 +57,8 @@ Based on the RICH interaction paradigm, we provide many atomic components for di
 > Antv Next X is more than just a component library—it's a complete solution for building the next generation of AI-powered applications. Start building today and create experiences that delight your users.
 `;
 
-const { isDark } = useDarkMode();
+const { theme: currentTheme } = theme.useToken();
+const isDark = computed(() => currentTheme.value.id === 1);
 
 const index = ref(0);
 const hasNextChunk = ref(false);
