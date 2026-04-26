@@ -19,7 +19,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./style.css": "./dist/index.css",
     "./plugins/*": {
       "types": "./plugins/*/index.d.ts",
       "import": "./plugins/*/index.js"
@@ -32,7 +31,7 @@
   },
   "scripts": {
     "type-check": "vue-tsc --project tsconfig.build.json --noEmit",
-    "build": "vp build --config vite.build.config.ts && vp build --config vite.build.config.ts --mode plugins && node ./scripts/add-css-import.mjs && node ./scripts/copy-themes.mjs"
+    "build": "vp build --config vite.build.config.ts && vp build --config vite.build.config.ts --mode plugins && node ./scripts/copy-themes.mjs"
   },
   "dependencies": {
     "dompurify": "^3.1.0",

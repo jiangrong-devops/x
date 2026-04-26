@@ -45,6 +45,8 @@ pnpm add @antdv-next/x-markdown
 
 ```vue
 <script setup>
+import "@antdv-next/x-markdown/themes/index.css";
+import "@antdv-next/x-markdown/themes/light.css";
 import { XMarkdown } from "@antdv-next/x-markdown";
 
 const content = `
@@ -67,6 +69,8 @@ const content = `
 
 ```vue
 <script setup>
+import "@antdv-next/x-markdown/themes/index.css";
+import "@antdv-next/x-markdown/themes/light.css";
 import { ref } from "vue";
 import { XMarkdown } from "@antdv-next/x-markdown";
 
@@ -86,6 +90,15 @@ function onChunk(chunk) {
 <template>
   <XMarkdown :content="content" :streaming="streaming" />
 </template>
+```
+
+## 样式
+
+破坏性变更：`@antdv-next/x-markdown` 不再自动引入样式。需要手动引入基础样式，并按需引入一个主题样式：
+
+```ts
+import "@antdv-next/x-markdown/themes/index.css";
+import "@antdv-next/x-markdown/themes/light.css";
 ```
 
 ## API
@@ -132,10 +145,11 @@ function onChunk(chunk) {
 
 ## 主题
 
-引入主题样式并设置主题类名：
+引入基础样式和主题样式，并设置主题类名：
 
 ```vue
 <script setup>
+import "@antdv-next/x-markdown/themes/index.css";
 import "@antdv-next/x-markdown/themes/light.css";
 </script>
 

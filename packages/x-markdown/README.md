@@ -45,6 +45,8 @@ pnpm add @antdv-next/x-markdown
 
 ```vue
 <script setup>
+import "@antdv-next/x-markdown/themes/index.css";
+import "@antdv-next/x-markdown/themes/light.css";
 import { XMarkdown } from "@antdv-next/x-markdown";
 
 const content = `
@@ -67,6 +69,8 @@ const content = `
 
 ```vue
 <script setup>
+import "@antdv-next/x-markdown/themes/index.css";
+import "@antdv-next/x-markdown/themes/light.css";
 import { ref } from "vue";
 import { XMarkdown } from "@antdv-next/x-markdown";
 
@@ -86,6 +90,15 @@ function onChunk(chunk) {
 <template>
   <XMarkdown :content="content" :streaming="streaming" />
 </template>
+```
+
+## Styles
+
+Breaking change: `@antdv-next/x-markdown` no longer imports styles automatically. Import the base styles manually, plus one optional theme stylesheet:
+
+```ts
+import "@antdv-next/x-markdown/themes/index.css";
+import "@antdv-next/x-markdown/themes/light.css";
 ```
 
 ## API
@@ -132,10 +145,11 @@ function onChunk(chunk) {
 
 ## Themes
 
-Import theme styles and set the theme class on the root:
+Import base styles, theme styles, and set the theme class on the root:
 
 ```vue
 <script setup>
+import "@antdv-next/x-markdown/themes/index.css";
 import "@antdv-next/x-markdown/themes/light.css";
 </script>
 

@@ -1,5 +1,3 @@
-import "./XMarkdown/index.css";
-
 export { default as XMarkdown } from "./XMarkdown/index.vue";
 
 export type { XMarkdownProps } from "./XMarkdown/interface";
