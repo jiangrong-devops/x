@@ -34,6 +34,14 @@ const XProvider = defineComponent({
       type: Object as PropType<XProviderProps["fileCard"]>,
       default: undefined,
     },
+    sources: {
+      type: Object as PropType<XProviderProps["sources"]>,
+      default: undefined,
+    },
+    codeHighlighter: {
+      type: Object as PropType<XProviderProps["codeHighlighter"]>,
+      default: undefined,
+    },
     mermaid: {
       type: Object as PropType<XProviderProps["mermaid"]>,
       default: undefined,
@@ -44,6 +52,18 @@ const XProvider = defineComponent({
     },
     suggestion: {
       type: Object as PropType<XProviderProps["suggestion"]>,
+      default: undefined,
+    },
+    sender: {
+      type: Object as PropType<XProviderProps["sender"]>,
+      default: undefined,
+    },
+    think: {
+      type: Object as PropType<XProviderProps["think"]>,
+      default: undefined,
+    },
+    thoughtChain: {
+      type: Object as PropType<XProviderProps["thoughtChain"]>,
       default: undefined,
     },
     welcome: {
@@ -73,9 +93,14 @@ const XProvider = defineComponent({
         bubble: props.bubble,
         conversations: props.conversations,
         fileCard: props.fileCard,
+        sources: props.sources,
+        codeHighlighter: props.codeHighlighter,
         mermaid: props.mermaid,
         prompts: props.prompts,
         suggestion: props.suggestion,
+        sender: props.sender,
+        think: props.think,
+        thoughtChain: props.thoughtChain,
         welcome: props.welcome,
       };
     });

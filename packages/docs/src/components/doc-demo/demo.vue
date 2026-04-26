@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Component, CSSProperties } from "vue";
 
-import { CheckOutlined, CopyOutlined } from "@antdv-next/icons";
+import { CheckOutlined, CodeOutlined, CopyOutlined } from "@antdv-next/icons";
 import { useClipboard } from "@vueuse/core";
 import { createStyles } from "antdv-style";
 import { loadDemo } from "virtual:demos";
@@ -12,6 +12,7 @@ import { getDemoId } from "@/utils/get-demo-id";
 
 import ExpandIcon from "./demo-expand-icon.vue";
 import DemoSkeleton from "./demo-skeleton.vue";
+import { loadPlaygroundUrl } from "./playground";
 
 defineOptions({
   name: "Demo",
@@ -280,6 +281,14 @@ function navigateToAnchor(event: MouseEvent) {
     hash: `#${id.value}`,
   });
 }
+
+function openPlayground() {
+  window.open(
+    loadPlaygroundUrl(demo.value?.source || ""),
+    "_blank",
+    "noopener,noreferrer",
+  );
+}
 </script>
 
 <template>
@@ -333,6 +342,15 @@ function navigateToAnchor(event: MouseEvent) {
             >
               <CheckOutlined v-if="copied" />
               <CopyOutlined v-else />
+            </button>
+          </a-tooltip>
+          <a-tooltip title="在 Playground 中打开">
+            <button
+              class="ant-doc-demo-box-code-action"
+              type="button"
+              @click="openPlayground"
+            >
+              <CodeOutlined />
             </button>
           </a-tooltip>
           <a-tooltip :title="showCode ? '收起代码' : '展开代码'">

@@ -22,6 +22,7 @@ import type {
   CodeHighlighterSemanticType,
 } from "./interface";
 
+import useXComponentConfig from "../_utils/hooks/use-x-component-config";
 import { codeToHtml } from "./shiki";
 import useCodeHighlighterStyle from "./style";
 
@@ -97,6 +98,7 @@ export const XCodeHighlighter = defineComponent({
   emits: ["update:theme"],
   setup(props, { emit, expose }) {
     const attrs = useAttrs();
+    const contextConfig = useXComponentConfig("codeHighlighter");
     const rootRef = ref<HTMLDivElement>();
     const [hashId, cssVarCls] = useCodeHighlighterStyle(
       computed(() => props.prefixCls),
@@ -171,7 +173,11 @@ export const XCodeHighlighter = defineComponent({
     };
 
     const getSlotClassName = (slot: CodeHighlighterSemanticType) => {
-      return [`${props.prefixCls}-${slot}`, props.classes?.[slot]];
+      return [
+        `${props.prefixCls}-${slot}`,
+        contextConfig.value.classes?.[slot],
+        props.classes?.[slot],
+      ];
     };
 
     const renderHeader = () => {
@@ -180,11 +186,21 @@ export const XCodeHighlighter = defineComponent({
       if (!hasHeaderContent) return null;
 
       return (
-        <div class={getSlotClassName("header")} style={props.styles?.header}>
+        <div
+          class={getSlotClassName("header")}
+          style={[contextConfig.value.styles?.header, props.styles?.header]}
+        >
           {props.showLanguage && (
             <span
-              class={[`${props.prefixCls}-lang`, props.classes?.headerTitle]}
-              style={props.styles?.headerTitle}
+              class={[
+                `${props.prefixCls}-lang`,
+                contextConfig.value.classes?.headerTitle,
+                props.classes?.headerTitle,
+              ]}
+              style={[
+                contextConfig.value.styles?.headerTitle,
+                props.styles?.headerTitle,
+              ]}
             >
               {props.language || "text"}
             </span>
@@ -239,11 +255,18 @@ export const XCodeHighlighter = defineComponent({
 
     const renderContent = () => {
       return (
-        <div class={getSlotClassName("content")} style={props.styles?.content}>
+        <div
+          class={getSlotClassName("content")}
+          style={[contextConfig.value.styles?.content, props.styles?.content]}
+        >
           {renderLineNumbers()}
           <div
-            class={[`${props.prefixCls}-code`, props.classes?.code]}
-            style={props.styles?.code}
+            class={[
+              `${props.prefixCls}-code`,
+              contextConfig.value.classes?.code,
+              props.classes?.code,
+            ]}
+            style={[contextConfig.value.styles?.code, props.styles?.code]}
             innerHTML={highlightedHtml.value}
           />
         </div>
@@ -258,13 +281,20 @@ export const XCodeHighlighter = defineComponent({
           props.prefixCls,
           `${props.prefixCls}-${props.theme}`,
           props.rootClass,
+          contextConfig.value.classes?.root,
           props.classes?.root,
           hashId.value,
           cssVarCls.value,
           attrs.class,
           props.class,
         ]}
-        style={[props.styles?.root, attrs.style as StyleValue, props.style]}
+        style={[
+          contextConfig.value.style,
+          contextConfig.value.styles?.root,
+          props.styles?.root,
+          attrs.style as StyleValue,
+          props.style,
+        ]}
       >
         {renderHeader()}
         {renderContent()}
