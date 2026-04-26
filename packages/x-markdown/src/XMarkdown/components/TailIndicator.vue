@@ -13,11 +13,3 @@ withDefaults(defineProps<Props>(), {
     {{ content }}
   </span>
 </template>
-
-<style scoped>
-.xmd-tail {
-  color: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-</style>
